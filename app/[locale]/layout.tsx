@@ -2,6 +2,7 @@ import { IBM_Plex_Mono } from 'next/font/google';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { RootProviders } from '@/components/providers/root-providers';
+import { VersionBadge } from '@/components/ui/version-badge';
 
 const ibmPlexMono = IBM_Plex_Mono({
   subsets: ['latin'],
@@ -31,6 +32,7 @@ export default async function LocaleLayout({
         <NextIntlClientProvider messages={messages}>
           <RootProviders>
             {children}
+            <VersionBadge />
           </RootProviders>
         </NextIntlClientProvider>
       </body>
