@@ -1,0 +1,127 @@
+---
+alwaysApply: true
+---
+### **1. Süper Admin (Platform Sahibi / SaaS Yönetimi)**
+
+**Yetkiler:**
+
+* [ ] Sistemin tüm modüllerine tam erişim.
+* [ ] Yeni firma kaydı oluşturma, düzenleme, silme.
+* [ ] Firma kullanıcılarını (İK Yetkilisi, Teknik Mülakatçı) ekleme, düzenleme, silme.
+* [ ] Firmaların kullanım kotalarını (CV sayısı, mülakat sayısı, depolama alanı) belirleme/güncelleme.
+* [ ] Tüm firmaların sistem kullanım istatistiklerini görüntüleme.
+* [ ] Sistem genelinde güvenlik logları, erişim logları, hata loglarına erişim.
+* [ ] Faturalandırma, abonelik planı ve ödeme yönetimi.
+* [ ] Yapay zekâ modüllerinin (model versiyonu, metrik eşikleri) ayarlarını değiştirme.
+* [ ] Bakım modu başlatma/durdurma.
+* [ ] KVKK / GDPR uyumluluk raporlarını ve şifreleme anahtarlarını yönetme.
+
+---
+
+### **2. İnsan Kaynakları (İK) Yetkilisi – Firma Admin (Birincil Kullanıcı)**
+
+**Yetkiler:**
+
+* [ ] Kurumsal e-posta ve şifre ile güvenli giriş.
+* [ ] PDF formatında CV toplu yükleme.
+* [ ] Aday listesini (temel bilgiler + analiz durumu) görüntüleme.
+* [ ] Özet rapor ve aday karşılaştırma tablolarını görüntüleme.
+* [ ] Pozisyon ve yetkinliklere göre kodlama sorusu/test senaryosu talebi.
+* [ ] Aday seçme, mülakatçı atama, tarih/saat belirleyerek mülakat planlama.
+* [ ] Mülakat sonrası kod analizi, aktivite log özeti, puanlama raporuna erişim.
+* [ ] Mülakat oturumlarını interaktif oynatıcıdan izleme.
+
+---
+
+### **3. Teknik Mülakatçı (Birincil Kullanıcı)**
+
+**Yetkiler:**
+
+* [ ] Tek kullanımlık link ile canlı IDE erişimi.
+* [ ] Adayın yazdığı kodu gerçek zamanlı izleme.
+* [ ] Yapay zekâdan gelen anlık ipuçları, uyarılar ve analizleri görüntüleme.
+* [ ] Canlı metrikleri (Çözüme Yakınlık Oranı vb.) izleme.
+* [ ] Kod analizi + puanlama raporuna erişim.
+* [ ] Mülakat oturumunu interaktif oynatıcı ile izleme.
+* [ ] Gözetmen panelinden tüm aktif mülakat oturumlarını izleme, durumu takip etme, tek tıkla bağlanma.
+
+---
+
+### **4. Aday (İkincil Kullanıcı)**
+
+**Yetkiler:**
+
+* [ ] Tek kullanımlık link ile canlı IDE erişimi.
+* [ ] Atanan kodlama görevini tamamlama.
+* [ ] Başka adayların veya sistem yönetim bilgilerine erişim yok.
+
+---
+
+### **5. Genel Güvenlik ve RBAC Gereksinimleri**
+
+* Rol bazlı erişim kontrolü **çok seviyeli** olmalı (Süper Admin → Firma Admin/İK → Teknik Mülakatçı → Aday).
+* Veri izolasyonu sağlanmalı, her firma yalnızca kendi verilerini görmeli.
+* Tüm veriler **AES-256** ile şifrelenmeli.
+* Erişim linkleri tek kullanımlık ve zaman damgalı olmalı.
+* KVKK / GDPR uyumluluğu zorunlu.
+* Tüm işlemler **audit log** ile kayıt altına alınmalı ve değiştirilemez olmalı.
+
+---
+
+## **JSON Formatında Yetki Matrisi**
+
+```json
+{
+  "roles": {
+    "super_admin": {
+      "description": "Platform sahibi, tüm firmaları ve kullanıcıları yönetir.",
+      "permissions": [
+        "full_system_access",
+        "manage_companies",
+        "manage_company_users",
+        "set_company_quotas",
+        "view_all_statistics",
+        "access_all_logs",
+        "billing_and_payments",
+        "configure_ai_modules",
+        "system_maintenance",
+        "manage_compliance_and_keys"
+      ]
+    },
+    "hr_manager": {
+      "description": "Firma yöneticisi, aday yönetimi ve mülakat planlama yapar.",
+      "permissions": [
+        "secure_login",
+        "upload_cv_batch",
+        "view_candidate_list",
+        "view_candidate_reports",
+        "request_custom_questions",
+        "assign_interviewer_and_schedule",
+        "view_interview_results",
+        "use_interactive_player"
+      ]
+    },
+    "technical_interviewer": {
+      "description": "Mülakat yürütür, aday kodunu ve analizleri izler.",
+      "permissions": [
+        "access_live_ide",
+        "view_live_code",
+        "receive_ai_feedback",
+        "view_live_metrics",
+        "view_code_report",
+        "use_interactive_player",
+        "access_proctoring_panel"
+      ]
+    },
+    "candidate": {
+      "description": "Mülakata katılır, verilen görevleri tamamlar.",
+      "permissions": [
+        "access_live_ide",
+        "complete_assigned_task"
+      ]
+    }
+  }
+}
+```
+
+---

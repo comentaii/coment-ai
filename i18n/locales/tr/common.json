@@ -1,0 +1,43 @@
+{
+    "Home": {
+        "title": "Coment-AI'ya Hoş Geldiniz",
+        "description": "Yapay Zeka Destekli Aday Değerlendirme ve Mülakat Platformu"
+    },
+    "Navigation": {
+        "signIn": "Giriş Yap",
+        "signUp": "Kayıt Ol",
+        "dashboard": "Dashboard",
+        "profile": "Profil",
+        "settings": "Ayarlar",
+        "logout": "Çıkış Yap"
+    },
+    "Footer": {
+        "rights": "Tüm hakları saklıdır."
+    },
+    "Auth": {
+        "email": "E-posta",
+        "password": "Şifre",
+        "confirmPassword": "Şifre Tekrarı",
+        "name": "Ad Soyad",
+        "login": "Giriş Yap",
+        "register": "Kayıt Ol",
+        "forgotPassword": "Şifremi Unuttum",
+        "googleLogin": "Google ile Giriş Yap",
+        "googleSignup": "Google ile Kayıt Ol"
+    },
+    "Roles": {
+        "super_admin": "Süper Admin",
+        "hr_manager": "İK Yetkilisi",
+        "technical_interviewer": "Teknik Mülakatçı",
+        "candidate": "Aday"
+    },
+    "Dashboard": {
+        "welcome": "Hoş geldiniz",
+        "userInfo": "Kullanıcı Bilgileri",
+        "accountInfo": "Hesap bilgileriniz",
+        "quickActions": "Hızlı İşlemler",
+        "availableActions": "Yapabileceğiniz işlemler",
+        "systemStatus": "Sistem Durumu",
+        "platformStatus": "Platform durumu"
+    }
+}

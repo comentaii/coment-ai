@@ -1,0 +1,43 @@
+{
+    "Home": {
+        "title": "Welcome to Coment-AI",
+        "description": "AI-Powered Candidate Assessment and Interview Platform"
+    },
+    "Navigation": {
+        "signIn": "Sign In",
+        "signUp": "Sign Up",
+        "dashboard": "Dashboard",
+        "profile": "Profile",
+        "settings": "Settings",
+        "logout": "Logout"
+    },
+    "Footer": {
+        "rights": "All rights reserved."
+    },
+    "Auth": {
+        "email": "Email",
+        "password": "Password",
+        "confirmPassword": "Confirm Password",
+        "name": "Full Name",
+        "login": "Sign In",
+        "register": "Sign Up",
+        "forgotPassword": "Forgot Password",
+        "googleLogin": "Sign in with Google",
+        "googleSignup": "Sign up with Google"
+    },
+    "Roles": {
+        "super_admin": "Super Admin",
+        "hr_manager": "HR Manager",
+        "technical_interviewer": "Technical Interviewer",
+        "candidate": "Candidate"
+    },
+    "Dashboard": {
+        "welcome": "Welcome",
+        "userInfo": "User Information",
+        "accountInfo": "Your account information",
+        "quickActions": "Quick Actions",
+        "availableActions": "Available actions",
+        "systemStatus": "System Status",
+        "platformStatus": "Platform status"
+    }
+}

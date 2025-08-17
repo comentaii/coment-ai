@@ -1,0 +1,980 @@
+---
+alwaysApply: true
+---
+
+
+# Coment-AI Project Structure & Development Guidelines
+
+## Project Overview
+Coment-AI is a Next.js 15 application with TypeScript, featuring real-time coding challenges, AI mentorship, and user authentication. The project uses Redux Toolkit for state management, NextAuth for authentication, Socket.io for real-time communication, and Radix UI for components.
+
+## Core Technologies
+- **Framework**: Next.js 15 with App Router
+- **Language**: TypeScript
+- **State Management**: Redux Toolkit + Redux Persist
+- **Authentication**: NextAuth.js
+- **Real-time**: Socket.io
+- **UI**: Radix UI + Tailwind CSS
+- **Database**: MongoDB with Mongoose
+- **Internationalization**: next-intl
+- **Code Editor**: Monaco Editor
+- **Form Validation**: Formik + Yup
+- **API Management**: RTK Query
+
+## Directory Structure
+
+### Root Level Organization
+```
+coment-ai/
+├── app/                    # Next.js App Router (pages & API routes)
+├── components/             # React components
+├── hooks/                  # Custom React hooks
+├── lib/                    # Utility functions & configurations
+├── store/                  # Redux store & slices
+├── types/                  # TypeScript type definitions
+├── services/               # API services & database
+├── socket/                 # Socket.io server
+├── utils/                  # General utilities
+├── schemas/                # Zod validation schemas
+├── contexts/               # React contexts
+├── i18n/                   # Internationalization
+└── public/                 # Static assets
+```
+
+## Component Organization
+
+### Components Directory Structure
+```
+components/
+├── ui/                     # Reusable UI components (Radix-based)
+├── layout/                 # Layout components
+├── providers/              # Context providers
+├── modals/                 # Modal components
+├── forms/                  # Form components (Formik + Yup)
+└── [feature-specific]/     # Feature-specific components
+```
+
+### Component Guidelines
+1. **UI Components**: Use Radix UI primitives in `components/ui/`
+2. **Layout Components**: Place in `components/layout/`
+3. **Form Components**: Use Formik + Yup in `components/forms/`
+4. **Feature Components**: Group by feature in dedicated folders
+5. **Naming**: Use kebab-case for files, PascalCase for components
+6. **Props**: Use TypeScript interfaces for all props
+7. **Styling**: Use Tailwind CSS with `cn()` utility for conditional classes
+
+## Form Validation with Formik + Yup
+
+### Validation Schema Structure
+```
+lib/
+├── validation-schemas.ts   # Yup validation schemas
+└── formik-form.tsx        # Reusable Formik components
+```
+
+### Form Development Guidelines
+1. **Schema Definition**: Define Yup schemas in `lib/validation-schemas.ts`
+2. **Form Components**: Use FormikForm wrapper from `components/ui/formik-form.tsx`
+3. **Field Components**: Use FormikField, FormikSelect, FormikTextarea
+4. **Error Handling**: Use FormError and FormSuccess components
+5. **Type Safety**: Export TypeScript types from validation schemas
+
+### Form Pattern
+```typescript
+// lib/validation-schemas.ts
+export const userSignupSchema = yup.object({
+  name: yup.string().required('İsim gereklidir'),
+  email: yup.string().email('Geçerli email giriniz').required('Email gereklidir'),
+  password: yup.string().min(6, 'En az 6 karakter').required('Şifre gereklidir'),
+});
+
+// components/forms/UserSignupForm.tsx
+<FormikForm
+  initialValues={initialValues}
+  validationSchema={userSignupSchema}
+  onSubmit={handleSubmit}
+>
+  {(formikProps) => (
+    <>
+      <FormikField
+        name="name"
+        label="Ad Soyad"
+        error={formikProps.errors.name}
+        touched={formikProps.touched.name}
+      />
+      <FormSubmitButton loading={isLoading}>
+        Kayıt Ol
+      </FormSubmitButton>
+    </>
+  )}
+</FormikForm>
+```
+
+## API Architecture with RTK Query
+
+### API Routes Structure
+```
+app/api/
+├── auth/                   # Authentication endpoints
+├── challenges/             # Challenge endpoints
+├── settings/               # User settings
+├── stats/                  # Statistics & analytics
+├── history/                # User history
+└── user-settings/          # User preferences
+```
+
+### API Development Guidelines
+1. **Route Handlers**: Use Next.js 15 App Router API handlers
+2. **Service Layer**: Use database services instead of direct schema access
+3. **Validation**: Use Yup schemas for request/response validation
+4. **Error Handling**: Use consistent error response format
+5. **Authentication**: Implement with NextAuth middleware
+
+### RTK Query Service Pattern
+```typescript
+// services/api/[feature]Api.ts
+export const featureApi = baseApi.injectEndpoints({
+  endpoints: (builder) => ({
+    getFeature: builder.query<FeatureType, void>({
+      query: () => 'feature',
+      providesTags: ['Feature'],
+    }),
+    createFeature: builder.mutation<FeatureType, CreateFeatureDto>({
+      query: (data) => ({
+        url: 'feature',
+        method: 'POST',
+        body: data,
+      }),
+      invalidatesTags: ['Feature'],
+    }),
+  }),
+});
+
+// Usage in components
+const { data, isLoading } = useGetFeatureQuery();
+const [createFeature, { isLoading: isCreating }] = useCreateFeatureMutation();
+```
+
+## Database Services with Inheritance
+
+### Service Structure
+```
+services/
+├── db/                     # Database services
+│   ├── base.service.ts     # Abstract base service
+│   ├── user.service.ts     # User-specific service
+│   ├── challenge.service.ts # Challenge-specific service
+│   └── index.ts           # Service exports
+└── api/                    # RTK Query services
+    ├── baseApi.ts          # RTK Query base configuration
+    ├── userApi.ts          # User API service
+    ├── challengeApi.ts     # Challenge API service
+    └── index.ts           # API exports
+```
+
+### Service Development Guidelines
+1. **Inheritance**: Extend BaseService for all database services
+2. **Super Constructor**: Use super(model) in constructor
+3. **Error Handling**: Use executeWithErrorHandling wrapper
+4. **Transactions**: Use withTransaction for complex operations
+5. **Validation**: Use validateId helper for ObjectId validation
+
+### Service Pattern
+```typescript
+// services/db/base.service.ts
+export abstract class BaseService<T extends Document> {
+  protected model: Model<T>;
+
+  constructor(model: Model<T>) {
+    this.model = model;
+    this.ensureConnection();
+  }
+
+  protected async executeWithErrorHandling<TResult>(
+    operation: () => Promise<TResult>
+  ): Promise<TResult> {
+    try {
+      return await operation();
+    } catch (error) {
+      console.error(`Error in ${this.constructor.name}:`, error);
+      throw error;
+    }
+  }
+}
+
+// services/db/user.service.ts
+class UserService extends BaseService<IUser> {
+  constructor() {
+    super(User);
+  }
+
+  async createUser(userData: Partial<IUser>): Promise<IUser> {
+    return this.executeWithErrorHandling(async () => {
+      // User-specific logic
+      return this.create(userData) as Promise<IUser>;
+    });
+  }
+}
+```
+
+## API Routes Using Services
+
+### Route Handler Pattern
+```typescript
+// app/api/challenges/route.ts
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json();
+
+    // Validate with Yup schema
+    await challengeSchema.validate(body);
+
+    // Use service instead of direct schema access
+    const challenge = await challengeService.createChallenge(body);
+
+    return responseHandler.success({
+      message: "Challenge created successfully",
+      challenge,
+    });
+  } catch (error) {
+    return responseHandler.error("Failed to create challenge");
+  }
+}
+```
+
+## State Management
+
+### Redux Store Structure
+```
+store/
+├── index.ts                # Store configuration
+├── features/               # Redux Toolkit slices
+└── reducers/               # Traditional reducers (if needed)
+```
+
+### State Management Guidelines
+1. **Use Redux Toolkit**: Prefer createSlice over traditional reducers
+2. **RTK Query**: Use for API state management
+3. **Persistence**: Use Redux Persist for user preferences
+4. **Selectors**: Create memoized selectors for complex state
+5. **Actions**: Use createAsyncThunk for async operations
+
+## Custom Hooks
+
+### Hooks Directory Structure
+```
+hooks/
+├── useAuth.ts              # Authentication hook
+├── useSocket.ts            # Socket.io hook
+├── useTheme.tsx            # Theme management
+├── useTimer.tsx            # Timer functionality
+├── useEditor.tsx           # Code editor hook
+├── useChallenge.tsx        # Challenge management
+├── useCodeEvaluation.tsx   # Code evaluation
+├── useUserSettings.tsx     # User settings
+└── use-mobile.ts           # Mobile detection
+```
+
+### Hook Guidelines
+1. **Naming**: Use `use` prefix for all custom hooks
+2. **TypeScript**: Provide proper TypeScript types
+3. **Error Handling**: Include error states and loading states
+4. **Dependencies**: Properly manage useEffect dependencies
+5. **Return Values**: Return objects with clear property names
+
+## Database & Services
+
+### Database Guidelines
+1. **Models**: Use Mongoose schemas in `services/db/`
+2. **Connections**: Centralize database connection logic
+3. **Validation**: Use Yup for schema validation
+4. **Error Handling**: Implement proper error handling
+5. **Indexing**: Optimize database queries with proper indexes
+
+## Real-time Communication
+
+### Socket.io Implementation
+```
+socket/                     # Socket.io server
+├── server.ts               # Socket server setup
+└── handlers/               # Socket event handlers
+```
+
+### Socket Guidelines
+1. **Client Hook**: Use `useSocket` hook for client-side
+2. **Event Naming**: Use consistent event naming conventions
+3. **Authentication**: Implement socket authentication
+4. **Error Handling**: Handle connection errors gracefully
+5. **Reconnection**: Implement automatic reconnection logic
+
+## TypeScript Configuration
+
+### Type Definitions
+```
+types/
+├── auth.d.ts               # Authentication types
+├── global.d.ts             # Global type declarations
+└── next-auth.d.ts          # NextAuth type extensions
+```
+
+### TypeScript Guidelines
+1. **Strict Mode**: Enable strict TypeScript configuration
+2. **Path Aliases**: Use `@/` alias for imports
+3. **Type Safety**: Avoid `any` type, use proper interfaces
+4. **Generic Types**: Use generics for reusable components
+5. **API Types**: Define types for all API requests/responses
+
+## Internationalization
+
+### i18n Structure
+```
+i18n/
+├── locales/                # Translation files
+│   ├── tr/                 # Turkish translations
+│   └── en/                 # English translations
+└── config.ts               # i18n configuration
+```
+
+### i18n Guidelines
+1. **Locale Routing**: Use `[locale]` dynamic route
+2. **Translation Keys**: Use hierarchical key structure
+3. **Fallbacks**: Provide fallback translations
+4. **Date/Number**: Use locale-specific formatting
+5. **RTL Support**: Consider RTL language support
+
+## Styling & UI
+
+### Styling Guidelines
+1. **Tailwind CSS**: Use Tailwind for styling
+2. **Component Variants**: Use `cva` for component variants
+3. **Responsive Design**: Mobile-first approach
+4. **Dark Mode**: Support dark/light theme switching
+5. **Accessibility**: Follow WCAG guidelines
+
+### UI Component Pattern
+```typescript
+// components/ui/Button.tsx
+import { cva, type VariantProps } from 'class-variance-authority'
+import { cn } from '@/lib/utils'
+
+const buttonVariants = cva(
+  'inline-flex items-center justify-center rounded-md text-sm font-medium',
+  {
+    variants: {
+      variant: {
+        default: 'bg-primary text-primary-foreground hover:bg-primary/90',
+        destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive/90',
+      },
+      size: {
+        default: 'h-10 px-4 py-2',
+        sm: 'h-9 rounded-md px-3',
+        lg: 'h-11 rounded-md px-8',
+      },
+    },
+    defaultVariants: {
+      variant: 'default',
+      size: 'default',
+    },
+  }
+)
+
+interface ButtonProps extends VariantProps<typeof buttonVariants> {
+  children: React.ReactNode
+  className?: string
+}
+
+export const Button = ({ className, variant, size, ...props }: ButtonProps) => {
+  return (
+    <button
+      className={cn(buttonVariants({ variant, size, className }))}
+      {...props}
+    />
+  )
+}
+```
+
+## Development Workflow
+
+### Code Organization Rules
+1. **Feature-based**: Group related functionality together
+2. **Separation of Concerns**: Keep UI, logic, and data separate
+3. **Import Organization**: Use absolute imports with `@/` alias
+4. **File Naming**: Use descriptive, consistent naming
+5. **Code Splitting**: Implement proper code splitting for performance
+
+### Best Practices
+1. **Error Boundaries**: Implement error boundaries for React components
+2. **Loading States**: Provide loading states for async operations
+3. **Form Validation**: Use Formik + Yup for form validation
+4. **Performance**: Optimize with React.memo, useMemo, useCallback
+5. **Testing**: Write unit tests for critical functionality
+6. **Documentation**: Document complex logic and API endpoints
+
+### Environment Configuration
+1. **Environment Variables**: Use `.env.local` for local development
+2. **Configuration**: Centralize configuration in `lib/` directory
+3. **Secrets**: Never commit sensitive information
+4. **Validation**: Validate environment variables at startup
+
+## File Naming Conventions
+- **Components**: PascalCase (e.g., `UserProfile.tsx`)
+- **Hooks**: camelCase with `use` prefix (e.g., `useAuth.ts`)
+- **Utilities**: camelCase (e.g., `formatDate.ts`)
+- **Types**: camelCase with `.d.ts` extension (e.g., `auth.d.ts`)
+- **Constants**: UPPER_SNAKE_CASE (e.g., `API_ENDPOINTS.ts`)
+- **API Routes**: kebab-case (e.g., `user-settings/route.ts`)
+- **Services**: camelCase with `.service.ts` extension (e.g., `user.service.ts`)
+
+## Import Organization
+```typescript
+// 1. React and Next.js imports
+import React from 'react'
+import { useRouter } from 'next/navigation'
+
+// 2. Third-party library imports
+import { Formik, Form } from 'formik'
+import { toast } from 'sonner'
+
+// 3. Internal imports (absolute paths)
+import { Button } from '@/components/ui/Button'
+import { useAuth } from '@/hooks/useAuth'
+import { userApi } from '@/services/api'
+
+// 4. Relative imports
+import { UserCard } from './UserCard'
+import { userTypes } from './types'
+```
+
+## New Module Addition Guidelines
+
+### Adding New Features
+1. **Create Feature Directory**: Add feature-specific components in `components/[feature-name]/`
+2. **API Routes**: Add new API endpoints in `app/api/[feature-name]/`
+3. **Services**: Create API service in `services/api/[featureName]Api.ts`
+4. **Database Service**: Create service in `services/db/[featureName].service.ts`
+5. **Types**: Add TypeScript types in `types/[feature-name].d.ts`
+6. **Hooks**: Create custom hooks in `hooks/use[FeatureName].ts`
+7. **Store**: Add Redux slices in `store/features/[featureName]Slice.ts`
+8. **Validation**: Add Yup schemas in `lib/validation-schemas.ts`
+
+### Adding New Components
+1. **UI Components**: Place reusable components in `components/ui/`
+2. **Layout Components**: Place layout components in `components/layout/`
+3. **Form Components**: Place form components in `components/forms/`
+4. **Feature Components**: Place feature-specific components in `components/[feature-name]/`
+5. **Modal Components**: Place modal components in `components/modals/`
+
+### Adding New API Endpoints
+1. **Route Handler**: Create `app/api/[endpoint]/route.ts`
+2. **Service Layer**: Use database services from `services/db/`
+3. **Validation**: Use Yup schemas from `lib/validation-schemas.ts`
+4. **Authentication**: Implement NextAuth middleware
+5. **Error Handling**: Use consistent error response format
+
+### Adding New Database Services
+1. **Extend BaseService**: Create service extending BaseService
+2. **Super Constructor**: Use super(model) in constructor
+3. **Error Handling**: Use executeWithErrorHandling wrapper
+4. **Specific Methods**: Add feature-specific methods
+5. **Export**: Add to `services/db/index.ts`
+
+### Adding New Forms
+1. **Schema**: Add Yup schema to `lib/validation-schemas.ts`
+2. **Form Component**: Create form using FormikForm wrapper
+3. **Validation**: Use FormikField components with error handling
+4. **API Integration**: Use RTK Query mutations
+5. **Type Safety**: Export TypeScript types from schema
+
+This structure ensures maintainable, scalable, and well-organized code that follows Next.js and React best practices with Formik + Yup validation, RTK Query API management, and inheritance-based database services.
+
+5. **Documentation**: Document complex logic
+
+This structure ensures maintainable, scalable, and well-organized code that follows Next.js and React best practices.
+
+# Coment-AI Project Structure & Development Guidelines
+
+## Project Overview
+Coment-AI is a Next.js 15 application with TypeScript, featuring real-time coding challenges, AI mentorship, and user authentication. The project uses Redux Toolkit for state management, NextAuth for authentication, Socket.io for real-time communication, and Radix UI for components.
+
+## Core Technologies
+- **Framework**: Next.js 15 with App Router
+- **Language**: TypeScript
+- **State Management**: Redux Toolkit + Redux Persist
+- **Authentication**: NextAuth.js
+- **Real-time**: Socket.io
+- **UI**: Radix UI + Tailwind CSS
+- **Database**: MongoDB with Mongoose
+- **Internationalization**: next-intl
+- **Code Editor**: Monaco Editor
+- **Form Validation**: Formik + Yup
+- **API Management**: RTK Query
+
+## Directory Structure
+
+### Root Level Organization
+```
+coment-ai/
+├── app/                    # Next.js App Router (pages & API routes)
+├── components/             # React components
+├── hooks/                  # Custom React hooks
+├── lib/                    # Utility functions & configurations
+├── store/                  # Redux store & slices
+├── types/                  # TypeScript type definitions
+├── services/               # API services & database
+├── socket/                 # Socket.io server
+├── utils/                  # General utilities
+├── schemas/                # Zod validation schemas
+├── contexts/               # React contexts
+├── i18n/                   # Internationalization
+└── public/                 # Static assets
+```
+
+## Component Organization
+
+### Components Directory Structure
+```
+components/
+├── ui/                     # Reusable UI components (Radix-based)
+├── layout/                 # Layout components
+├── providers/              # Context providers
+├── modals/                 # Modal components
+├── forms/                  # Form components (Formik + Yup)
+└── [feature-specific]/     # Feature-specific components
+```
+
+### Component Guidelines
+1. **UI Components**: Use Radix UI primitives in `components/ui/`
+2. **Layout Components**: Place in `components/layout/`
+3. **Form Components**: Use Formik + Yup in `components/forms/`
+4. **Feature Components**: Group by feature in dedicated folders
+5. **Naming**: Use kebab-case for files, PascalCase for components
+6. **Props**: Use TypeScript interfaces for all props
+7. **Styling**: Use Tailwind CSS with `cn()` utility for conditional classes
+
+## Form Validation with Formik + Yup
+
+### Validation Schema Structure
+```
+lib/
+├── validation-schemas.ts   # Yup validation schemas
+└── formik-form.tsx        # Reusable Formik components
+```
+
+### Form Development Guidelines
+1. **Schema Definition**: Define Yup schemas in `lib/validation-schemas.ts`
+2. **Form Components**: Use FormikForm wrapper from `components/ui/formik-form.tsx`
+3. **Field Components**: Use FormikField, FormikSelect, FormikTextarea
+4. **Error Handling**: Use FormError and FormSuccess components
+5. **Type Safety**: Export TypeScript types from validation schemas
+
+### Form Pattern
+```typescript
+// lib/validation-schemas.ts
+export const userSignupSchema = yup.object({
+  name: yup.string().required('İsim gereklidir'),
+  email: yup.string().email('Geçerli email giriniz').required('Email gereklidir'),
+  password: yup.string().min(6, 'En az 6 karakter').required('Şifre gereklidir'),
+});
+
+// components/forms/UserSignupForm.tsx
+<FormikForm
+  initialValues={initialValues}
+  validationSchema={userSignupSchema}
+  onSubmit={handleSubmit}
+>
+  {(formikProps) => (
+    <>
+      <FormikField
+        name="name"
+        label="Ad Soyad"
+        error={formikProps.errors.name}
+        touched={formikProps.touched.name}
+      />
+      <FormSubmitButton loading={isLoading}>
+        Kayıt Ol
+      </FormSubmitButton>
+    </>
+  )}
+</FormikForm>
+```
+
+## API Architecture with RTK Query
+
+### API Routes Structure
+```
+app/api/
+├── auth/                   # Authentication endpoints
+├── challenges/             # Challenge endpoints
+├── settings/               # User settings
+├── stats/                  # Statistics & analytics
+├── history/                # User history
+└── user-settings/          # User preferences
+```
+
+### API Development Guidelines
+1. **Route Handlers**: Use Next.js 15 App Router API handlers
+2. **Service Layer**: Use database services instead of direct schema access
+3. **Validation**: Use Yup schemas for request/response validation
+4. **Error Handling**: Use consistent error response format
+5. **Authentication**: Implement with NextAuth middleware
+
+### RTK Query Service Pattern
+```typescript
+// services/api/[feature]Api.ts
+export const featureApi = baseApi.injectEndpoints({
+  endpoints: (builder) => ({
+    getFeature: builder.query<FeatureType, void>({
+      query: () => 'feature',
+      providesTags: ['Feature'],
+    }),
+    createFeature: builder.mutation<FeatureType, CreateFeatureDto>({
+      query: (data) => ({
+        url: 'feature',
+        method: 'POST',
+        body: data,
+      }),
+      invalidatesTags: ['Feature'],
+    }),
+  }),
+});
+
+// Usage in components
+const { data, isLoading } = useGetFeatureQuery();
+const [createFeature, { isLoading: isCreating }] = useCreateFeatureMutation();
+```
+
+## Database Services with Inheritance
+
+### Service Structure
+```
+services/
+├── db/                     # Database services
+│   ├── base.service.ts     # Abstract base service
+│   ├── user.service.ts     # User-specific service
+│   ├── challenge.service.ts # Challenge-specific service
+│   └── index.ts           # Service exports
+└── api/                    # RTK Query services
+    ├── baseApi.ts          # RTK Query base configuration
+    ├── userApi.ts          # User API service
+    ├── challengeApi.ts     # Challenge API service
+    └── index.ts           # API exports
+```
+
+### Service Development Guidelines
+1. **Inheritance**: Extend BaseService for all database services
+2. **Super Constructor**: Use super(model) in constructor
+3. **Error Handling**: Use executeWithErrorHandling wrapper
+4. **Transactions**: Use withTransaction for complex operations
+5. **Validation**: Use validateId helper for ObjectId validation
+
+### Service Pattern
+```typescript
+// services/db/base.service.ts
+export abstract class BaseService<T extends Document> {
+  protected model: Model<T>;
+
+  constructor(model: Model<T>) {
+    this.model = model;
+    this.ensureConnection();
+  }
+
+  protected async executeWithErrorHandling<TResult>(
+    operation: () => Promise<TResult>
+  ): Promise<TResult> {
+    try {
+      return await operation();
+    } catch (error) {
+      console.error(`Error in ${this.constructor.name}:`, error);
+      throw error;
+    }
+  }
+}
+
+// services/db/user.service.ts
+class UserService extends BaseService<IUser> {
+  constructor() {
+    super(User);
+  }
+
+  async createUser(userData: Partial<IUser>): Promise<IUser> {
+    return this.executeWithErrorHandling(async () => {
+      // User-specific logic
+      return this.create(userData) as Promise<IUser>;
+    });
+  }
+}
+```
+
+## API Routes Using Services
+
+### Route Handler Pattern
+```typescript
+// app/api/challenges/route.ts
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json();
+
+    // Validate with Yup schema
+    await challengeSchema.validate(body);
+
+    // Use service instead of direct schema access
+    const challenge = await challengeService.createChallenge(body);
+
+    return responseHandler.success({
+      message: "Challenge created successfully",
+      challenge,
+    });
+  } catch (error) {
+    return responseHandler.error("Failed to create challenge");
+  }
+}
+```
+
+## State Management
+
+### Redux Store Structure
+```
+store/
+├── index.ts                # Store configuration
+├── features/               # Redux Toolkit slices
+└── reducers/               # Traditional reducers (if needed)
+```
+
+### State Management Guidelines
+1. **Use Redux Toolkit**: Prefer createSlice over traditional reducers
+2. **RTK Query**: Use for API state management
+3. **Persistence**: Use Redux Persist for user preferences
+4. **Selectors**: Create memoized selectors for complex state
+5. **Actions**: Use createAsyncThunk for async operations
+
+## Custom Hooks
+
+### Hooks Directory Structure
+```
+hooks/
+├── useAuth.ts              # Authentication hook
+├── useSocket.ts            # Socket.io hook
+├── useTheme.tsx            # Theme management
+├── useTimer.tsx            # Timer functionality
+├── useEditor.tsx           # Code editor hook
+├── useChallenge.tsx        # Challenge management
+├── useCodeEvaluation.tsx   # Code evaluation
+├── useUserSettings.tsx     # User settings
+└── use-mobile.ts           # Mobile detection
+```
+
+### Hook Guidelines
+1. **Naming**: Use `use` prefix for all custom hooks
+2. **TypeScript**: Provide proper TypeScript types
+3. **Error Handling**: Include error states and loading states
+4. **Dependencies**: Properly manage useEffect dependencies
+5. **Return Values**: Return objects with clear property names
+
+## Database & Services
+
+### Database Guidelines
+1. **Models**: Use Mongoose schemas in `services/db/`
+2. **Connections**: Centralize database connection logic
+3. **Validation**: Use Yup for schema validation
+4. **Error Handling**: Implement proper error handling
+5. **Indexing**: Optimize database queries with proper indexes
+
+## Real-time Communication
+
+### Socket.io Implementation
+```
+socket/                     # Socket.io server
+├── server.ts               # Socket server setup
+└── handlers/               # Socket event handlers
+```
+
+### Socket Guidelines
+1. **Client Hook**: Use `useSocket` hook for client-side
+2. **Event Naming**: Use consistent event naming conventions
+3. **Authentication**: Implement socket authentication
+4. **Error Handling**: Handle connection errors gracefully
+5. **Reconnection**: Implement automatic reconnection logic
+
+## TypeScript Configuration
+
+### Type Definitions
+```
+types/
+├── auth.d.ts               # Authentication types
+├── global.d.ts             # Global type declarations
+└── next-auth.d.ts          # NextAuth type extensions
+```
+
+### TypeScript Guidelines
+1. **Strict Mode**: Enable strict TypeScript configuration
+2. **Path Aliases**: Use `@/` alias for imports
+3. **Type Safety**: Avoid `any` type, use proper interfaces
+4. **Generic Types**: Use generics for reusable components
+5. **API Types**: Define types for all API requests/responses
+
+## Internationalization
+
+### i18n Structure
+```
+i18n/
+├── locales/                # Translation files
+│   ├── tr/                 # Turkish translations
+│   └── en/                 # English translations
+└── config.ts               # i18n configuration
+```
+
+### i18n Guidelines
+1. **Locale Routing**: Use `[locale]` dynamic route
+2. **Translation Keys**: Use hierarchical key structure
+3. **Fallbacks**: Provide fallback translations
+4. **Date/Number**: Use locale-specific formatting
+5. **RTL Support**: Consider RTL language support
+
+## Styling & UI
+
+### Styling Guidelines
+1. **Tailwind CSS**: Use Tailwind for styling
+2. **Component Variants**: Use `cva` for component variants
+3. **Responsive Design**: Mobile-first approach
+4. **Dark Mode**: Support dark/light theme switching
+5. **Accessibility**: Follow WCAG guidelines
+
+### UI Component Pattern
+```typescript
+// components/ui/Button.tsx
+import { cva, type VariantProps } from 'class-variance-authority'
+import { cn } from '@/lib/utils'
+
+const buttonVariants = cva(
+  'inline-flex items-center justify-center rounded-md text-sm font-medium',
+  {
+    variants: {
+      variant: {
+        default: 'bg-primary text-primary-foreground hover:bg-primary/90',
+        destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive/90',
+      },
+      size: {
+        default: 'h-10 px-4 py-2',
+        sm: 'h-9 rounded-md px-3',
+        lg: 'h-11 rounded-md px-8',
+      },
+    },
+    defaultVariants: {
+      variant: 'default',
+      size: 'default',
+    },
+  }
+)
+
+interface ButtonProps extends VariantProps<typeof buttonVariants> {
+  children: React.ReactNode
+  className?: string
+}
+
+export const Button = ({ className, variant, size, ...props }: ButtonProps) => {
+  return (
+    <button
+      className={cn(buttonVariants({ variant, size, className }))}
+      {...props}
+    />
+  )
+}
+```
+
+## Development Workflow
+
+### Code Organization Rules
+1. **Feature-based**: Group related functionality together
+2. **Separation of Concerns**: Keep UI, logic, and data separate
+3. **Import Organization**: Use absolute imports with `@/` alias
+4. **File Naming**: Use descriptive, consistent naming
+5. **Code Splitting**: Implement proper code splitting for performance
+
+### Best Practices
+1. **Error Boundaries**: Implement error boundaries for React components
+2. **Loading States**: Provide loading states for async operations
+3. **Form Validation**: Use Formik + Yup for form validation
+4. **Performance**: Optimize with React.memo, useMemo, useCallback
+5. **Testing**: Write unit tests for critical functionality
+6. **Documentation**: Document complex logic and API endpoints
+
+### Environment Configuration
+1. **Environment Variables**: Use `.env.local` for local development
+2. **Configuration**: Centralize configuration in `lib/` directory
+3. **Secrets**: Never commit sensitive information
+4. **Validation**: Validate environment variables at startup
+
+## File Naming Conventions
+- **Components**: PascalCase (e.g., `UserProfile.tsx`)
+- **Hooks**: camelCase with `use` prefix (e.g., `useAuth.ts`)
+- **Utilities**: camelCase (e.g., `formatDate.ts`)
+- **Types**: camelCase with `.d.ts` extension (e.g., `auth.d.ts`)
+- **Constants**: UPPER_SNAKE_CASE (e.g., `API_ENDPOINTS.ts`)
+- **API Routes**: kebab-case (e.g., `user-settings/route.ts`)
+- **Services**: camelCase with `.service.ts` extension (e.g., `user.service.ts`)
+
+## Import Organization
+```typescript
+// 1. React and Next.js imports
+import React from 'react'
+import { useRouter } from 'next/navigation'
+
+// 2. Third-party library imports
+import { Formik, Form } from 'formik'
+import { toast } from 'sonner'
+
+// 3. Internal imports (absolute paths)
+import { Button } from '@/components/ui/Button'
+import { useAuth } from '@/hooks/useAuth'
+import { userApi } from '@/services/api'
+
+// 4. Relative imports
+import { UserCard } from './UserCard'
+import { userTypes } from './types'
+```
+
+## New Module Addition Guidelines
+
+### Adding New Features
+1. **Create Feature Directory**: Add feature-specific components in `components/[feature-name]/`
+2. **API Routes**: Add new API endpoints in `app/api/[feature-name]/`
+3. **Services**: Create API service in `services/api/[featureName]Api.ts`
+4. **Database Service**: Create service in `services/db/[featureName].service.ts`
+5. **Types**: Add TypeScript types in `types/[feature-name].d.ts`
+6. **Hooks**: Create custom hooks in `hooks/use[FeatureName].ts`
+7. **Store**: Add Redux slices in `store/features/[featureName]Slice.ts`
+8. **Validation**: Add Yup schemas in `lib/validation-schemas.ts`
+
+### Adding New Components
+1. **UI Components**: Place reusable components in `components/ui/`
+2. **Layout Components**: Place layout components in `components/layout/`
+3. **Form Components**: Place form components in `components/forms/`
+4. **Feature Components**: Place feature-specific components in `components/[feature-name]/`
+5. **Modal Components**: Place modal components in `components/modals/`
+
+### Adding New API Endpoints
+1. **Route Handler**: Create `app/api/[endpoint]/route.ts`
+2. **Service Layer**: Use database services from `services/db/`
+3. **Validation**: Use Yup schemas from `lib/validation-schemas.ts`
+4. **Authentication**: Implement NextAuth middleware
+5. **Error Handling**: Use consistent error response format
+
+### Adding New Database Services
+1. **Extend BaseService**: Create service extending BaseService
+2. **Super Constructor**: Use super(model) in constructor
+3. **Error Handling**: Use executeWithErrorHandling wrapper
+4. **Specific Methods**: Add feature-specific methods
+5. **Export**: Add to `services/db/index.ts`
+
+### Adding New Forms
+1. **Schema**: Add Yup schema to `lib/validation-schemas.ts`
+2. **Form Component**: Create form using FormikForm wrapper
+3. **Validation**: Use FormikField components with error handling
+4. **API Integration**: Use RTK Query mutations
+5. **Type Safety**: Export TypeScript types from schema
+
+This structure ensures maintainable, scalable, and well-organized code that follows Next.js and React best practices with Formik + Yup validation, RTK Query API management, and inheritance-based database services.
+
+5. **Documentation**: Document complex logic
+
+This structure ensures maintainable, scalable, and well-organized code that follows Next.js and React best practices.

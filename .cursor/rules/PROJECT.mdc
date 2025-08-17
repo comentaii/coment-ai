@@ -1,0 +1,107 @@
+---
+alwaysApply: true
+---
+
+Yapay Zekâ Destekli Aday Değerlendirme ve Mülakat Platformu'nun temel amacı ve kapsamı aşağıdaki gibidir:
+
+**Projenin Temel Amacı:**
+*   **Teknik işe alım süreçlerini dijitalleştirmek ve hızlandırmak**.
+*   Aday değerlendirmelerinde **objektifliği artırmak**.
+*   İnsan Kaynakları (İK) ve teknik ekiplerin **verimliliğini en üst düzeye çıkarmak**.
+*   Bu doküman, projenin Minimum Viable Product (MVP) sürümü için işlevsel ve işlevsel olmayan gereksinimleri, kapsamı, hedefleri ve paydaşları tanımlamayı hedeflemektedir.
+
+**Projenin Kapsamı (MVP Sürümü):**
+
+**Kapsam Dahilindeki İşlevler (In-Scope):**
+*   **Kurumsal Kullanıcı Yönetimi:** İK yetkilileri için güvenli bir giriş mekanizması sunulacaktır.
+*   **Toplu CV Yükleme:** Adaylara ait CV'lerin .pdf formatında sisteme toplu olarak yüklenebilmesi sağlanacaktır.
+*   **Gelişmiş AI CV Analizi:**
+    *   Teknik yetkinlik, deneyim ve eğitim bilgilerinin çıkarılması.
+    *   Adayın "Junior", "Mid-level", "Senior" gibi kategorilere otomatik olarak uzmanlık seviyesi tespiti.
+    *   CV'nin biçimsel ve içeriksel kalitesini puanlayan CV Kalite Skoru belirlenmesi.
+*   **Aday Listeleme ve Ön Değerlendirme:** Analiz sonuçlarına göre adayların listelenmesi ve karşılaştırmalı bir tablo sunulması.
+*   **Mülakat Planlama:** Sistem üzerinden seçilen adaylar için mülakat zamanı oluşturulması.
+*   **Otomatik Link Üretimi:** Planlanan her mülakat için adaya ve mülakatçıya özel, tek kullanımlık mülakat linklerinin oluşturulması.
+*   **AI Destekli Soru Üretimi:** Pozisyonun gerektirdiği yetkinliklere ve adayın seviyesine uygun, özgün teknik sorular ve test senaryoları üretme.
+*   **Mülakatçı için Canlı Kod İzleme Ekranı**.
+*   **Canlı Kodlama Ortamı (IDE):** Mülakat sırasında adayın kod yazabileceği, mülakatçının ise canlı olarak izleyebileceği web tabanlı bir IDE sağlanacaktır.
+*   **Adım Adım Aktivite Kaydı (Keystroke Logging):** Adayın her tuş vuruşunu, silme işlemini, kopyala-yapıştır eylemlerini ve kod çalıştırma denemelerini zaman damgalarıyla kaydetme.
+*   **Canlı AI Analizi ve Mülakatçıya Anlık Geri Bildirim:** Mülakat esnasında yapay zekanın adayın kodlama davranışlarını analiz ederek mülakatçı ekranına anlık ipuçları, uyarılar ve analizler göndermesi.
+*   **Gözetmen Paneli:** Yüksek hacimli işe alımlarda veya online sınavlarda, bir gözetmenin aynı anda birden fazla mülakat oturumunu izleyebileceği ve kritik anlarda uyarılacağı özel bir arayüz.
+*   **Otomatik Kod Analizi:** Mülakat sonrası yazılan kodun doğruluğunu, temel verimliliğini ve kalitesini analiz eden ve puanlayan bir AI modülü.
+*   **Sonuç Raporu:** Mülakatçı için kod analizi sonuçlarını içeren basit bir geri bildirim ve puanlama raporu oluşturulması.
+
+**Kapsam Dışındaki İşlevler (Out-of-Scope):**
+*   Aday ve mülakatçı arasında video/sesli görüşme entegrasyonu.
+*   Harici İK Yönetim Sistemleri (HRIS, ATS - örn: Workday, Greenhouse) ile tam entegrasyon.
+*   Adaylar için kişisel gelişim veya pratik yapma modülleri.
+*   Video mülakat analizi ile yumuşak beceri (soft-skill) veya psikometrik değerlendirme.
+
+Yapay Zekâ Destekli Aday Değerlendirme ve Mülakat Platformu'nun **tam amacı**, sağlanan kaynaklarda belirtilen hedeflerin ötesinde, bir **Hizmet Olarak Yazılım (SaaS)** ürünü olması bağlamında genişlemektedir.
+
+İşte bu uygulamanın SaaS modeli göz önünde bulundurularak tam amacı:
+
+*   **Temel Amaç (Kaynaklardan Desteklenen):**
+    *   **Teknik işe alım süreçlerini dijitalleştirmek ve hızlandırmak**: Platform, manuel adımlara dayalı mevcut işe alım süreçlerindeki zaman alıcı CV incelemesi ve mülakat planlama zorluklarını ortadan kaldırmayı hedefler.
+    *   **Aday değerlendirmelerinde objektifliği artırmak**: Yapay zeka destekli CV analizi ve standart bir canlı kodlama ortamı sağlayarak, adayların gerçek yetkinliklerinin daha adil ve önyargılardan uzak bir şekilde değerlendirilmesini amaçlar.
+    *   **İnsan Kaynakları (İK) ve teknik ekiplerin verimliliğini en üst düzeye çıkarmak**: Manuel planlama ve değerlendirme yükünü azaltarak, tüm aday aktivitelerini (CV, kodlama süreci, sonuçlar) tek bir platformda toplayarak süreci izlenebilir kılmayı ve ekiplerin genel verimliliğini artırmayı hedefler.
+
+*   **SaaS Modelinin Getirdiği Ek Amaçlar (Konuşma Geçmişimizden Desteklenen ve Kaynak Dışı Bilgi):**
+    *   **Birden Fazla Kuruma Hizmet Sunmak**: Platformun temel amacı, tek bir şirketin iç işe alım sürecini optimize etmekten öte, birden fazla farklı şirkete (müşteriye) aynı hizmeti merkezi bir yapıdan sunmaktır. Bu, yazılımı bir ürün olarak birden fazla aboneliğe açarak geniş bir pazar segmentine ulaşmayı ve teknik işe alım süreçlerini sektör genelinde standartlaştırmayı amaçlar.
+    *   **Çoklu Kiracılığın (Multi-Tenancy) Yönetimi**: Her bir şirketin (kiracının) verilerini ve kullanıcılarını birbirinden izole ve güvenli bir şekilde yönetmek, platformun kritik bir amacıdır. Bu, her şirketin kendi İK Yetkilileri ve Teknik Mülakatçıları ile kendi aday havuzunu bağımsız olarak yönetebilmesini sağlar.
+    *   **Platform Kullanımını İzleme ve Yönetme**: Süper Yönetici rolü aracılığıyla, şirketlerin platform kullanım metriklerini (örneğin, CV yükleme sayıları, yapılan mülakatlar, kullanılan AI kapasitesi) takip ederek, **iş modeline uygun faturalandırma ve kaynak tahsisi yapmak** da SaaS amacının önemli bir parçasıdır.
+    *   **Genel Sistem Sağlığını ve Güvenliğini Denetlemek**: SaaS sağlayıcısı olarak, platformun genel performansını, güvenliğini ve KVKK/GDPR gibi düzenlemelere uyumluluğunu sürekli denetlemek ve sürdürülebilirliğini sağlamak esastır. Bu, tüm kullanıcı verilerinin şifrelenerek saklanması ve rol bazlı erişim kontrolü gibi gereksinimlerle desteklenir.
+    *   **Ölçeklenebilirlik ve Sürekli Gelişim**: Platformun, artan taleple birlikte performans düşüşü olmadan eş zamanlı mülakat oturumlarını yönetebilecek şekilde **otomatik olarak ölçeklenebilir olması** ve sürekli olarak yeni özelliklerle geliştirilmesi, bir SaaS ürününün uzun vadeli amacını oluşturur.
+
+Özetle, bu uygulamanın tam amacı, sadece teknik işe alım süreçlerini otomatikleştirmek ve verimliliği artırmak değil, aynı zamanda bu çözümü bir SaaS modeli aracılığıyla **geniş bir kurumsal müşteri yelpazesine sunarak**, sektörde teknik yetenek keşfi ve değerlendirmesinde **standart ve modern bir altyapı haline gelmektir.**Yapay Zekâ Destekli Aday Değerlendirme ve Mülakat Platformu'nun temel amacı ve kapsamı aşağıdaki gibidir:
+
+**Projenin Temel Amacı:**
+*   **Teknik işe alım süreçlerini dijitalleştirmek ve hızlandırmak**.
+*   Aday değerlendirmelerinde **objektifliği artırmak**.
+*   İnsan Kaynakları (İK) ve teknik ekiplerin **verimliliğini en üst düzeye çıkarmak**.
+*   Bu doküman, projenin Minimum Viable Product (MVP) sürümü için işlevsel ve işlevsel olmayan gereksinimleri, kapsamı, hedefleri ve paydaşları tanımlamayı hedeflemektedir.
+
+**Projenin Kapsamı (MVP Sürümü):**
+
+**Kapsam Dahilindeki İşlevler (In-Scope):**
+*   **Kurumsal Kullanıcı Yönetimi:** İK yetkilileri için güvenli bir giriş mekanizması sunulacaktır.
+*   **Toplu CV Yükleme:** Adaylara ait CV'lerin .pdf formatında sisteme toplu olarak yüklenebilmesi sağlanacaktır.
+*   **Gelişmiş AI CV Analizi:**
+    *   Teknik yetkinlik, deneyim ve eğitim bilgilerinin çıkarılması.
+    *   Adayın "Junior", "Mid-level", "Senior" gibi kategorilere otomatik olarak uzmanlık seviyesi tespiti.
+    *   CV'nin biçimsel ve içeriksel kalitesini puanlayan CV Kalite Skoru belirlenmesi.
+*   **Aday Listeleme ve Ön Değerlendirme:** Analiz sonuçlarına göre adayların listelenmesi ve karşılaştırmalı bir tablo sunulması.
+*   **Mülakat Planlama:** Sistem üzerinden seçilen adaylar için mülakat zamanı oluşturulması.
+*   **Otomatik Link Üretimi:** Planlanan her mülakat için adaya ve mülakatçıya özel, tek kullanımlık mülakat linklerinin oluşturulması.
+*   **AI Destekli Soru Üretimi:** Pozisyonun gerektirdiği yetkinliklere ve adayın seviyesine uygun, özgün teknik sorular ve test senaryoları üretme.
+*   **Mülakatçı için Canlı Kod İzleme Ekranı**.
+*   **Canlı Kodlama Ortamı (IDE):** Mülakat sırasında adayın kod yazabileceği, mülakatçının ise canlı olarak izleyebileceği web tabanlı bir IDE sağlanacaktır.
+*   **Adım Adım Aktivite Kaydı (Keystroke Logging):** Adayın her tuş vuruşunu, silme işlemini, kopyala-yapıştır eylemlerini ve kod çalıştırma denemelerini zaman damgalarıyla kaydetme.
+*   **Canlı AI Analizi ve Mülakatçıya Anlık Geri Bildirim:** Mülakat esnasında yapay zekanın adayın kodlama davranışlarını analiz ederek mülakatçı ekranına anlık ipuçları, uyarılar ve analizler göndermesi.
+*   **Gözetmen Paneli:** Yüksek hacimli işe alımlarda veya online sınavlarda, bir gözetmenin aynı anda birden fazla mülakat oturumunu izleyebileceği ve kritik anlarda uyarılacağı özel bir arayüz.
+*   **Otomatik Kod Analizi:** Mülakat sonrası yazılan kodun doğruluğunu, temel verimliliğini ve kalitesini analiz eden ve puanlayan bir AI modülü.
+*   **Sonuç Raporu:** Mülakatçı için kod analizi sonuçlarını içeren basit bir geri bildirim ve puanlama raporu oluşturulması.
+
+**Kapsam Dışındaki İşlevler (Out-of-Scope):**
+*   Aday ve mülakatçı arasında video/sesli görüşme entegrasyonu.
+*   Harici İK Yönetim Sistemleri (HRIS, ATS - örn: Workday, Greenhouse) ile tam entegrasyon.
+*   Adaylar için kişisel gelişim veya pratik yapma modülleri.
+*   Video mülakat analizi ile yumuşak beceri (soft-skill) veya psikometrik değerlendirme.
+
+Yapay Zekâ Destekli Aday Değerlendirme ve Mülakat Platformu'nun **tam amacı**, sağlanan kaynaklarda belirtilen hedeflerin ötesinde, bir **Hizmet Olarak Yazılım (SaaS)** ürünü olması bağlamında genişlemektedir.
+
+İşte bu uygulamanın SaaS modeli göz önünde bulundurularak tam amacı:
+
+*   **Temel Amaç (Kaynaklardan Desteklenen):**
+    *   **Teknik işe alım süreçlerini dijitalleştirmek ve hızlandırmak**: Platform, manuel adımlara dayalı mevcut işe alım süreçlerindeki zaman alıcı CV incelemesi ve mülakat planlama zorluklarını ortadan kaldırmayı hedefler.
+    *   **Aday değerlendirmelerinde objektifliği artırmak**: Yapay zeka destekli CV analizi ve standart bir canlı kodlama ortamı sağlayarak, adayların gerçek yetkinliklerinin daha adil ve önyargılardan uzak bir şekilde değerlendirilmesini amaçlar.
+    *   **İnsan Kaynakları (İK) ve teknik ekiplerin verimliliğini en üst düzeye çıkarmak**: Manuel planlama ve değerlendirme yükünü azaltarak, tüm aday aktivitelerini (CV, kodlama süreci, sonuçlar) tek bir platformda toplayarak süreci izlenebilir kılmayı ve ekiplerin genel verimliliğini artırmayı hedefler.
+
+*   **SaaS Modelinin Getirdiği Ek Amaçlar (Konuşma Geçmişimizden Desteklenen ve Kaynak Dışı Bilgi):**
+    *   **Birden Fazla Kuruma Hizmet Sunmak**: Platformun temel amacı, tek bir şirketin iç işe alım sürecini optimize etmekten öte, birden fazla farklı şirkete (müşteriye) aynı hizmeti merkezi bir yapıdan sunmaktır. Bu, yazılımı bir ürün olarak birden fazla aboneliğe açarak geniş bir pazar segmentine ulaşmayı ve teknik işe alım süreçlerini sektör genelinde standartlaştırmayı amaçlar.
+    *   **Çoklu Kiracılığın (Multi-Tenancy) Yönetimi**: Her bir şirketin (kiracının) verilerini ve kullanıcılarını birbirinden izole ve güvenli bir şekilde yönetmek, platformun kritik bir amacıdır. Bu, her şirketin kendi İK Yetkilileri ve Teknik Mülakatçıları ile kendi aday havuzunu bağımsız olarak yönetebilmesini sağlar.
+    *   **Platform Kullanımını İzleme ve Yönetme**: Süper Yönetici rolü aracılığıyla, şirketlerin platform kullanım metriklerini (örneğin, CV yükleme sayıları, yapılan mülakatlar, kullanılan AI kapasitesi) takip ederek, **iş modeline uygun faturalandırma ve kaynak tahsisi yapmak** da SaaS amacının önemli bir parçasıdır.
+    *   **Genel Sistem Sağlığını ve Güvenliğini Denetlemek**: SaaS sağlayıcısı olarak, platformun genel performansını, güvenliğini ve KVKK/GDPR gibi düzenlemelere uyumluluğunu sürekli denetlemek ve sürdürülebilirliğini sağlamak esastır. Bu, tüm kullanıcı verilerinin şifrelenerek saklanması ve rol bazlı erişim kontrolü gibi gereksinimlerle desteklenir.
+    *   **Ölçeklenebilirlik ve Sürekli Gelişim**: Platformun, artan taleple birlikte performans düşüşü olmadan eş zamanlı mülakat oturumlarını yönetebilecek şekilde **otomatik olarak ölçeklenebilir olması** ve sürekli olarak yeni özelliklerle geliştirilmesi, bir SaaS ürününün uzun vadeli amacını oluşturur.
+
+Özetle, bu uygulamanın tam amacı, sadece teknik işe alım süreçlerini otomatikleştirmek ve verimliliği artırmak değil, aynı zamanda bu çözümü bir SaaS modeli aracılığıyla **geniş bir kurumsal müşteri yelpazesine sunarak**, sektörde teknik yetenek keşfi ve değerlendirmesinde **standart ve modern bir altyapı haline gelmektir.**

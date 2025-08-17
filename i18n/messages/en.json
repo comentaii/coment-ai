@@ -1,0 +1,845 @@
+{
+    "search": {
+      "location": {
+        "label": "Kwqewqewqewqonum",
+        "placeholder": "Nereye gidiyorsun?",
+        "anyPlace": "Herhangi bir yer"
+      },
+      "dates": {
+        "label": "Giriş - Çıkış",
+        "placeholder": "Tarih ekle"
+      },
+      "guests": {
+        "label": "Misafir",
+        "adults": "yetişkinler",
+        "children": "çocuklar",
+        "addGroup": "+ Yeni Grup Ekle",
+        "confirm": "Onaylamak"
+      },
+      "searchButton": "Ara",
+      "totalGuests": {
+        "adult": "yetişkin",
+        "adults": "yetişkinler",
+        "child": "çocuk",
+        "children": "çocuklar"
+      }
+    },
+    "themes": {
+      "allThemes": "Tüwqewqewm temalar",
+      "resorts": "Tatil köyü",
+      "cityBreaks": "Şehir Molaları",
+      "umrah": "Umrah",
+      "villas": "Villalar",
+      "thermal": "Termal ve Sağlık"
+    },
+    "Hero": {
+      "title": "Mükemmel Helal dostu kaldığınızı bulun",
+      "subtitle": "Değerlerinize saygı duyan ve rahat bir konaklama sağlayan konaklama birimlerini keşfedin",
+      "stats": {
+        "destinations": "Destinasyonlar",
+        "properties": "Özellikler",
+        "reviews": "Mutlu Konuklar",
+        "satisfaction": "Memnuniyet"
+      }
+    },
+    "Search": {
+      "modifySearch": "Aramayı Değiştir",
+      "resultsCount": "{count} otel bulundu",
+      "filters": "Filtreler",
+      "noResults": "Sonuç bulunamadı",
+      "tryDifferentSearch": "Farklı tarihleri ​​veya farklı bir konumu deneyin",
+      "loading": "Yükleme ...",
+      "loadMore": "Daha Fazla Otel Yükle",
+      "sortBy": {
+        "recommended": "Tavsiye edilen",
+        "priceAsc": "Fiyat (düşükten yükseğe)",
+        "priceDesc": "Fiyat (yüksekten düşüğe)",
+        "rating": "Derecelendirme",
+        "reviewScore": "Puanı"
+      },
+      "guests": {
+        "adults": "yetişkinler",
+        "children": "çocuklar",
+        "addGroup": "+ Yeni Grup Ekle",
+        "confirm": "Onaylamak"
+      },
+      "types": {
+        "hotel": "Hotel",
+        "city": "City",
+        "region": "Region"
+      }
+    },
+    "HotelCard": {
+      "averagePerNight": "Gecelik ortalama",
+      "totalPrice": "Toplam: {price}",
+      "nights": "Gece",
+      "breakfast": "Kahvaltı",
+      "reviewScore": "Konuk İnceleme Puanı",
+      "toCityCenter": "{mesafe} şehir merkezine",
+      "reviews": "{Count} İncelemeler",
+      "seeAvailability": "Müsaitliği görün",
+      "taxesAndCharges": "Vergiler ve Ücretler",
+      "perNight": "/gece",
+      "limitedTimeOffer": "Sınırlı Zaman Teklifi",
+      "save": "{İndirim}% kaydet",
+      "popularChoice": "Popüler Seçim",
+      "from": "itibaren",
+      "viewDeal": "Anlaşmayı Görüntüle",
+      "category": "Beş Yıldızlı Otel",
+      "capacity": "{count} konuk",
+      "amenities": {
+        "wifi": "Wifi",
+        "pool": "Havuz",
+        "spa": "Spa",
+        "gym": "Spor salonu",
+        "restaurant": "Restoran",
+        "bar": "Çubuk",
+        "parking": "Otopark",
+        "airConditioning": "Klima",
+        "beach": "Plaj erişimi",
+        "roomService": "Oda servisi"
+      },
+      "rating": {
+        "excellent": "Harika",
+        "veryGood": "Çok güzel",
+        "good": "İyi",
+        "fair": "Adil",
+        "poor": "Fakir"
+      }
+    },
+    "HotelDetail": {
+      "title": "Otel Ayrıntıları",
+      "halalFeatures": "Helal özellikleri",
+      "facilities": {
+        "title": "Tesisler",
+        "pools": "Havuzlar",
+        "spa": "Spa ve Wellness",
+        "dining": "Yemek",
+        "activities": "Faaliyetler"
+      },
+      "nearbyAttractions": "Yakındaki cazibe merkezleri",
+      "transportation": "Toplu taşıma",
+      "rooms": {
+        "title": "Mevcut Odalar",
+        "perNight": "/gece",
+        "size": "Oda boyutu",
+        "bedrooms": "Yatak odası",
+        "bathrooms": "Banyo",
+        "occupancy": "Doluluk",
+        "mealPlan": "Yemek planı"
+      },
+      "showOnMap": "Haritada Göster",
+      "seeAllPhotos": "Tüm {Count} fotoğraflarını görün",
+      "policies": {
+        "title": "Politikalar",
+        "checkIn": "Giriş",
+        "checkOut": "Çıkış yapmak",
+        "languages": "Diller konuşuldu"
+      },
+      "location": "Konum"
+    },
+    "RoomCard": {
+      "guests": "konuklar",
+      "bathroom": "banyo",
+      "amenities": "Oda olanakları",
+      "more": "Daha",
+      "freeCancellation": "Ücretsiz iptal",
+      "payLater": "Otelde Öde",
+      "selectRoom": "Oda seçin",
+      "savings": "tasarruf",
+      "totalPrice": "Tüm geceler için toplam fiyat",
+      "info": "Bilgi",
+      "showMore": "+{Count} daha fazla olanak"
+    },
+    "Booking": {
+      "steps": {
+        "options": "Rezervasyon Seçenekleri",
+        "customerInfo": "Müşteri Bilgileri",
+        "payment": "Ödeme"
+      },
+      "page": {
+        "stepTitles": {
+          "reservation": "Rezervasyon Ayrıntıları",
+          "personal": "Kişisel bilgiler",
+          "payment": "Ödeme"
+        },
+        "stepDescriptions": {
+          "reservation": "Konaklama Tercihlerinizi Seçin",
+          "personal": "Rezervasyon Sahibinin Bilgilerini Girin",
+          "payment": "Rezervasyonunuzu güvenli ödeme ile tamamlayın"
+        },
+        "payment": {
+          "retry": "Ödemeyi yeniden deneyin",
+          "error": "Bir hata oluştu",
+          "processing": "Ödeme İşleme ..."
+        },
+        "pricing": {
+          "totalPrice": "Toplam fiyat",
+          "includesTaxes": "Vergiler ve ücretler içerir"
+        },
+        "socialProof": {
+          "title": "Müşterilerimiz bizi seviyor",
+          "reviews": {
+            "review1": {
+              "text": "Çok kolay ve hızlı rezervasyon. ",
+              "author": "Ahmet Y.",
+              "time": "2 gün önce"
+            },
+            "review2": {
+              "text": "Burada en iyi fiyatı buldum, süper hizmet!",
+              "author": "Merve K.",
+              "time": "1 hafta önce"
+            },
+            "review3": {
+              "text": "7/24 destek gerçekten yardımcı oldu.",
+              "author": "Mehmet A.",
+              "time": "3 gün önce"
+            }
+          }
+        }
+      },
+      "options": {
+        "stayDetails": "Detaylar Kalın",
+        "checkIn": "Giriş",
+        "checkOut": "Çıkış yapmak",
+        "checkInTime": "{tarih} • {time} 'dan sonra",
+        "checkOutTime": "{tarih} • {time} 'den önce",
+        "totalStay": "Toplam konaklama",
+        "nightCount": "{Count} {Count, çoğul, bir {gece} Diğer {Nights}}",
+        "mealPlan": "Yemek planı",
+        "mealPlans": {
+          "roomOnly": "Sadece oda",
+          "breakfast": "Kahvaltı dahil",
+          "halfBoard": "Yarım pansiyon"
+        },
+        "addonsTitle": "Ek Hizmetler",
+        "addons": {
+          "airportTransfer": "Havaalanı transferi",
+          "spa": "Spa erişimi",
+          "earlyCheckIn": "Erken check-in",
+          "lateCheckOut": "Geç check-out"
+        },
+        "continue": "Devam etmek",
+        "freeCancellation": "Ücretsiz iptal",
+        "payAtHotel": "Otelde ödeme",
+        "priceDetails": {
+          "totalPrice": "Toplam fiyat",
+          "includesTaxes": "Vergiler ve ücretler içerir",
+          "perNight": "gecelik",
+          "total": "Toplam",
+          "taxes": "Vergiler ve Ücretler"
+        },
+        "accommodation": "Konaklama",
+        "taxesAndFees": "Vergiler ve Ücretler",
+        "total": "Toplam",
+        "priceDisclaimer": "Fiyatlar mülkün yerel para biriminde gösterilmiştir",
+        "selectPackage": "Paket seçin",
+        "superb": "Müthiş",
+        "recommended": "Tavsiye edilen",
+        "perNight": "gecelik",
+        "packages": {
+          "basic": {
+            "title": "Temel Paket",
+            "benefit1": "Ücretsiz kahvaltı",
+            "benefit2": "Ücretsiz iptal",
+            "benefit3": "Wi-Fi erişimi"
+          },
+          "premium": {
+            "title": "Premium paket",
+            "benefit1": "Geç check-out (14:00)",
+            "benefit2": "Erken check-in (12:00)",
+            "benefit3": "Ücretsiz kahvaltı",
+            "benefit4": "Tüm otel olanakları dahil"
+          },
+          "luxury": {
+            "title": "Lüks paket",
+            "benefit1": "VIP karşılama ve transfer",
+            "benefit2": "Alakart restoran erişimi",
+            "benefit3": "Özel Spa indirimi (%30)",
+            "benefit4": "Executive Lounge erişimi",
+            "benefit5": "24/7 oda servisi"
+          }
+        }
+      },
+      "customerInfo": {
+        "title": "Müşteri Bilgileri",
+        "firstName": "İlk adı",
+        "lastName": "Soy isim",
+        "email": "E -posta",
+        "phone": "Telefon",
+        "specialRequests": "Özel istekler",
+        "back": "Geri",
+        "continue": "Devam etmek"
+      },
+      "payment": {
+        "title": "Ödeme",
+        "creditCard": "Kredi kartı",
+        "payAtHotel": "Otelde ödeme",
+        "cardNumber": "Kart numarası",
+        "expiryDate": "Son kullanma tarihi",
+        "cvv": "CVV",
+        "back": "Geri",
+        "confirm": "Rezervasyonu onaylayın"
+      }
+    },
+    "Auth": {
+      "login": "Giriş yapmak",
+      "register": "Kayıt olmak",
+      "email": "E -posta",
+      "password": "Şifre",
+      "name": "Ad Soyad",
+      "forgotPassword": "Parolanızı mı unuttunuz?",
+      "noAccount": "Hesabınız yok mu?",
+      "haveAccount": "Zaten bir hesabınız var mı?",
+      "registerNow": "Şimdi Kaydolun",
+      "loginNow": "Şimdi giriş yapın",
+      "continueWith": "Devam etmek",
+      "or": "veya",
+      "termsNotice": "Devam ederek,",
+      "terms": "Hizmet Şartları",
+      "and": "Ve",
+      "privacy": "Gizlilik Politikası"
+    },
+    "Dashboard": {
+      "hotels": {
+        "steps": {
+          "basic": "Temel Bilgi",
+          "location": "Konum",
+          "facilities": "Tesisler",
+          "rooms": "Odalar",
+          "photos": "Fotoğraf"
+        },
+        "form": {
+          "facilities": {
+            "title": "Tesisler",
+            "save": "Kaydetmek",
+            "cancel": "İptal etmek",
+            "pools": {
+              "title": "Yüzme havuzları",
+              "indoor": "Kapalı havuz",
+              "outdoor": "Açık yüzme havuzu",
+              "heated": "Isıtmalı havuz",
+              "kids": "Çocuk Havuzu"
+            },
+            "wellness": {
+              "spa": "Spa merkezi",
+              "sauna": "Sauna",
+              "turkishBath": "Türk banyosu",
+              "massage": "Masaj"
+            },
+            "sports": {
+              "title": "Spor tesisleri",
+              "tennis": "Tenis kortu",
+              "basketball": "Basketbol sahası",
+              "volleyball": "Voleybol sahası",
+              "fitness": "Fitness merkezi"
+            }
+          },
+          "policies": {
+            "title": "Otel Politikaları",
+            "save": "Kaydetmek",
+            "cancel": "İptal etmek"
+          }
+        },
+        "rooms": "Odalar",
+        "title": "Otel",
+        "subtitle": "Otellerinizi ve mülklerinizi yönetin",
+        "addHotel": "Otel ekle",
+        "edit": "Düzenlemek",
+        "manageRooms": "Odaları Yönetin",
+        "delete": "Silmek",
+        "properties": {
+          "missingAddress": "Adres ekle",
+          "missingFacilities": "Tesisler Ekle",
+          "missingLocation": "Konum ekle",
+          "missingPolicy": "Politikalar ekle",
+          "missingSeasons": "Mevsim ekleyin"
+        },
+        "table": {
+          "hotel": "Otel",
+          "category": "Kategori",
+          "createdAt": "Yaratılmış",
+          "status": "Durum",
+          "actions": "Eylem",
+          "updatedAt": "Son güncellendi",
+          "accommodationType": "Konaklama Tipi",
+          "address": "Adres",
+          "city": "Şehir",
+          "defaultCurrency": "Varsayılan Para Birimi",
+          "searchPlaceholder": "Otel Ara"
+        },
+        "category": {
+          "five_star": "Beş Yıldızlı",
+          "four_star": "Dört Yıldızlı",
+          "three_star": "Üç Yıldızlı",
+          "boutique": "Butik",
+          "apart": "Ayrı",
+          "villa": "Villa"
+        },
+        "status": {
+          "active": "Aktif",
+          "draft": "Taslak",
+          "inactive": "Aktif olmayan"
+        },
+        "alerts": {
+          "addressAdded": "Adres başarıyla eklendi",
+          "addressAddFailed": "Adres eklenemedi",
+          "hotelCreated": "Otel başarıyla yaratıldı",
+          "hotelCreateFailed": "Otel yaratamadı",
+          "hotelUpdated": "Otel başarıyla güncellendi",
+          "hotelUpdateFailed": "Oteli güncelleyemedi",
+          "hotelDeleted": "Otel başarıyla silindi",
+          "hotelDeleteFailed": "Oteli silemedi",
+          "facilitiesAdded": "Tesisler başarıyla eklendi",
+          "facilitiesAddFailed": "Tesis ekleyemedi",
+          "locationAdded": "Konum başarıyla eklendi",
+          "locationAddFailed": "Konum ekleyemedi"
+        },
+        "detail": {
+          "notFound": "Otel bulunamadı",
+          "edit": "Düzenlemek",
+          "category": "{kategori} otel",
+          "tabs": {
+            "basic": "Temel Bilgi",
+            "facilities": "Tesisler",
+            "location": "Konum",
+            "policies": "Politikalar",
+            "gallery": "Galeri"
+          },
+          "basic": {
+            "generalInfo": "Genel bilgi",
+            "edit": "Düzenlemek",
+            "cancel": "İptal etmek",
+            "save": "Kaydetmek",
+            "name": "Otel adı",
+            "category": "Kategori",
+            "description": "Tanım",
+            "categories": {
+              "five_star": "Beş Yıldızlı",
+              "four_star": "Dört Yıldızlı",
+              "three_star": "Üç Yıldızlı",
+              "boutique": "Butik",
+              "apart": "Ayrı",
+              "villa": "Villa"
+            }
+          },
+          "facilities": {
+            "title": "Otel tesisleri",
+            "edit": "Tesisleri Düzenle",
+            "heated": "Isıtmalı",
+            "privateBeach": "Özel plaj",
+            "publicBeach": "Halka açık plaj",
+            "beachBar": "Plaj barı",
+            "noItems": "Yok {bölüm} mevcut",
+            "sections": {
+              "pools": "Yüzme havuzları",
+              "beaches": "Plaj erişimi",
+              "restaurants": "Restoranlar ve Barlar",
+              "wellness": "Sağlık ve Spa",
+              "sports": "Spor tesisleri"
+            },
+            "languages": {
+              "en": "İngilizce",
+              "tr": "Türkçe",
+              "ar": "Arapça",
+              "de": "Almanca",
+              "ru": "Rusça"
+            },
+            "internet": "İnternet erişimi",
+            "parking": "Otopark",
+            "valet": "Vale park yeri",
+            "indoor": "Kapalı otopark",
+            "notAvailable": "Müsait değil"
+          },
+          "location": {
+            "title": "Konum",
+            "addLocation": "Konum ekle",
+            "address": "Adres",
+            "coordinates": "Koordinatlar",
+            "distances": {
+              "center": "Merkeze Mesafe",
+              "airport": "Havaalanına Mesafe",
+              "beach": "Plaja Mesafe"
+            }
+          },
+          "policies": {
+            "noPolicies": "Henüz tanımlanmadı",
+            "addPolicies": "Politikalar ekle",
+            "editPolicies": "Politikaları Düzenle",
+            "sections": {
+              "checkIn": "Check-in/check-out",
+              "cancellation": "İptal",
+              "children": "Çocuklar",
+              "pets": "Evcil hayvan",
+              "payment": "Ödeme"
+            },
+            "yes": "Evet",
+            "no": "HAYIR",
+            "required": "Gerekli",
+            "notRequired": "Gerekli değil",
+            "depositRequired": "Depozito Gerekli",
+            "prepayment": "Ön ödeme",
+            "acceptedMethods": "Kabul edilen ödeme yöntemleri"
+          },
+          "gallery": {
+            "title": "Fotoğraf galerisi",
+            "upload": "Fotoğraf yükleyin",
+            "delete": "Silmek",
+            "categories": {
+              "exterior": "Dış",
+              "interior": "İç mekan",
+              "room": "Odalar",
+              "restaurant": "Restoran",
+              "pool": "Havuz",
+              "beach": "Sahil",
+              "spa": "Spa",
+              "sport": "Spor",
+              "meeting": "Toplantı",
+              "entertainment": "Eğlence",
+              "kids": "Çocuk",
+              "other": "Diğer"
+            }
+          },
+          "rooms": {
+            "noRooms": "Henüz oda eklenmedi",
+            "addRoom": "Oda ekle",
+            "edit": "Düzenleme Odası",
+            "bedTypes": "Yatak türleri",
+            "size": "Oda boyutu",
+            "capacity": "Kapasite",
+            "maxGuests": "Maksimum {{count}} konuklar",
+            "amenities": "Aktivite",
+            "views": "Görüşler",
+            "basePrice": "Temel fiyat",
+            "bedType": {
+              "single": "Tek kişilik yatak",
+              "double": "Çift kişilik yatak",
+              "twin": "İkiz yatak",
+              "king": "Kral Boyutu"
+            },
+            "view": {
+              "garden": "Bahçe görünümü",
+              "sea": "Deniz manzarası",
+              "pool": "Havuz görünümü",
+              "mountain": "Dağ görünümü",
+              "city": "Şehir görüşü"
+            }
+          }
+        }
+      },
+      "menu": {
+        "overview": "Genel bakış",
+        "hotels": "Otel",
+        "bookings": "Rezervasyonlar",
+        "reviews": "İncelemeler",
+        "settings": "Ayarlar",
+        "logout": "Oturum açma"
+      },
+      "overview": {
+        "welcome": "Tekrar hoşgeldiniz",
+        "overview": "İşte otellerinizle neler oluyor",
+        "metrics": {
+          "bookings": "Toplam rezervasyonlar",
+          "revenue": "Toplam gelir",
+          "occupancy": "Doluluk oranı",
+          "guests": "Toplam Konuklar"
+        },
+        "recentBookings": "Son rezervasyonlar",
+        "viewAll": "Hepsini görüntüle",
+        "guest": "Misafir",
+        "room": "Oda",
+        "checkIn": "Giriş",
+        "checkOut": "Çıkış yapmak",
+        "status": {
+          "confirmed": "Onaylanmış",
+          "pending": "Askıda olması",
+          "cancelled": "İptal edilmiş"
+        }
+      },
+      "properties": {
+        "missingAddress": "📍 Adres ekle",
+        "missingFacilities": "🏊‍♂️ Tesisler ekleyin",
+        "missingLocation": "🗺️ Konum ekle",
+        "missingPolicy": "📋 Politikalar ekleyin",
+        "missingSeasons": "🗓️ Seasons ekle"
+      }
+    },
+    "Common": {
+      "reservations": "Rezervasyonlarım",
+      "logout": "Oturum açma"
+    },
+    "SpecialOffer": {
+      "title": "Özel Teklifler",
+      "subtitle": "En iyi fırsatlarımızı keşfedin ve bir sonraki konaklamanızda büyük tasarruf edin",
+      "viewDeal": "Anlaşmayı Görüntüle",
+      "perNight": "gecelik",
+      "totalPrice": "Toplam fiyat",
+      "limitedTimeOffer": "Sınırlı Zaman Teklifi",
+      "save": "{İndirim}% kaydet",
+      "taxesIncluded": "Vergiler ve ücretler dahil",
+      "freeBreakfast": "Ücretsiz kahvaltı",
+      "freeCancellation": "Ücretsiz iptal",
+      "noPrepayment": "Ön ödemeye gerek yok",
+      "bestPrice": "En iyi fiyat garantili",
+      "lastRoom": "Son oda!",
+      "popularChoice": "Popüler Seçim",
+      "recommended": "Tavsiye edilen",
+      "bestSeller": "En çok satan kitap"
+    },
+    "FeaturedHotels": {
+      "title": "Özellikli oteller",
+      "subtitle": "Mükemmel konaklamanız için seçilmiş oteller",
+      "perNight": "1 gece",
+      "reviews": "{Count} İncelemeler",
+      "locations": {
+        "istanbul": "İstanbul",
+        "dubai": "Dubai",
+        "kualaLumpur": "kuala Lumpur",
+        "makkah": "Makkah",
+        "bodrum": "Bodrum",
+        "palmJumeirah": "Palm jumeirah",
+        "downtown": "Şehir merkezi"
+      },
+      "areas": {
+        "levent": "Levent",
+        "jbr": "JBR",
+        "klcc": "KLCC",
+        "besiktas": "Beşiktaş",
+        "palmCumeyra": "Palm cumeyra"
+      },
+      "countries": {
+        "turkey": "Türkiye",
+        "uae": "BAE",
+        "malaysia": "Malezya",
+        "saudiArabia": "Suudi Arabistan"
+      }
+    },
+    "Breadcrumb": {
+      "home": "Ev",
+      "hotels": "Otel",
+      "search": "Ara",
+      "results": "Sonuçlar",
+      "booking": "Rezervasyon",
+      "payment": "Ödeme",
+      "confirmation": "Onaylama",
+      "steps": {
+        "reservation": "Rezervasyon",
+        "personal": "Kişisel Bilgi",
+        "payment": "Ödeme"
+      },
+      "locations": {
+        "istanbul": "İstanbul",
+        "dubai": "Dubai",
+        "makkah": "Makkah",
+        "antalya": "Antalya",
+        "bodrum": "Bodrum",
+        "alanya": "Alanya",
+        "kusadasi": "Keşadas",
+        "fethiye": "Fethiye"
+      },
+      "categories": {
+        "hotels": "Otel",
+        "resorts": "Tatil köyü",
+        "villas": "Villalar",
+        "apartments": "Daireler"
+      }
+    },
+    "DestinationSearch": {
+      "title": "Nereye?",
+      "placeholder": "Konum veya Otel Adı",
+      "allDestinations": "Tüm destinasyonlar",
+      "themes": {
+        "allThemes": "Tüm temalar",
+        "resorts": "Tatil köyü",
+        "cityBreaks": "Şehir Molaları",
+        "umrah": "Umrah",
+        "villas": "Villalar",
+        "thermal": "Termal ve Sağlık"
+      },
+      "countries": {
+        "turkey": "Türkiye",
+        "bosnia": "Bosna ve Hersek",
+        "uae": "BAE",
+        "maldives": "Maldivler",
+        "saudiArabia": "Suudi Arabistan",
+        "spain": "İspanya",
+        "thailand": "Tayland"
+      },
+      "cities": {
+        "istanbul": "İstanbul",
+        "mecca": "Mekke",
+        "medina": "Medine",
+        "sharmElSheikh": "Sharm El Sheikh",
+        "sarajevo": "Saraybosna",
+        "dubai": "Dubai",
+        "milan": "Milano"
+      }
+    },
+    "PopularCategories": {
+      "title": "Popüler Kategoriler",
+      "subtitle": "En çok tercih edilen konaklama türlerimizi keşfedin",
+      "categories": {
+        "resorts": {
+          "title": "Tatil Köyleri",
+          "description": "Her şey dahil paketleri olan lüks tatil köyleri",
+          "count": "450+ Tesis"
+        },
+        "cityBreaks": {
+          "title": "Şehir Otelleri",
+          "description": "Merkezi konumlarda mükemmel şehir kaçamakları",
+          "count": "820+ Tesis"
+        },
+        "umrah": {
+          "title": "Umre",
+          "description": "Konforlu konaklamalı manevi yolculuklar",
+          "count": "120+ Tesis"
+        },
+        "villas": {
+          "title": "Villalar",
+          "description": "Aileler için özel lüks villalar",
+          "count": "340+ Tesis"
+        },
+        "thermal": {
+          "title": "Termal & Sağlık",
+          "description": "Wellness ve spa merkezleri",
+          "count": "230+ Tesis"
+        }
+      }
+    },
+    "FeaturedDestinations": {
+      "title": "Öne Çıkan Destinasyonlar",
+      "subtitle": "Sizin için önerdiğimiz popüler konaklama yerleri",
+      "trending": "Trend",
+      "destinations": {
+        "mecca": {
+          "title": "Mekke",
+          "description": "Harem-i Şerif yakınındaki özenle seçilmiş otellerimizle hayat boyu unutulmayacak manevi bir yolculuk yaşayın",
+          "properties": "250+ Tesis"
+        },
+        "dubai": {
+          "title": "Dubai",
+          "description": "Modern bir vahada lüks ve gelenek buluşuyor. İkonik yapıları ve dünya standartlarında konaklama imkanlarını keşfedin",
+          "properties": "1000+ Tesis"
+        },
+        "istanbul": {
+          "title": "İstanbul",
+          "description": "Doğu ile Batı'nın mükemmel uyumu. Tarihi mekanları ve geleneksel Türk misafirperverliğini keşfedin",
+          "properties": "800+ Tesis"
+        },
+        "maldives": {
+          "title": "Maldivler",
+          "description": "Kristal berraklığında sularıyla yeryüzündeki cennet. Size özel su üstü villalarını ve sahil otellerini keşfedin",
+          "properties": "150+ Tesis"
+        }
+      }
+    },
+    "WhyChooseUs": {
+      "title": "Neden HalalWorld",
+      "subtitle": "Helal seyahatin güvenilir adresi",
+      "features": {
+        "halalCertified": {
+          "title": "Sertifikalı Oteller",
+          "description": "Helal standartlarına uygun özenle seçilmiş tesisler."
+        },
+        "verifiedReviews": {
+          "title": "Onaylı Yorumlar",
+          "description": "Müslüman misafirlerimizden gerçek deneyim yorumları."
+        },
+        "support": {
+          "title": "7/24 Destek",
+          "description": "Çok dilli destek ekibimiz her an yanınızda."
+        },
+        "bestPrice": {
+          "title": "En İyi Fiyat Garantisi",
+          "description": "Bulduğunuz daha düşük fiyatlarla eşleşiyoruz."
+        }
+      }
+    },
+    "EmailSubscription": {
+      "title": "Özel Seyahat Fırsatlarını Yakalayın",
+      "subtitle": "Helal dostu seyahat güncellemeleri için bültene katılın",
+      "placeholder": "E-posta adresinizi girin",
+      "buttonText": "Abone Ol",
+      "privacyNotice": "Abone olarak, Gizlilik Politikamızı kabul ediyor ve güncellemeler almayı onaylıyorsunuz",
+      "error": {
+        "invalidEmail": "Geçerli bir e-posta adresi girin",
+        "required": "E-posta gerekli"
+      },
+      "success": "Abone olduğunuz için teşekkürler!"
+    },
+    "Footer": {
+      "description": "Dünya çapında helal dostu konaklamalar için güvenilir platformunuz.",
+      "sections": {
+        "company": {
+          "title": "Şirket",
+          "links": {
+            "about": "Hakkımızda",
+            "careers": "Kariyer",
+            "press": "Basın",
+            "blog": "Blog"
+          }
+        },
+        "support": {
+          "title": "Destek",
+          "links": {
+            "help": "Yardım Merkezi",
+            "safety": "Güvenlik Bilgileri",
+            "cancellation": "İptal Politikası",
+            "contact": "Bize Ulaşın"
+          }
+        },
+        "legal": {
+          "title": "Yasal",
+          "links": {
+            "terms": "Kullanım Koşulları",
+            "privacy": "Gizlilik Politikası",
+            "cookies": "Çerez Politikası",
+            "sitemap": "Site Haritası"
+          }
+        }
+      },
+      "copyright": {
+        "rights": "© {year} HalalWorld. Tüm hakları saklıdır.",
+        "tagline": "Müslüman toplumu için ❤️ ile yapıldı"
+      },
+      "social": {
+        "facebook": "Facebook'ta bizi takip edin",
+        "twitter": "Twitter'da bizi takip edin",
+        "instagram": "Instagram'da bizi takip edin"
+      }
+    },
+    "Payment": {
+      "title": "Ödeme",
+      "subtitle": "Ödeme bilgilerinizi girin",
+      "cardNumber": "Kart Numarası",
+      "cardHolder": "Kart sahibi adı",
+      "expirationDate": "Son kullanma tarihi",
+      "payNow": "Ödemeyi tamamla",
+      "paymentAmount": "Ödenecek Tutar",
+      "processing": "Ödeme işleniyor...",
+      "securePayment": "Stripe güvencesiyle güvenli ödeme",
+      "success": {
+        "title": "Ödeme Başarılı!",
+        "subtitle": "Rezervasyonunuz onaylandı",
+        "bookingReference": "Rezervasyon Numarası: {reference}",
+        "emailSent": "Rezervasyon detaylarını e-posta adresinize gönderdik",
+        "nextSteps": "Sırada Ne Var?",
+        "steps": {
+          "confirmation": "Onay e-postası gönderildi",
+          "voucher": "Otel voucher'ı giriş tarihinden 24 saat önce gönderilecek",
+          "support": "Sorularınız için 7/24 destek hizmeti"
+        },
+        "buttons": {
+          "viewBooking": "Rezervasyon Detayları",
+          "backHome": "Ana Sayfaya Dön"
+        }
+      }
+    },
+    "Error": {
+      "title": "Ups! Bir şeyler yanlış gitti",
+      "serverError": "Sunucularımıza bağlanırken sorun yaşıyoruz. Lütfen daha sonra tekrar deneyin.",
+      "generalError": "Otel detayları yüklenirken bir hata oluştu. Lütfen tekrar deneyin.",
+      "tryAgain": "Tekrar Dene",
+      "backToSearch": "Aramaya Dön"
+    }
+  }
