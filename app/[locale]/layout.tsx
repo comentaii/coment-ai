@@ -29,12 +29,10 @@ export default async function LocaleLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
       <body className={`${ibmPlexMono.variable} font-mono antialiased bg-white dark:bg-gray-900`}>
-        <NextIntlClientProvider messages={messages}>
-          <RootProviders>
-            {children}
-            <VersionBadge />
-          </RootProviders>
-        </NextIntlClientProvider>
+        <RootProviders messages={messages} locale={locale}>
+          {children}
+          <VersionBadge />
+        </RootProviders>
       </body>
     </html>
   );

@@ -3,10 +3,11 @@
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { signIn } from 'next-auth/react';
-import { FormikForm } from './formik-form';
-import { FormikField } from './formik-field';
+import { FormikForm } from '@/components/ui/formik-form';
+import { FormikField } from '@/components/forms/formik-field';
 import { Button } from '@/components/ui/button';
 import { userLoginSchema, UserLoginFormData } from '@/lib/validation-schemas';
+import { FormikProps } from 'formik';
 
 interface LoginFormProps {
   onSuccess?: () => void;
@@ -62,7 +63,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
         onSubmit={handleSubmit}
         className="space-y-4"
       >
-        {(formikProps) => (
+        {(formikProps: FormikProps<UserLoginFormData>) => (
           <>
             <FormikField
               name="email"

@@ -10,9 +10,102 @@ import {
   ChevronRight,
   Menu,
   X,
+  Home,
+  Users,
+  Building,
+  Calendar,
+  FileText,
+  Code,
+  UserCheck,
+  BarChart3,
+  Settings,
 } from 'lucide-react';
 import { useNavigation } from '@/lib/utils/navigation';
 import { USER_ROLES, type UserRole } from '@/lib/constants/roles';
+
+interface MenuItem {
+  id: string;
+  label: string;
+  description: string;
+  href: string;
+  icon: React.ComponentType<{ className?: string }>;
+  roles: string[];
+}
+
+const menuItems: MenuItem[] = [
+  {
+    id: 'dashboard',
+    label: 'Dashboard',
+    description: 'Ana kontrol paneli',
+    href: '/tr/dashboard',
+    icon: Home,
+    roles: ['super_admin', 'hr_manager', 'technical_interviewer', 'candidate'],
+  },
+  {
+    id: 'candidates',
+    label: 'Adaylar',
+    description: 'Aday yönetimi ve listesi',
+    href: '/tr/candidates',
+    icon: Users,
+    roles: ['super_admin', 'hr_manager'],
+  },
+  {
+    id: 'companies',
+    label: 'Firmalar',
+    description: 'Firma yönetimi',
+    href: '/tr/companies',
+    icon: Building,
+    roles: ['super_admin'],
+  },
+  {
+    id: 'interviews',
+    label: 'Mülakatlar',
+    description: 'Mülakat planlama ve yönetimi',
+    href: '/tr/interviews',
+    icon: Calendar,
+    roles: ['super_admin', 'hr_manager', 'technical_interviewer'],
+  },
+  {
+    id: 'cv-analysis',
+    label: 'CV Analizi',
+    description: 'CV değerlendirme ve analiz',
+    href: '/tr/cv-analysis',
+    icon: FileText,
+    roles: ['super_admin', 'hr_manager'],
+  },
+  {
+    id: 'code-review',
+    label: 'Kod Değerlendirme',
+    description: 'Kod analizi ve puanlama',
+    href: '/tr/code-review',
+    icon: Code,
+    roles: ['super_admin', 'technical_interviewer'],
+  },
+  {
+    id: 'my-interviews',
+    label: 'Mülakatlarım',
+    description: 'Kişisel mülakat geçmişi',
+    href: '/tr/my-interviews',
+    icon: UserCheck,
+    roles: ['candidate'],
+  },
+  {
+    id: 'analytics',
+    label: 'Analitik',
+    description: 'İstatistikler ve raporlar',
+    href: '/tr/analytics',
+    icon: BarChart3,
+    roles: ['super_admin', 'hr_manager', 'technical_interviewer'],
+  },
+  {
+    id: 'settings',
+    label: 'Ayarlar',
+    description: 'Hesap ve sistem ayarları',
+    href: '/tr/settings',
+    icon: Settings,
+    roles: ['super_admin', 'hr_manager', 'technical_interviewer', 'candidate'],
+  },
+];
 
 export function Sidebar() {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -35,22 +128,22 @@ export function Sidebar() {
     setIsMobileOpen(false);
   };
 
-  const MenuItemComponent = ({ item, isCollapsed, onClick }: { 
-    item: any; 
-    isCollapsed: boolean; 
+  const MenuItemComponent = ({ item, isCollapsed, onClick }: {
+    item: any;
+    isCollapsed: boolean;
     onClick?: () => void;
   }) => {
     const Icon = item.icon;
     const isActive = isActivePath(item.path);
-    
+
     return (
       <Link
         href={getLocalizedPath(item.path)}
         onClick={onClick}
         className={cn(
           "group relative flex items-center gap-3 rounded-lg px-3 py-3 transition-all duration-200",
-          isActive 
-            ? "bg-brand-green text-white shadow-sm" 
+          isActive
+            ? "bg-brand-green text-white shadow-sm"
             : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
         )}
       >
@@ -62,8 +155,8 @@ export function Sidebar() {
           <Icon className={cn(
             "transition-all duration-200",
             isCollapsed ? "h-5 w-5" : "h-6 w-6",
-            isActive 
-              ? "text-white" 
+            isActive
+              ? "text-white"
               : "text-brand-green dark:text-green-400 group-hover:text-brand-green dark:group-hover:text-green-400"
           )} />
         </div>
@@ -79,8 +172,8 @@ export function Sidebar() {
             </p>
             <p className={cn(
               "text-xs leading-none transition-colors duration-200",
-              isActive 
-                ? "text-green-100" 
+              isActive
+                ? "text-green-100"
                 : "text-gray-500 dark:text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300"
             )}>
               {item.description}
@@ -148,10 +241,10 @@ export function Sidebar() {
         {/* Navigation Menu */}
         <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
           {filteredMenuItems.map((item) => (
-            <MenuItemComponent 
-              key={item.id} 
-              item={item} 
-              isCollapsed={isCollapsed} 
+            <MenuItemComponent
+              key={item.id}
+              item={item}
+              isCollapsed={isCollapsed}
             />
           ))}
         </nav>
@@ -202,10 +295,10 @@ export function Sidebar() {
           {/* Mobile Navigation */}
           <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
             {filteredMenuItems.map((item) => (
-              <MenuItemComponent 
-                key={item.id} 
-                item={item} 
-                isCollapsed={false} 
+              <MenuItemComponent
+                key={item.id}
+                item={item}
+                isCollapsed={false}
                 onClick={closeMobileSidebar}
               />
             ))}
