@@ -7,58 +7,61 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { UserRoleBadge } from '@/components/user-role-badge';
 import { StateDebugger } from '@/components/debug/state-debugger';
+import { getActionCardsByRole } from '@/lib/constants/action-cards';
+import { useNavigation } from '@/lib/utils/navigation';
+import { USER_ROLES, type UserRole } from '@/lib/constants/roles';
 
 export default function DashboardPage() {
   const { session } = useAuth();
   const t = useTranslations('Common');
+  const { getLocalizedPath } = useNavigation();
 
   if (!session) {
     return null;
   }
 
+  const userRole = (session.user?.role as UserRole) || USER_ROLES.CANDIDATE;
+  const actionCards = getActionCardsByRole(userRole);
+
   return (
     <DashboardLayout>
-      <div className="p-6">
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-brand-green dark:text-green-400 mb-2">
-            Aday Paneli
+      <div className="space-y-6">
+        {/* Welcome Section */}
+        <div className="space-y-2">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
+            Hoş geldiniz, {session.user?.name}!
           </h1>
-          <p className="text-lg text-brand-dark dark:text-gray-300">
-            Mülakat ve değerlendirme süreçleri
+          <p className="text-lg text-gray-600 dark:text-gray-400">
+            Coment-AI platformuna hoş geldiniz. Aşağıdaki seçeneklerden birini seçerek başlayın.
           </p>
         </div>
 
-        <div className="mb-8">
-          <h2 className="text-2xl font-semibold text-brand-green dark:text-green-400 mb-4">
-            Hoş geldiniz, <span className="text-brand-green dark:text-green-400">{session.user?.name}</span>
-          </h2>
-          <UserRoleBadge role={session.user?.role || 'candidate'} />
-        </div>
-
-        {/* User Information Card */}
-        <Card className="mb-8">
+        {/* User Info Card */}
+        <Card className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
           <CardHeader>
-            <CardTitle>Kullanıcı Bilgileri</CardTitle>
+            <CardTitle className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+              Hesap Bilgileri
+            </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="text-sm font-medium text-brand-dark dark:text-gray-300">Ad Soyad</label>
-                <p className="text-base text-brand-dark dark:text-gray-200">{session.user?.name}</p>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="space-y-1">
+                <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Ad Soyad</p>
+                <p className="text-base text-gray-900 dark:text-gray-100">{session.user?.name}</p>
               </div>
-              <div>
-                <label className="text-sm font-medium text-brand-dark dark:text-gray-300">Rol</label>
-                <div className="mt-1">
-                  <UserRoleBadge role={session.user?.role || 'candidate'} />
+              <div className="space-y-1">
+                <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Email</p>
+                <p className="text-base text-gray-900 dark:text-gray-100">{session.user?.email}</p>
+              </div>
+              <div className="space-y-1">
+                <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Rol</p>
+                <div className="flex items-center gap-2">
+                  <UserRoleBadge role={userRole} />
                 </div>
               </div>
-              <div>
-                <label className="text-sm font-medium text-brand-dark dark:text-gray-300">Email</label>
-                <p className="text-base text-brand-dark dark:text-gray-200">{session.user?.email}</p>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-brand-dark dark:text-gray-300">Şirket ID</label>
-                <p className="text-base text-brand-dark dark:text-gray-200">
+              <div className="space-y-1">
+                <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Şirket ID</p>
+                <p className="text-base text-gray-900 dark:text-gray-100">
                   {session.user?.companyId || 'Şirket ilişkisi yok'}
                 </p>
               </div>
@@ -67,39 +70,45 @@ export default function DashboardPage() {
         </Card>
 
         {/* Action Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card className="card-hover">
-            <CardHeader>
-              <CardTitle>Mülakatlarım</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Button className="w-full btn-primary">
-                Mülakatlarım
-              </Button>
-            </CardContent>
-          </Card>
-
-          <Card className="card-hover">
-            <CardHeader>
-              <CardTitle>Profilim</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Button className="w-full btn-primary">
-                Profilim
-              </Button>
-            </CardContent>
-          </Card>
-
-          <Card className="card-hover">
-            <CardHeader>
-              <CardTitle>Ayarlar</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Button className="w-full btn-primary">
-                Ayarlar
-              </Button>
-            </CardContent>
-          </Card>
+        <div className="space-y-4">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
+            Hızlı Erişim
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            {actionCards.map((card, index) => {
+              const Icon = card.icon;
+              return (
+                <Card 
+                  key={index} 
+                  className="group hover:shadow-lg transition-all duration-200 cursor-pointer bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 hover:scale-[1.02]"
+                >
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center gap-3">
+                      <div className={`p-2 rounded-lg ${card.color} text-white group-hover:scale-110 transition-transform duration-200`}>
+                        <Icon className="h-5 w-5" />
+                      </div>
+                      <CardTitle className="text-base font-medium text-gray-900 dark:text-gray-100 group-hover:text-brand-green dark:group-hover:text-green-400 transition-colors duration-200">
+                        {card.title}
+                      </CardTitle>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="pt-0">
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 group-hover:text-gray-700 dark:group-hover:text-gray-300 transition-colors duration-200">
+                      {card.description}
+                    </p>
+                    <Button 
+                      className="w-full bg-brand-green hover:bg-brand-green/90 text-white transition-colors duration-200"
+                      asChild
+                    >
+                      <a href={getLocalizedPath(card.path)}>
+                        {card.title}
+                      </a>
+                    </Button>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
         </div>
       </div>
       
