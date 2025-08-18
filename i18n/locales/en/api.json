@@ -1,0 +1,30 @@
+{
+    "success": {
+        "default": "Operation completed successfully.",
+        "created": "{entity} created successfully.",
+        "updated": "{entity} updated successfully.",
+        "deleted": "{entity} deleted successfully.",
+        "fetched": "{entity} data fetched successfully.",
+        "login": "Login successful. Redirecting...",
+        "logout": "Logout successful. Redirecting...",
+        "register": "Registration successful. Please verify your email."
+    },
+    "error": {
+        "default": "An unexpected error occurred.",
+        "notFound": "{entity} not found.",
+        "alreadyExists": "This {entity} already exists.",
+        "invalidCredentials": "Invalid email or password.",
+        "unauthorized": "You are not authorized to perform this action.",
+        "forbidden": "You do not have permission to access this resource.",
+        "validation": "Validation error. Please check your inputs.",
+        "server": "Server error. Please try again later.",
+        "badRequest": "Bad request. Please check your data.",
+        "rateLimit": "Too many requests. Please wait a moment."
+    },
+    "entity": {
+        "user": "User",
+        "company": "Company",
+        "challenge": "Challenge",
+        "candidate": "Candidate"
+    }
+}

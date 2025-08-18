@@ -2,35 +2,53 @@
 
 import { useSession, signIn, signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import { useToast } from './use-toast';
+import { useError } from './use-error';
+import { toastMessages } from '@/lib/utils/toast';
+import { AuthError } from '@/lib/utils/error';
 
 export function useAuth() {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const { success, error } = useToast();
+  const { handleAuthError, handleAsyncError } = useError({
+    showToast: false, // We'll handle toast manually
+  });
 
   const isAuthenticated = !!session;
   const isLoading = status === 'loading';
 
   const login = async (email: string, password: string) => {
-    try {
-      const result = await signIn('credentials', {
-        email,
-        password,
-        redirect: false,
-      });
+    return handleAsyncError(
+      async () => {
+        const result = await signIn('credentials', {
+          email,
+          password,
+          redirect: false,
+        });
 
-      if (result?.error) {
-        throw new Error(result.error);
-      }
+        if (result?.error) {
+          throw new AuthError(result.error);
+        }
 
-      return result;
-    } catch (error) {
-      throw error;
-    }
+        success(toastMessages.loginSuccess);
+        return result;
+      },
+      undefined,
+      toastMessages.loginError
+    );
   };
 
   const logout = async () => {
-    await signOut({ redirect: false });
-    router.push('/');
+    return handleAsyncError(
+      async () => {
+        await signOut({ redirect: false });
+        success(toastMessages.logoutSuccess);
+        router.push('/');
+      },
+      undefined,
+      toastMessages.logoutError
+    );
   };
 
   return {

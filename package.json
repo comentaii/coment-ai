@@ -7,6 +7,9 @@
         "build": "next build",
         "start": "next start",
         "lint": "next lint",
+        "lint:fix": "next lint --fix",
+        "type-check": "tsc --noEmit",
+        "type-check:watch": "tsc --noEmit --watch",
         "seed": "node scripts/seed-data.js"
     },
     "dependencies": {
@@ -87,6 +90,11 @@
         "@types/node": "^22",
         "@types/react": "^19",
         "@types/react-dom": "^19",
+        "@typescript-eslint/eslint-plugin": "^7.0.0",
+        "@typescript-eslint/parser": "^7.0.0",
+        "eslint": "^8.57.0",
+        "eslint-config-next": "^15.2.4",
+        "eslint-plugin-unused-imports": "^3.1.0",
         "postcss": "^8",
         "tailwindcss": "^3.4.17",
         "ts-node": "^10.9.2",

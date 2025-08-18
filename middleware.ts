@@ -41,7 +41,7 @@ export async function middleware(req: NextRequest) {
     }
   }
 
-  // Handle protected routes - redirect non-authenticated users to signin
+  // Handle protected routes - redirect non-authenticated users to unauthorized page
   if (pathWithoutLocale.startsWith('/dashboard/') || 
       pathWithoutLocale.startsWith('/admin/') || 
       pathWithoutLocale.startsWith('/candidates/') || 
@@ -51,20 +51,41 @@ export async function middleware(req: NextRequest) {
       const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
       
       if (!token) {
-        // User not authenticated, redirect to signin
-        return NextResponse.redirect(new URL(`/${locale}/auth/signin`, req.url));
+        // User not authenticated, redirect to unauthorized page
+        return NextResponse.redirect(new URL(`/${locale}/unauthorized`, req.url));
       }
 
-      // Basic role check (can be enhanced later)
+      // Role-based access control
       const userRole = token.role as string;
-      if (pathWithoutLocale.startsWith('/admin/') && userRole !== 'super_admin') {
-        // Unauthorized access, redirect to dashboard
-        return NextResponse.redirect(new URL(`/${locale}/dashboard`, req.url));
+      
+      // Super admin routes
+      if (pathWithoutLocale.startsWith('/admin/')) {
+        if (userRole !== 'super_admin') {
+          // Forbidden access, redirect to forbidden page
+          return NextResponse.redirect(new URL(`/${locale}/forbidden`, req.url));
+        }
+      }
+      
+      // HR Manager routes
+      if (pathWithoutLocale.startsWith('/candidates/') || 
+          pathWithoutLocale.startsWith('/interviews/')) {
+        if (!['hr_manager', 'super_admin'].includes(userRole)) {
+          // Forbidden access, redirect to forbidden page
+          return NextResponse.redirect(new URL(`/${locale}/forbidden`, req.url));
+        }
+      }
+      
+      // Technical Interviewer routes
+      if (pathWithoutLocale.startsWith('/proctoring/')) {
+        if (!['technical_interviewer', 'hr_manager', 'super_admin'].includes(userRole)) {
+          // Forbidden access, redirect to forbidden page
+          return NextResponse.redirect(new URL(`/${locale}/forbidden`, req.url));
+        }
       }
     } catch (error) {
       console.error('Authentication check error:', error);
-      // On error, redirect to signin
-      return NextResponse.redirect(new URL(`/${locale}/auth/signin`, req.url));
+      // On error, redirect to unauthorized page
+      return NextResponse.redirect(new URL(`/${locale}/unauthorized`, req.url));
     }
   }
 

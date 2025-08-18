@@ -1,0 +1,651 @@
+---
+alwaysApply: true
+---
+### 2. API Katmanı: Doğrulama ve Endpoint Oluşturma
+
+#### Adım 2.1: Validation Şeması Tanımlama (`lib/validation-schemas.ts`)
+
+- **Dosya Yeri:** `lib/validation-schemas.ts`
+- **Yapı:**
+    1.  `yup` kütüphanesini kullanarak yeni özelliğin `create` ve `update` işlemleri için doğrulama şemaları oluşturun.
+    2.  Şemadan `Yup.InferType` kullanarak TypeScript tipini türetin ve export edin. Bu, API rotalarında ve formlarda tam tip güvenliği sağlar.
+
+**Örnek: `lib/validation-schemas.ts` içine ekleme**
+```typescript
+import * as yup from 'yup';
+import { type InferType } from 'yup';
+
+// ... diğer şemalar ...
+
+export const createAssessmentSchema = yup.object({
+  candidate: yup.string().required('Aday ID bilgisi zorunludur.'),
+  challenge: yup.string().required('Meydan okuma ID bilgisi zorunludur.'),
+  code: yup.string().required('Kod içeriği zorunludur.'),
+});
+
+export type CreateAssessmentDto = InferType<typeof createAssessmentSchema>;
+```
+
+#### Adım 2.2: API Rotası Oluşturma (`app/api/`)
+
+- **Dosya Yeri:** `app/api/[ozellik-adi]/route.ts`
+- **Yapı:**
+    1.  İlgili HTTP metodu için (örn: `POST`) bir `async` fonksiyon oluşturun.
+    2.  `request.json()` ile gelen veriyi alın.
+    3.  Yup doğrulama şemasını kullanarak veriyi `validate` edin. Hata durumunda `try-catch` bloğu hatayı yakalayacaktır.
+    4.  **Doğrudan modeli değil, ilgili veritabanı servisini (`assessmentService`) çağırın.**
+    5.  `responseHandler`'ı kullanarak standart bir başarı veya hata yanıtı dönün. API rotası, iş mantığı içermemeli, sadece bir orkestratör görevi görmelidir.
+
+**Örnek: `app/api/assessments/route.ts`**
+```typescript
+import { NextRequest } from 'next/server';
+import { responseHandler } from '@/utils/response-handler';
+import { createAssessmentSchema } from '@/lib/validation-schemas';
+import assessmentService from '@/services/db/assessment.service';
+import { getTranslations } from 'next-intl/server';
+
+export async function POST(req: NextRequest) {
+  const t = await getTranslations('api');
+  try {
+    const body = await req.json();
+    await createAssessmentSchema.validate(body);
+
+    const newAssessment = await assessmentService.create(body);
+
+    return responseHandler.success(
+      { assessment: newAssessment },
+      t('success.created', { entity: t('entity.assessment') })
+    );
+  } catch (error) {
+    return responseHandler.error(error);
+  }
+}
+```
+
+---
+
+### 3. Ön Yüz Katmanı: RTK Query, Form ve Bileşenler
+
+#### Adım 3.1: RTK Query Endpoint'i Ekleme (`services/api/`)
+
+- **Dosya Yeri:** `services/api/[ozellik]Api.ts` (Yeni bir özellik için yeni dosya oluşturulabilir.)
+- **Yapı:**
+    1.  `baseApi.injectEndpoints` kullanarak yeni `query` (veri çekme) veya `mutation` (veri değiştirme) endpoint'leri ekleyin.
+    2.  `query` objesi içinde URL, metot ve (varsa) body'yi belirtin.
+    3.  Veri bütünlüğünü sağlamak için `providesTags` (veri sağlayan) ve `invalidatesTags` (önbelleği temizleyen) etiketlerini mutlaka kullanın.
+
+**Örnek: `services/api/assessmentApi.ts`**
+```typescript
+import { baseApi } from './base-api';
+import { CreateAssessmentDto } from '@/lib/validation-schemas';
+import { IAssessment } from '@/schemas/assessment.model';
+
+export const assessmentApi = baseApi.injectEndpoints({
+  endpoints: (builder) => ({
+    createAssessment: builder.mutation<IAssessment, CreateAssessmentDto>({
+      query: (body) => ({
+        url: 'assessments',
+        method: 'POST',
+        body,
+      }),
+      invalidatesTags: ['Assessment'], // Assessment listesini yenile
+    }),
+    getAssessmentsByCandidate: builder.query<IAssessment[], string>({
+      query: (candidateId) => `assessments/candidate/${candidateId}`,
+      providesTags: (result, error, arg) =>
+        result
+          ? [...result.map(({ _id }) => ({ type: 'Assessment' as const, id: _id })), 'Assessment']
+          : ['Assessment'],
+    }),
+  }),
+});
+
+export const {
+  useCreateAssessmentMutation,
+  useGetAssessmentsByCandidateQuery,
+} = assessmentApi;
+```
+
+#### Adım 3.2: Form Bileşeni Oluşturma (`components/forms/`)
+
+- **Dosya Yeri:** `components/forms/[Ozellik]Form.tsx`
+- **Yapı:**
+    1.  `FormikForm` sarmalayıcı bileşenini kullanın.
+    2.  `initialValues`, `validationSchema` ve `onSubmit` prop'larını geçin.
+    3.  `onSubmit` fonksiyonu içinde ilgili RTK Query `mutation` hook'unu (`useCreateAssessmentMutation`) çağırın.
+    4.  Alanlar için `FormikField` bileşenini kullanın.
+    5.  Gönderim butonu için `FormSubmitButton`'ı kullanarak `isLoading` durumunu otomatik yönetin.
+
+**Örnek: `components/forms/CreateAssessmentForm.tsx`**
+```typescript
+'use client';
+
+import { FormikHelpers } from 'formik';
+import { FormikForm } from '@/components/ui/formik-form';
+import { FormikField } from '@/components/forms/formik-field';
+import { FormSubmitButton } from '@/components/ui/button';
+import { createAssessmentSchema, CreateAssessmentDto } from '@/lib/validation-schemas';
+import { useCreateAssessmentMutation } from '@/services/api/assessmentApi';
+import { useToast } from '@/hooks/use-toast';
+
+const initialValues: CreateAssessmentDto = {
+  candidate: '',
+  challenge: '',
+  code: '',
+};
+
+export function CreateAssessmentForm() {
+  const [createAssessment, { isLoading }] = useCreateAssessmentMutation();
+  const { promise } = useToast();
+
+  const handleSubmit = async (
+    values: CreateAssessmentDto,
+    { resetForm }: FormikHelpers<CreateAssessmentDto>
+  ) => {
+    await promise(createAssessment(values).unwrap(), {
+      loading: 'Değerlendirme oluşturuluyor...',
+      success: 'Değerlendirme başarıyla oluşturuldu!',
+      error: 'Bir hata oluştu.',
+    });
+    resetForm();
+  };
+
+  return (
+    <FormikForm
+      initialValues={initialValues}
+      validationSchema={createAssessmentSchema}
+      onSubmit={handleSubmit}
+    >
+      <FormikField name="candidate" label="Aday ID" />
+      <FormikField name="challenge" label="Meydan Okuma ID" />
+      <FormikField name="code" label="Kod" as="textarea" />
+      <FormSubmitButton loading={isLoading}>
+        Değerlendirme Oluştur
+      </FormSubmitButton>
+    </FormikForm>
+  );
+}
+```
+
+#### Adım 3.3: Sayfa ve Görüntüleme Bileşenleri
+
+- **Dosya Yeri:** `app/[locale]/[ozellik]/page.tsx`
+- **Yapı:**
+    1.  İlgili RTK Query `query` hook'unu (`useGetAssessmentsByCandidateQuery`) kullanarak veriyi çekin.
+    2.  `isLoading`, `isError`, `data` durumlarını yöneterek kullanıcıya geri bildirim verin (örn: `Skeleton` bileşenleri göstermek).
+    3.  Veriyi listeleyen veya görüntüleyen bileşenleri oluşturun.
+
+---
+
+## Global Sistemlerin Kullanımı
+
+Bu bölümde, projedeki temel global sistemlerin yeni özelliklere nasıl entegre edileceği açıklanmaktadır.
+
+### 4. Lokalizasyon (Internationalization - i18n)
+
+- **Prensip:** Uygulamadaki **tüm metinler** (statik kullanıcı arayüzü metinleri, dinamik API yanıtları, hata mesajları vb.) `next-intl` kullanılarak yönetilmelidir. Koda doğrudan metin (`hardcoded string`) yazmak **kesinlikle yasaktır.**
+- **Amaç:** Uygulamanın kolayca yeni dillere çevrilebilmesini sağlamak ve tüm metinleri tek bir yerden yöneterek tutarlılığı artırmak.
+
+#### Ön Yüz (Client-Side) Çevirileri
+- **Dosya Yeri:** `i18n/locales/[dil]/common.json`
+- **Kullanım:** `useTranslations` hook'u ile.
+
+```typescript
+// Kötü Örnek
+<h1>Tüm Değerlendirmeler</h1>
+
+// İyi Örnek
+import { useTranslations } from 'next-intl';
+const t = useTranslations('AssessmentsPage');
+return <h1>{t('title')}</h1>;
+```
+
+#### API Yanıtları (Server-Side) Çevirileri
+- **Dosya Yeri:** `i18n/locales/[dil]/api.json`
+- **Kullanım:** `getTranslations` ile sunucu tarafında. `response-handler` bu yapıyı otomatik olarak kullanır.
+
+```typescript
+const t = await getTranslations('api');
+return responseHandler.success(data, t('success.fetched', { entity: t('entity.assessment') }));
+```
+
+### 5. Bildirimler (Toast Notifications)
+
+Kullanıcıyı bilgilendirmek için `useToast` hook'u kullanılmalıdır.
+
+- **Hook:** `hooks/use-toast.ts`
+- **Temel Kullanım:**
+    - `success(mesaj)`: Başarılı işlem.
+    - `error(mesaj)`: Hata mesajı.
+    - `warning(mesaj)`: Uyarı.
+    - `info(mesaj)`: Bilgilendirme.
+- **Promise Kullanımı:** API istekleri gibi asenkron işlemler için en iyi yöntemdir. Yüklenme, başarı ve hata durumlarını otomatik yönetir.
+
+```typescript
+// Form submit handler içinde
+const { promise } = useToast();
+
+await promise(createAssessment(values).unwrap(), {
+  loading: 'Değerlendirme kaydediliyor...',
+  success: (result) => `Değerlendirme "${result._id}" başarıyla kaydedildi.`,
+  error: (err) => `Hata: ${err.message}`,
+});
+```
+
+### 6. Hata Yönetimi (Error Handling)
+
+- **`ErrorBoundary` (`components/error-boundary.tsx`):** Beklenmedik render hatalarını yakalayan global bir sarmalayıcıdır. `RootProviders` içinde yapılandırılmıştır. Manuel bir işlem gerekmez.
+- **`useError` Hook'u (`hooks/use-error.ts`):** Bileşenler içinde kontrollü hata yönetimi için kullanılır.
+
+```typescript
+import { useError } from '@/hooks/use-error';
+
+const { handleAsyncError, handleApiError } = useError();
+
+const fetchData = async () => {
+  const result = await handleAsyncError(async () => {
+    // API isteği
+    const data = await fetch('/api/some-data');
+    if (!data.ok) throw new Error('API request failed');
+    return data.json();
+  });
+
+  if (!result) {
+    handleApiError(new Error('Fetch failed'), '/api/some-data');
+  }
+};
+```
+
+### 7. Global Durum Yönetimi (Redux Toolkit)
+
+Projede iki tür durum (state) yönetimi vardır:
+
+1.  **API Durumu (Server State):** Sunucudan gelen, önbelleklenen, güncellenen tüm veriler. **Bu durum KESİNLİKLE Redux slice'ları ile yönetilmemelidir.** Bunun için sadece **RTK Query** kullanılmalıdır. RTK Query, `isLoading`, `isFetching`, `isSuccess`, `isError` gibi durumları, önbelleklemeyi ve veri yenilemeyi otomatik olarak yönetir.
+
+2.  **Global UI Durumu (Client State):** API'den gelmeyen, sadece kullanıcı arayüzünün durumunu etkileyen veriler. Örnekler:
+    -   Tema (açık/koyu mod).
+    -   Sidebar'ın açık/kapalı olma durumu.
+    -   Açık olan modal penceresi.
+    -   Çok adımlı bir formun mevcut adımı.
+
+    Bu tür durumlar için Redux Toolkit slice'ları oluşturulabilir.
+
+#### Yeni Bir Redux Slice Ekleme
+- **Dosya Yeri:** `store/features/[slice-adi]Slice.ts`
+- **Yapı:** `createSlice` kullanarak bir slice oluşturun. `name`, `initialState` ve `reducers` alanlarını tanımlayın.
+- **Store'a Ekleme:** Oluşturulan reducer'ı `store/index.ts` dosyasına ekleyin.
+- **Kullanım:** `useAppSelector` ile durumu okuyun, `useAppDispatch` ile action'ları tetikleyin.
+
+**Örnek: `store/features/uiSlice.ts`**
+```typescript
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+
+interface UiState {
+  isSidebarCollapsed: boolean;
+}
+
+const initialState: UiState = {
+  isSidebarCollapsed: false,
+};
+
+const uiSlice = createSlice({
+  name: 'ui',
+  initialState,
+  reducers: {
+    toggleSidebar(state) {
+      state.isSidebarCollapsed = !state.isSidebarCollapsed;
+    },
+    setSidebarCollapsed(state, action: PayloadAction<boolean>) {
+      state.isSidebarCollapsed = action.payload;
+    },
+  },
+});
+
+export const { toggleSidebar, setSidebarCollapsed } = uiSlice.actions;
+export default uiSlice.reducer;
+```
+
+---
+
+## Ön Yüz Geliştirme Standartları
+
+Tüm ön yüz bileşenleri ve sayfaları aşağıdaki standartlara uymalıdır.
+
+### 8. Tasarım ve Görsel Bütünlük
+
+#### Renk Paleti
+Projenin ana renkleri `tailwind.config.ts` dosyasında `brand` objesi altında tanımlanmıştır. Tasarımlarda bu renkler kullanılmalıdır.
+
+- **Ana Renk (Primary):** `bg-brand-green` (`#21C55D`) - Genellikle ana eylem butonları, aktif durumlar ve vurgulanmak istenen elementler için kullanılır.
+- **İkincil Renk (Secondary):** `bg-brand-red` (`#DD3333`) - Silme, iptal etme gibi yıkıcı eylemler veya hata durumları için kullanılır.
+- **Üçüncül Renkler (Dark Tones):**
+    - `bg-brand-dark` (`#111827`): Ana metinler, başlıklar ve koyu arka planlar için.
+    - `bg-brand-dark-light` (`#1F2937`): Kart arka planları gibi daha yumuşak koyu tonlar için.
+
+#### Font ve Tipografi
+- **Ana Font:** Projenin tek fontu `IBM Plex Mono`'dur ve `tailwind.config.ts`'de `font-mono` olarak tanımlanmıştır. Tüm metin elementleri bu fontu kullanmalıdır.
+- **Hiyerarşi:** Başlıklar (`h1`, `h2`, vb.) ve paragraflar (`p`) arasında `text-xl`, `text-lg` gibi Tailwind sınıfları kullanılarak net bir görsel hiyerarşi oluşturulmalıdır.
+
+#### İkonografi
+- **İkon Kütüphanesi:** Projede `lucide-react` ikon paketi standart olarak kullanılmaktadır. Tasarımlarla uyumlu, temiz ve modern bir görünüme sahiptir.
+- **Kullanım:** İkonlar anlamlı ve tutarlı bir şekilde kullanılmalıdır. Örneğin, tüm "silme" işlemleri için aynı çöp kutusu ikonu tercih edilmelidir. İkonların boyutu ve rengi, yanındaki metinle uyumlu olmalıdır.
+
+```typescript
+import { Trash2, Edit } from 'lucide-react';
+
+// İyi Örnek
+<Button variant="destructive" size="icon">
+  <Trash2 className="h-4 w-4" />
+</Button>
+<Button variant="outline" size="icon">
+  <Edit className="h-4 w-4" />
+</Button>
+```
+
+### 9. Tip Güvenliği (Type Safety)
+
+- **`any` Kullanımından Kaçının:** `any` tipi, TypeScript'in sağladığı güvenlik ağını devre dışı bırakır. Her zaman belirli tipler veya `unknown` kullanılmalıdır.
+- **Props ve State Tiplemesi:** Tüm React bileşenlerinin `props`'ları ve `useState` hook'ları için `interface` veya `type` tanımlanmalıdır.
+- **API Yanıtları:** RTK Query endpoint'lerinde gelen veri tipi (`<IAssessment[], string>`) mutlaka belirtilmelidir. Bu, `data` objesinin tam tip güvenliğine sahip olmasını sağlar.
+
+```typescript
+// İyi Örnek
+interface UserCardProps {
+  user: IUser;
+  onSelect: (userId: string) => void;
+}
+
+export function UserCard({ user, onSelect }: UserCardProps) {
+  // ...
+}
+```
+
+### 10. Responsive Tasarım (Mobile-First)
+
+- **Mobile-First Yaklaşımı:** Stiller önce mobil cihazlar için yazılmalı, ardından `sm:`, `md:`, `lg:` gibi breakpoint'ler kullanılarak daha büyük ekranlar için genişletilmelidir.
+- **Grid ve Flexbox:** Karmaşık layout'lar için Tailwind CSS'in `grid` ve `flex` yardımcı sınıfları etkin bir şekilde kullanılmalıdır.
+
+```typescript
+// İyi Örnek: Mobil için tek sütun, tablet ve üzeri için üç sütunlu yapı
+<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+  <div>Kolon 1</div>
+  <div>Kolon 2</div>
+  <div>Kolon 3</div>
+</div>
+```
+
+### 11. Dark Mode Uyumluluğu
+
+- **`dark:` Varyantını Kullanın:** Tüm renk tanımlamaları (arka plan, metin, border vb.) için `dark:` varyantı eklenmelidir. Bu, `ThemeProvider` tarafından yönetilen tema değişimlerinde arayüzün doğru görüntülenmesini sağlar.
+- **Renk Seçimi:** Renkler, hem açık hem de koyu temada okunabilirliği ve kontrastı sağlayacak şekilde seçilmelidir. Genellikle koyu modda daha yumuşak (daha az parlak) renkler tercih edilir.
+
+```typescript
+// İyi Örnek
+<div className="bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-gray-200 dark:border-gray-700">
+  <p>Bu metin tema değişimine uyumludur.</p>
+</div>
+```
+
+### 12. Temiz Kod ve Performans
+
+- **Gereksiz Koddan Kaçınma:** Kullanılmayan değişkenler, import'lar veya fonksiyonlar bırakılmamalıdır. ESLint bu konuda yardımcı olacaktır.
+- **`cn` Yardımcı Fonksiyonu:** Koşullu class'ları birleştirmek için `clsx` ve `tailwind-merge` kullanan `cn` (`lib/utils.ts`) fonksiyonu tercih edilmelidir. Bu, okunabilirliği artırır ve stil çakışmalarını önler.
+- **Bileşenlere Ayırma:** Büyük ve karmaşık sayfalar, daha küçük ve yeniden kullanılabilir bileşenlere bölünmelidir.
+- **Performans Optimizasyonları:**
+    -   **`React.memo`:** Props'ları değişmediği sürece yeniden render edilmemesi gereken bileşenleri sarmalamak için kullanılır.
+    -   **`useCallback` ve `useMemo`:** Gereksiz fonksiyon oluşturma ve hesaplamaları önlemek için dikkatli bir şekilde, sadece ihtiyaç duyulan yerlerde kullanılmalıdır. Genellikle, bir fonksiyonu alt bileşene prop olarak geçtiğinizde veya karmaşık bir hesaplamayı memoize etmeniz gerektiğinde kullanışlıdır.
+
+```typescript
+// cn kullanımı
+import { cn } from '@/lib/utils';
+
+<div className={cn(
+  "p-4 rounded-md",
+  isActive ? "bg-blue-500 text-white" : "bg-gray-100 text-gray-800",
+  className
+)}>
+  // ...
+</div>
+```
+
+---
+
+## Kod Organizasyonu ve Yeniden Kullanım Standartları
+
+### 13. Sabitlerin Merkezi Yönetimi (Constants)
+
+- **Prensip:** Uygulama genelinde tekrar eden sabit değerler (roller, navigasyon linkleri, durum etiketleri, API anahtarları vb.) `lib/constants/` dizininde merkezi olarak tanımlanmalı ve buradan import edilmelidir. "Magic string" veya "magic number" kullanımından kesinlikle kaçınılmalıdır.
+- **Amaç:** Kod tekrarını önlemek, bakımını kolaylaştırmak, olası yazım hatalarını engellemek ve projenin tek bir doğruluk kaynağına (`single source of truth`) sahip olmasını sağlamak.
+- **Örnek:** Kullanıcı rollerini yönetirken, `lib/constants/roles.ts` içinde tanımlanan `USER_ROLES` ve `ROLE_LABELS` objeleri kullanılmalıdır.
+
+```typescript
+// Kötü Örnek (Kod Tekrarı ve Hata Riski)
+function UserProfile({ user }) {
+  const roleLabel = user.role === 'super_admin' ? 'Süper Admin' : 'Kullanıcı';
+  if (user.role === 'super_admin') { /* ... özel yetki ... */ }
+  return <span>{roleLabel}</span>
+}
+
+// İyi Örnek (Merkezi ve Güvenli)
+import { USER_ROLES, ROLE_LABELS } from '@/lib/constants/roles';
+import { UserRoleBadge } from '@/components/user-role-badge';
+
+function UserProfile({ user }) {
+  if (user.role === USER_ROLES.SUPER_ADMIN) { /* ... özel yetki ... */ }
+  return <UserRoleBadge role={user.role} />;
+}
+```
+
+### 14. Mantığın Soyutlanması (Hooks & Utils)
+
+- **Prensip:** İki veya daha fazla yerde kullanılan veya kendi içinde karmaşık olan herhangi bir mantık, özel bir hook (`hooks/`) veya yardımcı bir fonksiyon (`lib/utils/`) içine soyutlanmalıdır. **"Don't Repeat Yourself" (DRY)** prensibi benimsenmelidir.
+- **Hook vs. Utility Function Ayrımı:**
+    -   **Hook (`hooks/`):** React state'i, context'i veya diğer hook'ları (`useState`, `useEffect`, `useParams` vb.) içeren mantıklar için kullanılır. Bileşenin yaşam döngüsüne bağlıdırlar. Örnek: `useAuth`, `useNavigation`, `useToast`.
+    -   **Utility Function (`lib/utils/`):** React'e bağımlı olmayan, saf JavaScript mantığı (veri formatlama, hesaplama, string işlemleri vb.) için kullanılır. Her yerden import edilip kullanılabilir. Örnek: `cn`, `formatDate`.
+
+```typescript
+// Kötü Örnek (Mantık bileşen içinde tekrarlanıyor)
+function ComponentA() {
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  // ... useEffect ile resize dinle ...
+}
+function ComponentB() {
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  // ... aynı useEffect ...
+}
+
+// İyi Örnek (Mantık hook'a taşındı)
+import { useIsMobile } from '@/hooks/use-is-mobile';
+
+function ComponentA() {
+  const isMobile = useIsMobile();
+  // ...
+}
+function ComponentB() {
+  const isMobile = useIsMobile();
+  // ...
+}
+```
+
+### 15. Bileşen Mimarisi ve Ortaklaştırma
+
+- **Prensip:** Bileşenler, amaçlarına ve yeniden kullanılabilirlik durumlarına göre `components/` dizini altında doğru klasörlere yerleştirilmelidir. Ortak UI elementleri standart hale getirilmeli ve farklı çözümler üretilmemelidir.
+- **Klasör Yapısı ve Sorumlulukları:**
+    -   `components/ui/`: `Button`, `Card`, `Input`, `Dialog` gibi projenin temel yapı taşları. Bu bileşenler stil ve temel işlevsellik dışında bir mantık içermelidir. Projenin görsel kimliğini oluştururlar.
+    -   `components/layout/`: `Sidebar`, `Navbar`, `DashboardLayout` gibi sayfa düzenini oluşturan büyük ve yapısal bileşenler.
+    -   `components/forms/`: `Formik` ile entegre, form alanları (`FormikField`) veya tam form yapıları (`LoginForm`) gibi bileşenler.
+    -   `components/[ozellik-adi]/`: Sadece belirli bir özelliğe (örneğin, `components/assessment/`) ait, başka bir yerde kullanılması beklenmeyen spesifik bileşenler.
+- **Ortaklaştırma:** Bir butona veya karta her seferinde aynı `className`'leri tekrar tekrar yazmak yerine, projenin `Button` veya `Card` gibi mevcut `ui` bileşenleri kullanılmalıdır. Eğer yeni bir varyasyona ihtiyaç duyulursa, mevcut bileşene yeni bir `variant` eklenmelidir. Bu, projenin görsel tutarlılığını garanti eder ve gelecekteki tasarım değişikliklerini tek bir yerden yapmayı mümkün kılar.
+
+Bu kılavuz, projenin mevcut mimarisine ve en iyi pratiklere dayanarak hazırlanmıştır. Bu standartlara uymak, kodun okunabilirliğini, test edilebilirliğini ve uzun vadede bakımını kolaylaştıracaktır.
+
+---
+
+## Geliştirme Akışı ve Kalite Standartları
+
+Bu bölüm, kodun yazılmasından ana branch'e birleştirilmesine kadar olan süreçteki kalite standartlarını ve iş akışını tanımlar.
+
+### 16. Git Akışı (Git Workflow)
+
+Proje, basit ve etkili bir "Feature Branch Workflow" kullanır.
+
+#### Branch İsimlendirme
+Tüm branch'ler `main` branch'inden oluşturulmalı ve aşağıdaki formatlara uymalıdır:
+- **Yeni Özellikler:** `feature/[ozellik-adi]` (Örn: `feature/assessment-module`)
+- **Hata Düzeltmeleri:** `fix/[hata-adi]` (Örn: `fix/login-button-bug`)
+- **Dokümantasyon:** `docs/[dokuman-konusu]` (Örn: `docs/update-readme`)
+- **Refactor ve Diğerleri:** `chore/[yapilan-is]` (Örn: `chore/refactor-user-service`)
+
+#### Commit Mesaj Standardı (Conventional Commits)
+Her commit mesajı, projenin geçmişini okunabilir kılmak ve sürüm notlarını otomatik oluşturabilmek için "Conventional Commits" standardına uymalıdır.
+
+**Format:** `<tip>(<kapsam>): <konu>`
+- **`tip`:** `feat` (yeni özellik), `fix` (hata düzeltme), `docs` (dokümantasyon), `style` (kod formatlama), `refactor`, `test`, `chore` (yapılandırma vb.).
+- **`kapsam` (opsiyonel):** Değişikliğin etki ettiği alan (örn: `api`, `auth`, `ui`).
+- **`konu`:** Değişikliğin kısa ve net açıklaması.
+
+**Örnekler:**
+- `feat(auth): add google sign-in functionality`
+- `fix(ui): correct button alignment on mobile`
+- `docs(guide): add git workflow section`
+- `refactor(services): improve performance of user service`
+
+#### Pull Request (PR) Süreci
+1.  **PR Oluşturma:** İşiniz bittiğinde, branch'inizi `main`'e birleştirmek için bir Pull Request açın.
+2.  **Açıklama:** PR açıklaması, yapılan değişikliği, neden yapıldığını ve nasıl test edileceğini net bir şekilde açıklamalıdır.
+3.  **Review (Kod Gözden Geçirme):** PR, en az bir başka ekip üyesi tarafından incelenmeli ve onaylanmalıdır.
+4.  **Otomatik Kontroller:** PR, `lint`, `type-check` ve `test` gibi tüm otomatik kalite kontrollerini başarıyla geçmelidir.
+5.  **Merge:** Onaylandıktan ve kontroller geçtikten sonra, "Squash and Merge" yöntemiyle birleştirilerek `main` branch'inin geçmişi temiz tutulmalıdır.
+
+### 17. Kod Formatlama ve Linting
+
+- **Prensip:** Tüm kodlar, takım üyeleri arasında tutarlılığı sağlamak için otomatik olarak formatlanmalı ve kalite kontrolünden geçirilmelidir.
+- **Araçlar:**
+    - **`Prettier`:** Kod formatlamasından sorumludur (boşluklar, satır sonları, noktalı virgüller vb.).
+    - **`ESLint`:** Kod kalitesi kurallarından sorumludur (kullanılmayan değişkenler, `any` tipi kullanımı, en iyi pratikler vb.).
+- **Otomasyon (`husky` ve `lint-staged`):** Bu araçlar, her `git commit` işleminden önce otomatik olarak çalışacak şekilde yapılandırılmıştır. Bu sayede, projenin ana branch'ine standartlara uymayan kodların gönderilmesi engellenir. Geliştiricinin manuel bir işlem yapmasına gerek kalmaz.
+
+### 18. Test Stratejisi
+
+- **Prensip:** Yazılan her yeni kod, projenin kararlılığını ve doğruluğunu garanti altına almak için uygun testlerle desteklenmelidir.
+- **Test Türleri ve Araçları:**
+    1.  **Birim Testleri (Unit Tests):**
+        - **Amaç:** Tek bir fonksiyonun, metodun veya `util`'in beklendiği gibi çalıştığını doğrulamak.
+        - **Araç:** `Jest` veya `Vitest`.
+        - **Kapsam:** `lib/utils/`, `services/db/` altındaki karmaşık iş mantığı içeren metotlar.
+        - **Örnek:** `formatDate` fonksiyonunun verilen bir tarihe göre doğru string'i ürettiğini test etmek.
+    2.  **Entegrasyon Testleri (Integration Tests):**
+        - **Amaç:** Birden fazla birimin (bileşen, hook, servis) bir araya geldiğinde doğru çalışıp çalışmadığını test etmek.
+        - **Araç:** `React Testing Library` (RTL).
+        - **Kapsam:** `components/` altındaki bileşenler. Bir butona tıklandığında beklenen fonksiyonun çağrıldığını veya bir formun `submit` edildiğinde API isteğinin doğru verilerle yapıldığını test etmek.
+    3.  **Uçtan Uca Testler (End-to-End - E2E):**
+        - **Amaç:** Kullanıcının uygulamayı baştan sona kullanırken izleyeceği kritik akışları (kayıt olma, giriş yapma, mülakat tamamlama vb.) simüle etmek.
+        - **Araç:** `Cypress` veya `Playwright`.
+        - **Kapsam:** En kritik kullanıcı yolculukları. Bu testler yavaştır ve sadece en önemli akışlar için yazılmalıdır.
+
+---
+
+## Yapılandırma ve Ortam Yönetimi
+
+### 19. Ortam Değişkenleri (Environment Variables)
+
+- **Prensip:** Hassas bilgiler (API anahtarları, veritabanı bağlantı bilgileri vb.) ve ortama göre değişen yapılandırmalar (API URL'i vb.) asla koda sabit olarak yazılmamalıdır.
+- **Dosyalar:**
+    - `.env.local`: Yerel geliştirme ortamı için kullanılır ve Git'e dahil edilmez.
+    - `.env.production`: Production ortamı için kullanılır.
+    - `.env.example`: Hangi değişkenlerin gerekli olduğunu gösteren bir şablon dosyasıdır ve Git'e dahil edilir.
+- **Doğrulama ve Tip Güvenliği (`Zod`):** Proje, başlatıldığında ortam değişkenlerinin varlığını ve doğruluğunu kontrol etmelidir. Bu, eksik veya yanlış yapılandırılmış bir değişkenden kaynaklanacak çalışma zamanı hatalarını (runtime errors) önler.
+
+**Örnek: `lib/env.ts` (Tavsiye Edilen Yapı)**
+```typescript
+import { z } from 'zod';
+
+const envSchema = z.object({
+  // Genel
+  NEXT_PUBLIC_APP_URL: z.string().url(),
+  NODE_ENV: z.enum(['development', 'test', 'production']),
+
+  // Veritabanı
+  MONGODB_URI: z.string().min(1),
+
+  // Kimlik Doğrulama (NextAuth)
+  NEXTAUTH_SECRET: z.string().min(1),
+  NEXTAUTH_URL: z.string().url(),
+  GITHUB_CLIENT_ID: z.string().min(1),
+  GITHUB_CLIENT_SECRET: z.string().min(1),
+});
+
+// process.env'yi doğrula ve tip güvenli bir 'env' objesi oluştur
+export const env = envSchema.parse(process.env);
+```
+- **Kullanım:** Projenin herhangi bir yerinde `process.env.VARIABLE_ADI` yerine, `import { env } from '@/lib/env'` import edilerek `env.VARIABLE_ADI` kullanılmalıdır. Bu, tam otomatik tamamlama ve tip güvenliği sağlar.
+
+---
+
+## Next.js Mimarisi ve En İyi Pratikler
+
+Bu bölüm, Next.js 15 App Router'ın sunduğu özelliklerin projede nasıl doğru ve tutarlı bir şekilde kullanılacağını tanımlar.
+
+### 20. App Router Yapısı ve İsimlendirme
+
+- **Prensip:** App Router, dosya sistemi tabanlı bir yönlendirme (routing) mekanizması kullanır. Klasörler rotaları, özel dosya isimleri ise o rotanın UI'ını tanımlar.
+- **Klasör Yapısı:** Rotalar, `app/` dizini altında iç içe klasörler ile oluşturulur. Örneğin, `app/[locale]/dashboard/settings/` yolu, `/dashboard/settings` sayfasına karşılık gelir.
+- **Özel Dosyalar:**
+    - **`page.tsx`:** Bir rotanın ana UI bileşenidir. **Zorunludur.**
+    - **`layout.tsx`:** Birden fazla sayfada paylaşılan ortak UI (örn: header, sidebar). Bir `layout`, altındaki `layout`'ları ve `page`'leri sarmalar.
+    - **`loading.tsx`:** Sayfa veya alt segment içeriği yüklenirken gösterilecek olan anlık UI (genellikle bir `skeleton` bileşeni). React `Suspense` ile otomatik olarak çalışır.
+    - **`error.tsx`:** Sayfa veya alt segmentte oluşabilecek beklenmedik hataları yakalar ve kullanıcıya bir hata arayüzü gösterir. React `Error Boundary` ile çalışır.
+    - **`not-found.tsx`:** `notFound()` fonksiyonu çağrıldığında veya bir rota bulunamadığında gösterilecek UI.
+- **Rota Grupları `(group-name)`:** Bir klasörü parantez içine alarak (`(dashboard)`) URL'e dahil etmeden rota grupları oluşturulabilir. Bu, belirli bir bölüm için ortak bir `layout` paylaşmak amacıyla kullanılır.
+
+### 21. Rendering Stratejileri: Ne Zaman Ne Kullanılmalı?
+
+App Router, varsayılan olarak **Server Components** kullanır. Bu, performansı en üst düzeye çıkarır. Doğru rendering stratejisini seçmek, uygulamanın hızı ve verimliliği için kritiktir.
+
+#### a) Statik Site Oluşturma (SSG - Static Site Generation)
+- **Nedir?** Sayfanın HTML'i, proje `build` edilirken bir kez oluşturulur ve her istekte bu statik HTML sunulur. En hızlı yöntemdir.
+- **Ne Zaman Kullanılır?**
+    - Pazarlama sayfaları
+    - Blog yazıları
+    - "Hakkımızda", "İletişim" gibi statik içerik sayfaları
+    - Sık değişmeyen ürün detay sayfaları
+- **Nasıl Uygulanır?** Bu, **varsayılan** davranıştır. Bir sayfada dinamik fonksiyonlar (`cookies()`, `headers()`, `searchParams`) veya `fetch` için `cache: 'no-store'` kullanılmadığı sürece, Next.js o sayfayı otomatik olarak statik hale getirir.
+
+#### b) Sunucu Taraflı Rendering (SSR - Server-Side Rendering)
+- **Nedir?** Sayfanın HTML'i, her istek geldiğinde sunucuda o anki verilerle yeniden oluşturulur.
+- **Ne Zaman Kullanılır?**
+    - **Kullanıcıya özel içerik:** `Dashboard` gibi her kullanıcı için farklı görünen sayfalar.
+    - **Sık değişen veri:** Anlık borsa verileri veya canlı skorlar gibi verileri gösteren sayfalar.
+    - **Arama sonuçları:** Her arama sorgusu için farklı sonuçların gösterildiği sayfalar.
+- **Nasıl Uygulanır?** Bir Server Component içinde aşağıdaki dinamik fonksiyonlardan birini kullandığınızda sayfa otomatik olarak SSR'e geçer:
+    - `cookies()` veya `headers()`
+    - `useSearchParams()` hook'u
+    - `fetch` isteğinde `cache: 'no-store'` veya `next: { revalidate: 0 }` seçeneklerinin kullanılması.
+
+#### c) İstemci Taraflı Rendering (CSR - Client-Side Rendering)
+- **Nedir?** Sayfa başlangıçta boş bir HTML ve JavaScript paketi ile yüklenir. Tarayıcı, JavaScript'i çalıştırarak sayfayı oluşturur ve veriyi API'den çeker.
+- **Ne Zaman Kullanılır?**
+    - **Yüksek derecede interaktif arayüzler:** Kullanıcının sürekli veri girdiği, filtreleme yaptığı, anlık güncellemeler gördüğü karmaşık formlar veya tablolar.
+    - **Tarayıcıya özel API'lere erişim:** `localStorage`, `window` gibi sadece tarayıcıda bulunan API'lere ihtiyaç duyan bileşenler.
+    - **React Hook'ları:** `useState`, `useEffect`, `useContext` gibi state ve lifecycle yönetimi gerektiren bileşenler.
+- **Nasıl Uygulanır?** Dosyanın en başına `"use client";` direktifi eklenerek bir bileşen veya onun altındaki tüm bileşenler Client Component'e dönüştürülür.
+- **En İyi Pratik:** `"use client";` direktifini mümkün olduğunca ağacın en altındaki (en spesifik) bileşene yerleştirin. Tüm sayfayı Client Component yapmak yerine, sadece interaktif olan küçük bir butonu veya formu Client Component yapın. Bu, sunucuda render edilen bileşen miktarını en üst düzeye çıkarır.
+
+---
+
+## Geliştirme Felsefesi ve Takım Çalışması
+
+### 22. Kontrollü ve Adım Adım Geliştirme
+
+- **Prensip:** Büyük ve karmaşık görevler, her zaman daha küçük, yönetilebilir ve test edilebilir adımlara bölünmelidir. Bu, hataları erken tespit etmeyi, kodun kalitesini kontrol altında tutmayı ve geri dönüşleri (rework) en aza indirmeyi sağlar.
+- **Uygulama:** Tek bir `commit` veya `Pull Request` içine birden fazla ilgisiz özellik veya büyük bir refactor sığdırmaktan kaçının. Örneğin, "API endpoint'ini oluşturma", "form bileşenini yapma" ve "sayfaya entegre etme" adımları ayrı `commit`'ler halinde yapılabilir.
+
+### 23. Belirsizlik Durumunda İletişim
+
+- **Prensip:** "Emin değilsen, mutlaka sor." Geliştirme sürecinde bir gereksinimin tam olarak anlaşılamadığı veya teknik bir yaklaşımın projenin genel mimarisine uygun olup olmadığı konusunda şüpheye düşüldüğü anlar olabilir.
+- **Uygulama:**
+    - Tahminlerde bulunarak veya varsayımlar yaparak ilerlemek yerine, ilgili takım üyesine veya proje liderine danışın.
+    - Bir yaklaşım seçmeden önce olası alternatifleri ve bunların projenin standartlarıyla (örn: rendering stratejileri, state yönetimi) ne kadar uyumlu olduğunu tartışın.
+    - **Bu geliştirme kılavuzunu her zaman ilk referans noktası olarak kullanın.** Eğer aradığınız cevap burada yoksa veya durum özel bir yaklaşım gerektiriyorsa, o zaman iletişime geçin.
+
+Bu felsefeyi benimsemek, hem bireysel hataları azaltır hem de takımın genel hızını ve ürünün kalitesini uzun vadede artırır.

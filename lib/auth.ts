@@ -1,13 +1,11 @@
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
-import bcrypt from "bcryptjs";
 import { UserService } from "@/services/db/user.service";
-import { CompanyService } from "@/services/db/company.service";
 import { connectToDatabase } from "@/lib/db";
+import { USER_ROLES, type UserRole } from "@/lib/constants/roles";
 
 const userService = new UserService();
-const companyService = new CompanyService();
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -54,7 +52,7 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async signIn({ user, account, profile }) {
+    async signIn({ user, account }) {
       if (account?.provider === "google") {
         await connectToDatabase();
         
@@ -67,7 +65,7 @@ export const authOptions: NextAuthOptions = {
             name: user.name!,
             email: user.email!,
             image: user.image!,
-            role: 'candidate', // Default role for OAuth users
+            role: USER_ROLES.CANDIDATE, // Default role for OAuth users
             emailVerified: new Date(),
           });
           
@@ -101,7 +99,7 @@ export const authOptions: NextAuthOptions = {
     session: ({ session, token }) => {
       if (token && session.user) {
         session.user.id = token.id;
-        session.user.role = (token as any).role as "super_admin" | "hr_manager" | "technical_interviewer" | "candidate";
+        session.user.role = (token as any).role as UserRole;
         session.user.companyId = (token as any).companyId;
       }
       return session;

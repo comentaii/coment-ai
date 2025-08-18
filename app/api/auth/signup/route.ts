@@ -4,6 +4,8 @@ import { UserService } from '@/services/db/user.service';
 import { CompanyService } from '@/services/db/company.service';
 import { connectToDatabase } from '@/lib/db';
 import { ResponseHandler } from '@/utils/response-handler';
+import { toastMessages } from '@/lib/utils/toast';
+import { USER_ROLES } from '@/lib/constants/roles';
 
 const userService = new UserService();
 const companyService = new CompanyService();
@@ -26,7 +28,7 @@ export async function POST(request: NextRequest) {
     let companyId: string | undefined = undefined;
 
     // If user is HR Manager or Technical Interviewer and provided company info, create/check company
-    if ((body.role === 'hr_manager' || body.role === 'technical_interviewer') && 
+    if ((body.role === USER_ROLES.HR_MANAGER || body.role === USER_ROLES.TECHNICAL_INTERVIEWER) && 
         body.companyName && body.companyEmail) {
       
       // Check if company exists
@@ -61,7 +63,7 @@ export async function POST(request: NextRequest) {
     const user = await userService.createUser(userData);
 
     return ResponseHandler.success({
-      message: 'Kullanıcı başarıyla oluşturuldu',
+      message: toastMessages.createSuccess,
       user: {
         id: user._id,
         name: user.name,
@@ -75,9 +77,9 @@ export async function POST(request: NextRequest) {
     console.error('Signup error:', error);
     
     if (error.name === 'ValidationError') {
-      return ResponseHandler.error(error.message, 400);
+      return ResponseHandler.error(toastMessages.validationError, 400);
     }
 
-    return ResponseHandler.error('Kayıt işlemi başarısız', 500);
+    return ResponseHandler.error(toastMessages.createError, 500);
   }
 } 

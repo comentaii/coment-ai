@@ -1,0 +1,30 @@
+{
+    "success": {
+        "default": "İşlem başarıyla tamamlandı.",
+        "created": "{entity} başarıyla oluşturuldu.",
+        "updated": "{entity} başarıyla güncellendi.",
+        "deleted": "{entity} başarıyla silindi.",
+        "fetched": "{entity} verileri başarıyla getirildi.",
+        "login": "Giriş başarılı. Yönlendiriliyorsunuz...",
+        "logout": "Çıkış başarılı. Yönlendiriliyorsunuz...",
+        "register": "Kayıt başarılı. Lütfen e-postanızı doğrulayın."
+    },
+    "error": {
+        "default": "Beklenmeyen bir hata oluştu.",
+        "notFound": "{entity} bulunamadı.",
+        "alreadyExists": "Bu {entity} zaten mevcut.",
+        "invalidCredentials": "Geçersiz e-posta veya şifre.",
+        "unauthorized": "Bu işlemi yapmak için yetkiniz yok.",
+        "forbidden": "Bu kaynağa erişim izniniz yok.",
+        "validation": "Doğrulama hatası. Lütfen girdilerinizi kontrol edin.",
+        "server": "Sunucu hatası. Lütfen daha sonra tekrar deneyin.",
+        "badRequest": "Geçersiz istek. Lütfen verilerinizi kontrol edin.",
+        "rateLimit": "Çok fazla istek gönderdiniz. Lütfen bir süre bekleyin."
+    },
+    "entity": {
+        "user": "Kullanıcı",
+        "company": "Şirket",
+        "challenge": "Meydan Okuma",
+        "candidate": "Aday"
+    }
+}
