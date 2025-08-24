@@ -71,3 +71,4 @@ CandidateProfileSchema.index({ userId: 1 });
 
 
 export const CandidateProfile = mongoose.models.CandidateProfile || mongoose.model<ICandidateProfile>('CandidateProfile', CandidateProfileSchema);
+

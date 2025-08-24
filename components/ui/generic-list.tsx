@@ -80,3 +80,4 @@ export function GenericList<T extends { _id: any }>({
     </motion.div>
   );
 }
+

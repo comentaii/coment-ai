@@ -84,3 +84,4 @@ export class CandidateProfileService extends BaseService<ICandidateProfile> {
 }
 
 export const candidateProfileService = new CandidateProfileService();
+
