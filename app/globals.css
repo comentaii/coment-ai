@@ -92,49 +92,23 @@
 @layer components {
   /* Global Button Styles with consistent hover effects */
   .btn-primary {
-    @apply bg-brand-green hover:bg-green-600 dark:bg-green-500 dark:hover:bg-green-600 text-white font-medium py-3 px-6 rounded-lg transition-all duration-200 text-base shadow-sm hover:shadow-md;
+    @apply bg-primary text-primary-foreground hover:bg-primary/90;
   }
   
   .btn-secondary {
-    @apply bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-brand-dark dark:text-gray-200 font-medium py-3 px-6 rounded-lg transition-all duration-200 text-base shadow-sm hover:shadow-md;
+    @apply bg-secondary text-secondary-foreground hover:bg-secondary/80;
   }
   
   .btn-destructive {
-    @apply bg-custom-red hover:bg-red-600 dark:bg-red-500 dark:hover:bg-red-600 text-white font-medium py-3 px-6 rounded-lg transition-all duration-200 text-base shadow-sm hover:shadow-md;
+    @apply bg-destructive text-destructive-foreground hover:bg-destructive/90;
   }
   
   .btn-ghost {
-    @apply bg-transparent hover:bg-gray-100 dark:hover:bg-gray-800 text-brand-dark dark:text-gray-200 font-medium py-3 px-6 rounded-lg transition-all duration-200 text-base;
+    @apply hover:bg-accent hover:text-accent-foreground;
   }
   
   .btn-outline {
-    @apply bg-transparent border border-brand-green hover:bg-brand-green hover:text-white dark:border-green-400 dark:text-green-400 dark:hover:bg-green-400 dark:hover:text-brand-dark font-medium py-3 px-6 rounded-lg transition-all duration-200 text-base;
-  }
-  
-  /* Button hover effects for all variants */
-  button[data-variant="default"]:hover,
-  .btn-primary:hover {
-    @apply bg-green-600 dark:bg-green-600 shadow-md;
-  }
-  
-  button[data-variant="secondary"]:hover,
-  .btn-secondary:hover {
-    @apply bg-gray-300 dark:bg-gray-600 shadow-md;
-  }
-  
-  button[data-variant="destructive"]:hover,
-  .btn-destructive:hover {
-    @apply bg-red-600 dark:bg-red-600 shadow-md;
-  }
-  
-  button[data-variant="ghost"]:hover,
-  .btn-ghost:hover {
-    @apply bg-gray-100 dark:bg-gray-800;
-  }
-  
-  button[data-variant="outline"]:hover,
-  .btn-outline:hover {
-    @apply bg-brand-green text-white dark:bg-green-400 dark:text-brand-dark;
+    @apply border border-input bg-transparent hover:bg-accent hover:text-accent-foreground;
   }
   
   /* Global Input Styles with consistent focus states */

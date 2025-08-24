@@ -9,8 +9,8 @@ interface FormikFieldProps {
   label: string;
   type?: string;
   placeholder?: string;
-  error?: string;
-  touched?: boolean;
+  error?: string | undefined;
+  touched?: boolean | undefined;
 }
 
 export function FormikField({

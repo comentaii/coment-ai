@@ -3,11 +3,13 @@
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
-import { FormikForm } from './formik-form';
-import { FormikField } from './formik-field';
+import { FormikForm } from '@/components/ui/formik-form';
+import { FormikField } from '@/components/forms/formik-field';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { userSignupSchema, UserSignupFormData } from '@/lib/validation-schemas';
+import { useToast } from '@/hooks/use-toast';
+import { FormikHelpers } from 'formik';
 
 interface SignupFormProps {
   onSuccess?: () => void;
@@ -16,6 +18,7 @@ interface SignupFormProps {
 export function SignupForm({ onSuccess }: SignupFormProps) {
   const t = useTranslations('Auth');
   const router = useRouter();
+  const { success, error: showError } = useToast();
   const [isLoading, setIsLoading] = useState(false);
 
   const initialValues: UserSignupFormData = {
@@ -28,7 +31,7 @@ export function SignupForm({ onSuccess }: SignupFormProps) {
     companyEmail: '',
   };
 
-  const handleSubmit = async (values: UserSignupFormData) => {
+  const handleSubmit = async (values: UserSignupFormData, { resetForm }: FormikHelpers<UserSignupFormData>) => {
     setIsLoading(true);
     try {
       const response = await fetch('/api/auth/signup', {
@@ -39,19 +42,17 @@ export function SignupForm({ onSuccess }: SignupFormProps) {
         body: JSON.stringify(values),
       });
 
-      const data = await response.json();
-
-      if (response.ok) {
-        // Redirect to login page after successful signup
-        alert('Kayıt başarılı! Giriş yapabilirsiniz.');
-        router.push('/tr/auth/signin');
-        onSuccess?.();
-      } else {
-        throw new Error(data.message || 'Kayıt işlemi başarısız');
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || t('signupErrorDefault'));
       }
-    } catch (error: any) {
-      console.error('Signup error:', error);
-      alert(error.message);
+
+      success(t('signupSuccessDescription'));
+      resetForm();
+      router.push('/tr/auth/signin');
+      onSuccess?.();
+    } catch (err: any) {
+      showError(err.message);
     } finally {
       setIsLoading(false);
     }
