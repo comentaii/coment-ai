@@ -12,12 +12,13 @@ const ibmPlexMono = IBM_Plex_Mono({
 
 export default async function LocaleLayout({
   children,
-  params: { locale }
+  params,
 }: {
   children: React.ReactNode;
   params: { locale: string };
 }) {
   const messages = await getMessages();
+  const { locale } = params;
 
   return (
     <html lang={locale} suppressHydrationWarning>

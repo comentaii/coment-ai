@@ -25,6 +25,23 @@ interface RootProvidersProps {
   locale: string;
 }
 
+const FullScreenLoader = () => (
+    <div style={{
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: '100vh',
+      width: '100vw',
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      backgroundColor: 'rgba(255, 255, 255, 0.8)',
+      zIndex: 9999,
+    }}>
+      <div>Loading...</div>
+    </div>
+  );
+
 export function RootProviders({ children, messages, locale }: RootProvidersProps) {
   const handleGlobalError = (error: Error, errorInfo: any) => {
     ErrorHandler.logError(error, {
@@ -36,7 +53,7 @@ export function RootProviders({ children, messages, locale }: RootProvidersProps
   return (
     <ErrorBoundary onError={handleGlobalError}>
         <Provider store={store}>
-            <PersistGate loading={null} persistor={persistor}>
+            <PersistGate loading={<FullScreenLoader />} persistor={persistor}>
                 <NextIntlClientProvider locale={locale} messages={messages}>
                     <AuthProvider>
                         <GlobalSettingsProvider>
