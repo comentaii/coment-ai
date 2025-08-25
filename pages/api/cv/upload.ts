@@ -9,6 +9,7 @@ import { geminiService } from '@/services/ai/gemini.service';
 import { UserService } from '@/services/db/user.service';
 import { candidateProfileService } from '@/services/db/candidate-profile.service';
 import { connectToDatabase } from '@/lib/db';
+import { fileTypeFromFile } from 'file-type';
 
 // Define a type for the response from the server's socket
 interface NextApiResponseWithSocket extends NextApiResponse {
@@ -83,6 +84,26 @@ const handler = async (req: NextApiRequest, res: NextApiResponseWithSocket) => {
       const publicPath = `/uploads/${companyId}/${file.newFilename}`; // Create a public-facing URL path
 
       try {
+        // Server-side file type validation
+        const fileTypeResult = await fileTypeFromFile(file.filepath);
+        if (!fileTypeResult || fileTypeResult.ext !== 'pdf') {
+          // Clean up the invalid file
+          await fs.unlink(file.filepath);
+          
+          const errorMessage = `Invalid file type: ${file.originalFilename}. Only PDFs are allowed.`;
+          console.error(errorMessage);
+          
+          if (io) {
+            io.to(session.user.id).emit('upload_status', {
+              taskId,
+              status: 'error',
+              error: errorMessage,
+              errorType: 'validation', // Add error type
+            });
+          }
+          return; // Stop processing this file
+        }
+
         if (io) io.to(session.user.id).emit('upload_status', { taskId, status: 'processing' });
         
         // 1. Analyze CV with Gemini
@@ -109,13 +130,23 @@ const handler = async (req: NextApiRequest, res: NextApiResponseWithSocket) => {
 
         if (io) io.to(session.user.id).emit('upload_status', { taskId, status: 'success', analysis: analysisResult });
 
-      } catch (error) {
+      } catch (error: any) {
         console.error(`Error processing file ${file.originalFilename}:`, error);
+
+        let errorMessage = 'Failed to process CV.';
+        let errorType: 'validation' | 'server' = 'server';
+
+        if (error.message && error.message.includes('User validation failed: email: Email is required')) {
+          errorMessage = 'Processing failed: Could not identify an email in the document. Please upload a valid CV.';
+          errorType = 'validation';
+        }
+
         if (io) {
           io.to(session.user.id).emit('upload_status', {
             taskId,
             status: 'error',
-            error: 'Failed to process CV.',
+            error: errorMessage,
+            errorType: errorType, // Add error type
           });
         }
       }

@@ -1,14 +1,17 @@
 'use client';
 
+import { useState } from 'react';
 import { PopulatedCandidateProfile } from '@/services/api/candidateApi';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Eye, Briefcase, Bot, AlertTriangle, Trash2 } from 'lucide-react';
+import { Briefcase, Bot, AlertTriangle, Trash2, MoreHorizontal } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useDeleteCandidateMutation } from '@/services/api/candidateApi';
 import { toast } from 'sonner';
+import { useConfirmation } from '@/hooks/use-confirmation';
+import { CandidateDetailsModal } from '@/components/modals/candidate-details-modal';
 
 interface CandidateCardProps {
   candidate: PopulatedCandidateProfile;
@@ -41,32 +44,18 @@ const getStatusIcon = (status: PopulatedCandidateProfile['status']) => {
 }
 
 export function CandidateCard({ candidate }: CandidateCardProps) {
-  const { userId, analysisResult, status, cvPath, _id } = candidate;
+  const { userId, analysisResult, status, _id } = candidate;
   const [deleteCandidate, { isLoading: isDeleting }] = useDeleteCandidateMutation();
-
-  const handlePreview = () => {
-    if (cvPath) {
-      // Find the part of the path that starts with 'uploads'
-      const uploadsMarker = '/uploads/';
-      const pathSeparator = cvPath.includes('\\') ? '\\uploads\\' : uploadsMarker;
-      
-      const uploadsIndex = cvPath.lastIndexOf(pathSeparator);
-      
-      if (uploadsIndex !== -1) {
-        // Get the path relative to the uploads directory (e.g., 'companyId/file.pdf')
-        const relativePath = cvPath.substring(uploadsIndex + pathSeparator.length);
-        const apiPath = `/api/cv/${relativePath}`;
-        window.open(apiPath, '_blank');
-      } else {
-        toast.error("Invalid CV path format. Cannot generate preview link.");
-      }
-    } else {
-      toast.error("CV path is not available.");
-    }
-  };
+  const { confirm } = useConfirmation();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleDelete = async () => {
-    if (window.confirm(`Are you sure you want to delete this profile?`)) {
+    const isConfirmed = await confirm(
+        'Delete Candidate',
+        `Are you sure you want to delete the profile for ${userId?.name}? This action cannot be undone.`
+    );
+
+    if (isConfirmed) {
         try {
             await deleteCandidate(_id).unwrap();
             toast.success("Candidate deleted successfully.");
@@ -95,53 +84,66 @@ export function CandidateCard({ candidate }: CandidateCardProps) {
   }
 
   return (
-    <motion.div
-      whileHover={{ scale: 1.03 }}
-      transition={{ type: 'spring', stiffness: 300 }}
-      className="h-full" // Ensure the motion div takes full height
-    >
-      <Card className="flex flex-col h-full">
-        <CardHeader className="flex-row items-center gap-4">
-          <Avatar>
-            <AvatarImage src={userId.image || ''} alt={userId.name} />
-            <AvatarFallback>{userId.name.charAt(0)}</AvatarFallback>
-          </Avatar>
-          <div className="flex-1">
-            <CardTitle className="text-lg">{userId.name}</CardTitle>
-            <p className="text-sm text-muted-foreground">{userId.email}</p>
-          </div>
-        </CardHeader>
-        <CardContent className="flex-grow">
-          <div className="space-y-3">
-            <div className="flex items-center">
-              {getStatusIcon(status)}
-              <Badge variant={getStatusBadgeVariant(status)} className="capitalize">
-                {status.replace('_', ' ')}
-              </Badge>
+    <>
+      <motion.div
+        whileHover={{ scale: 1.03 }}
+        transition={{ type: 'spring', stiffness: 300 }}
+        className="h-full" // Ensure the motion div takes full height
+      >
+        <Card className="flex flex-col h-full">
+          <CardHeader className="flex-row items-center gap-4">
+            <Avatar>
+              <AvatarImage src={userId.image || ''} alt={userId.name} />
+              <AvatarFallback>{userId.name.charAt(0)}</AvatarFallback>
+            </Avatar>
+            <div className="flex-1 min-w-0">
+              <CardTitle className="text-lg truncate">{userId.name}</CardTitle>
+              <p className="text-sm text-muted-foreground truncate">{userId.email}</p>
             </div>
-            {analysisResult && (
-              <div className="flex items-center text-sm">
-                <Briefcase className="h-4 w-4 mr-2 text-muted-foreground" />
-                <span>{analysisResult.experienceLevel}</span>
+          </CardHeader>
+          <CardContent className="flex-grow">
+            <div className="space-y-3">
+              <div className="flex items-center">
+                {getStatusIcon(status)}
+                <Badge variant={getStatusBadgeVariant(status)} className="capitalize">
+                  {status.replace('_', ' ')}
+                </Badge>
               </div>
-            )}
-            {analysisResult && (
-                <p className="text-sm text-muted-foreground line-clamp-2">
-                    {analysisResult.summary}
-                </p>
-            )}
-          </div>
-        </CardContent>
-        <CardFooter className="flex items-center gap-2 mt-auto pt-4">
-            <Button variant="outline" className="w-full" onClick={handlePreview} disabled={!cvPath}>
-                <Eye className="h-4 w-4 mr-2" />
-                Preview CV
-            </Button>
-            <Button variant="destructive" size="icon" onClick={handleDelete} disabled={isDeleting}>
-                <Trash2 className="h-4 w-4 text-white" />
-            </Button>
-        </CardFooter>
-      </Card>
-    </motion.div>
+              {analysisResult && (
+                <div className="flex items-center text-sm">
+                  <Briefcase className="h-4 w-4 mr-2 text-muted-foreground" />
+                  <span>{analysisResult.experienceLevel}</span>
+                </div>
+              )}
+              {analysisResult && (
+                  <p className="text-sm text-muted-foreground line-clamp-2">
+                      {analysisResult.summary}
+                  </p>
+              )}
+            </div>
+          </CardContent>
+          <CardFooter className="flex items-center gap-2 mt-auto pt-4">
+              <Button 
+                variant="outline" 
+                className="w-full" 
+                onClick={() => setIsModalOpen(true)}
+                disabled={status !== 'analyzed'}
+              >
+                  <MoreHorizontal className="h-4 w-4 mr-2" />
+                  View Details
+              </Button>
+              <Button variant="destructive" size="icon" onClick={handleDelete} disabled={isDeleting}>
+                  <Trash2 className="h-4 w-4" />
+              </Button>
+          </CardFooter>
+        </Card>
+      </motion.div>
+      
+      <CandidateDetailsModal 
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        candidate={candidate}
+      />
+    </>
   );
 }

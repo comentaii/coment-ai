@@ -1,12 +1,15 @@
 'use client';
 
+import { useState } from 'react';
 import { PopulatedCandidateProfile } from '@/services/api/candidateApi';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Eye, Trash2, Bot, Briefcase, AlertTriangle } from 'lucide-react';
+import { Eye, Trash2, Bot, Briefcase, AlertTriangle, MoreHorizontal } from 'lucide-react';
 import { useDeleteCandidateMutation } from '@/services/api/candidateApi';
 import { toast } from 'sonner';
+import { CandidateDetailsModal } from '@/components/modals/candidate-details-modal';
+import { useConfirmation } from '@/hooks/use-confirmation'; // Import the new hook
 
 interface CandidateRowProps {
   candidate: PopulatedCandidateProfile;
@@ -26,39 +29,25 @@ const getStatusClasses = (status: PopulatedCandidateProfile['status']) => {
 };
 
 export function CandidateRow({ candidate }: CandidateRowProps) {
-  const { userId, analysisResult, status, cvPath, _id } = candidate;
+  const { userId, analysisResult, status, _id } = candidate;
   const statusInfo = getStatusClasses(status);
   const [deleteCandidate, { isLoading: isDeleting }] = useDeleteCandidateMutation();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { confirm } = useConfirmation(); // Use the hook
   
-  const handlePreview = () => {
-    if (cvPath) {
-        // Find the part of the path that starts with 'uploads'
-        const uploadsMarker = '/uploads/';
-        const pathSeparator = cvPath.includes('\\') ? '\\uploads\\' : uploadsMarker;
-        
-        const uploadsIndex = cvPath.lastIndexOf(pathSeparator);
-        
-        if (uploadsIndex !== -1) {
-            // Get the path relative to the uploads directory (e.g., 'companyId/file.pdf')
-            const relativePath = cvPath.substring(uploadsIndex + pathSeparator.length);
-            const apiPath = `/api/cv/${relativePath}`;
-            window.open(apiPath, '_blank');
-        } else {
-            toast.error("Invalid CV path format. Cannot generate preview link.");
-        }
-    } else {
-        toast.error("CV path is not available.");
-    }
-  };
-
   const handleDelete = async () => {
-    if (window.confirm(`Are you sure you want to delete the profile for ${userId?.name}?`)) {
-        try {
-            await deleteCandidate(_id).unwrap();
-            toast.success("Candidate deleted successfully.");
-        } catch (error) {
-            toast.error("Failed to delete candidate.");
-        }
+    const isConfirmed = await confirm(
+      'Delete Candidate',
+      `Are you sure you want to delete the profile for ${userId?.name}? This action cannot be undone.`
+    );
+
+    if (isConfirmed) {
+      try {
+        await deleteCandidate(_id).unwrap();
+        toast.success("Candidate deleted successfully.");
+      } catch (error) {
+        toast.error("Failed to delete candidate.");
+      }
     }
   };
 
@@ -72,37 +61,51 @@ export function CandidateRow({ candidate }: CandidateRowProps) {
   }
 
   return (
-    <div className="flex items-center p-3 bg-card border rounded-lg hover:bg-muted/50 transition-colors">
-      <div className="flex items-center gap-4 flex-1">
-        <Avatar>
-          <AvatarImage src={userId.image || ''} alt={userId.name} />
-          <AvatarFallback>{userId.name.charAt(0)}</AvatarFallback>
-        </Avatar>
-        <div className="flex-1 min-w-0">
-          <p className="font-semibold truncate">{userId.name}</p>
-          <p className="text-sm text-muted-foreground truncate">{userId.email}</p>
+    <>
+      <div className="flex items-center p-3 bg-card border rounded-lg hover:bg-muted/50 transition-colors w-full">
+        <div className="flex items-center gap-4 flex-1 min-w-0">
+          <Avatar>
+            <AvatarImage src={userId.image || ''} alt={userId.name} />
+            <AvatarFallback>{userId.name.charAt(0)}</AvatarFallback>
+          </Avatar>
+          <div className="flex-1 min-w-0">
+            <p className="font-semibold truncate">{userId.name}</p>
+            <p className="text-sm text-muted-foreground truncate">{userId.email}</p>
+          </div>
+        </div>
+        
+        <div className="hidden md:flex items-center gap-2 justify-center flex-1">
+          {statusInfo.icon}
+          <span className="text-sm">{statusInfo.text}</span>
+        </div>
+
+        <div className="hidden lg:flex justify-center flex-1">
+          {analysisResult && (
+              <Badge variant="outline">{analysisResult.experienceLevel}</Badge>
+          )}
+        </div>
+
+        <div className="flex items-center justify-end gap-2 flex-shrink-0 ml-4">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={() => setIsModalOpen(true)}
+            disabled={status !== 'analyzed'}
+          >
+              <MoreHorizontal className="h-4 w-4 mr-2" />
+              View Details
+          </Button>
+          <Button variant="destructive" size="icon" onClick={handleDelete} disabled={isDeleting}>
+              <Trash2 className="h-4 w-4" />
+          </Button>
         </div>
       </div>
       
-      <div className="flex items-center gap-4 mx-4 w-1/4">
-        {statusInfo.icon}
-        <span className="text-sm">{statusInfo.text}</span>
-      </div>
-
-      <div className="w-1/4">
-        {analysisResult && (
-            <Badge variant="outline">{analysisResult.experienceLevel}</Badge>
-        )}
-      </div>
-
-      <div className="flex items-center gap-2">
-        <Button variant="outline" size="icon" onClick={handlePreview}>
-            <Eye className="h-4 w-4" />
-        </Button>
-        <Button variant="destructive" size="icon" onClick={handleDelete} disabled={isDeleting}>
-            <Trash2 className="h-4 w-4" />
-        </Button>
-      </div>
-    </div>
+      <CandidateDetailsModal 
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        candidate={candidate}
+      />
+    </>
   );
 }

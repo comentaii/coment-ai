@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export type UploadStatus = 'pending' | 'uploading' | 'processing' | 'success' | 'error';
+export type UploadErrorType = 'validation' | 'server' | 'network';
 
 export interface UploadTask {
   id: string; // Benzersiz ID, belki dosya adı + zaman damgası
@@ -8,6 +9,7 @@ export interface UploadTask {
   status: UploadStatus;
   progress: number; // 0-100 arası bir değer
   error?: string;
+  errorType?: UploadErrorType;
   analysisResult?: any; // To store analysis data on success
 }
 
@@ -23,7 +25,7 @@ const uploadSlice = createSlice({
   name: 'upload',
   initialState,
   reducers: {
-    addUploadTask(state, action: PayloadAction<Omit<UploadTask, 'status' | 'progress' | 'analysisResult'>>) {
+    addUploadTask(state, action: PayloadAction<Omit<UploadTask, 'status' | 'progress' | 'analysisResult' | 'errorType'>>) {
       const newTask: UploadTask = {
         ...action.payload,
         status: 'pending',
@@ -31,15 +33,17 @@ const uploadSlice = createSlice({
       };
       state.tasks.push(newTask);
     },
-    updateUploadTaskStatus(state, action: PayloadAction<{ id: string; status: UploadStatus; error?: string; analysisResult?: any }>) {
+    updateUploadTaskStatus(state, action: PayloadAction<{ id: string; status: UploadStatus; error?: string; errorType?: UploadErrorType; analysisResult?: any }>) {
       const task = state.tasks.find(t => t.id === action.payload.id);
       if (task) {
         task.status = action.payload.status;
         if (action.payload.error) {
           task.error = action.payload.error;
+          task.errorType = action.payload.errorType;
         } else {
           // Clear error on non-error statuses
           task.error = undefined;
+          task.errorType = undefined;
         }
         if (action.payload.analysisResult) {
             task.analysisResult = action.payload.analysisResult;

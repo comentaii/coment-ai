@@ -11,6 +11,7 @@ import { ErrorHandler } from '@/lib/utils/error';
 import { UploadProgressTracker } from '@/components/ui/upload-progress-tracker';
 import { NextIntlClientProvider, AbstractIntlMessages } from 'next-intl';
 import { useSocket } from '@/hooks/useSocket';
+import { ConfirmationDialog } from '@/components/modals/confirmation-dialog'; // Import the dialog
 
 // A new component to initialize the socket connection globally
 function SocketInitializer() {
@@ -42,6 +43,7 @@ export function RootProviders({ children, messages, locale }: RootProvidersProps
                             <SocketInitializer />
                             {children}
                             <UploadProgressTracker />
+                            <ConfirmationDialog /> 
                         </GlobalSettingsProvider>
                     </AuthProvider>
                 </NextIntlClientProvider>

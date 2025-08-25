@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { X, CheckCircle, AlertTriangle, Loader2, Trash2, ChevronUp, ChevronDown, RefreshCw, CircleSlash } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
+import { useToast } from '@/hooks/use-toast';
 
 const statusConfig: Record<UploadStatus, { icon: React.ElementType; text: string; color: string; progressColor: string }> = {
   pending: { icon: Loader2, text: 'Bekliyor...', color: 'text-gray-500', progressColor: 'bg-gray-400' },
@@ -20,9 +21,14 @@ const statusConfig: Record<UploadStatus, { icon: React.ElementType; text: string
 const TaskItem = ({ task }: { task: UploadTask }) => {
   const dispatch = useAppDispatch();
   const config = statusConfig[task.status];
+  const isValidationError = task.errorType === 'validation';
+  const { info } = useToast();
 
   const handleRetry = () => {
+    // This would re-trigger the upload for this specific file.
+    // For now, we'll just remove the task and let the user re-add it.
     console.log("Retry logic to be implemented for task:", task.id);
+    info("Retry functionality is not yet implemented. Please re-upload the file.");
     dispatch(removeUploadTask(task.id));
   };
 
@@ -58,8 +64,15 @@ const TaskItem = ({ task }: { task: UploadTask }) => {
 
         <div className="flex-shrink-0 flex items-center -mr-2">
             {task.status === 'error' && (
-                <Button variant="ghost" size="icon" className="h-5 w-5" onClick={handleRetry} title="Yeniden Dene">
-                    <RefreshCw className="h-3 w-3 text-blue-500" />
+                <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    className="h-5 w-5" 
+                    onClick={handleRetry} 
+                    title={isValidationError ? "This file is invalid and cannot be retried." : "Retry Upload"}
+                    disabled={isValidationError}
+                >
+                    <RefreshCw className={`h-3 w-3 ${isValidationError ? 'text-gray-400' : 'text-blue-500'}`} />
                 </Button>
             )}
             {(task.status === 'uploading' || task.status === 'processing' || task.status === 'pending') && (
