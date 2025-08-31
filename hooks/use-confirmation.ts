@@ -1,32 +1,25 @@
-import { useAppDispatch } from '@/hooks/use-redux';
-import { showConfirmation } from '@/store/features/confirmationSlice';
+import { useAppDispatch, useAppSelector } from '@/hooks/use-redux';
+import { showConfirmation, ShowConfirmationPayload, setConfirmed } from '@/store/features/confirmationSlice';
+import { useStore } from 'react-redux';
+
+type ConfirmationOptions = Omit<ShowConfirmationPayload, 'onConfirm'>;
 
 export const useConfirmation = () => {
   const dispatch = useAppDispatch();
+  const store = useStore();
 
-  const confirm = (
-    title: string,
-    description: string
-  ): Promise<boolean> => {
+  const confirm = (options: ConfirmationOptions): Promise<boolean> => {
     return new Promise((resolve) => {
-      const handleConfirm = () => {
-        resolve(true);
-      };
+      dispatch(showConfirmation(options));
 
-      const handleCancel = () => {
-        resolve(false);
-      };
-
-      dispatch(
-        showConfirmation({
-          title,
-          description,
-          onConfirm: handleConfirm,
-        })
-      );
-      
-      // Note: The dialog's own close/cancel logic will also effectively resolve the promise
-      // because the onConfirm callback is the only way to resolve(true).
+      const unsubscribe = store.subscribe(() => {
+        const newIsConfirmed = store.getState().confirmation.isConfirmed;
+        if (newIsConfirmed !== null) {
+          resolve(newIsConfirmed);
+          unsubscribe();
+          dispatch(setConfirmed(null));
+        }
+      });
     });
   };
 

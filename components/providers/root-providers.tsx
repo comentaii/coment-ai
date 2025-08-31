@@ -60,7 +60,8 @@ export function RootProviders({ children, messages, locale }: RootProvidersProps
                             <SocketInitializer />
                             {children}
                             <UploadProgressTracker />
-                            <ConfirmationDialog /> 
+                            <ConfirmationDialog />
+                            <Toaster richColors closeButton position="top-right" />
                         </GlobalSettingsProvider>
                     </AuthProvider>
                 </NextIntlClientProvider>

@@ -1,23 +1,28 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-interface ConfirmationState {
+export interface ConfirmationState {
   isOpen: boolean;
   title: string;
   description: string;
-  onConfirm: (() => void) | null;
+  confirmText: string;
+  cancelText: string;
+  isConfirmed: boolean | null;
 }
 
 const initialState: ConfirmationState = {
   isOpen: false,
   title: '',
   description: '',
-  onConfirm: null,
+  confirmText: 'Confirm',
+  cancelText: 'Cancel',
+  isConfirmed: null,
 };
 
-interface ShowConfirmationPayload {
+export interface ShowConfirmationPayload {
   title: string;
   description: string;
-  onConfirm: () => void;
+  confirmText: string;
+  cancelText: string;
 }
 
 const confirmationSlice = createSlice({
@@ -28,16 +33,19 @@ const confirmationSlice = createSlice({
       state.isOpen = true;
       state.title = action.payload.title;
       state.description = action.payload.description;
-      state.onConfirm = action.payload.onConfirm as any; // Redux toolkit serializability issue
+      state.confirmText = action.payload.confirmText;
+      state.cancelText = action.payload.cancelText;
+      state.isConfirmed = null; 
     },
     hideConfirmation(state) {
       state.isOpen = false;
-      state.title = '';
-      state.description = '';
-      state.onConfirm = null;
+    },
+    setConfirmed(state, action: PayloadAction<boolean>) {
+      state.isConfirmed = action.payload;
+      state.isOpen = false;
     },
   },
 });
 
-export const { showConfirmation, hideConfirmation } = confirmationSlice.actions;
+export const { showConfirmation, hideConfirmation, setConfirmed } = confirmationSlice.actions;
 export default confirmationSlice.reducer;

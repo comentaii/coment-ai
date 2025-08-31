@@ -1,7 +1,7 @@
 'use client';
 
 import { useAppSelector, useAppDispatch } from '@/hooks/use-redux';
-import { hideConfirmation } from '@/store/features/confirmationSlice';
+import { hideConfirmation, setConfirmed } from '@/store/features/confirmationSlice';
 import {
   Dialog,
   DialogContent,
@@ -14,20 +14,27 @@ import { Button } from '@/components/ui/button';
 
 export function ConfirmationDialog() {
   const dispatch = useAppDispatch();
-  const { isOpen, title, description, onConfirm } = useAppSelector(
+  const { isOpen, title, description, confirmText, cancelText } = useAppSelector(
     (state) => state.confirmation
   );
 
   const handleConfirm = () => {
-    if (onConfirm) {
-      onConfirm();
-    }
-    dispatch(hideConfirmation());
+    dispatch(setConfirmed(true));
   };
 
-  const handleClose = () => {
-    dispatch(hideConfirmation());
+  const handleCancel = () => {
+    dispatch(setConfirmed(false));
   };
+
+  const handleClose = (open: boolean) => {
+    if (!open) {
+      handleCancel();
+    }
+  };
+
+  if (!isOpen) {
+    return null;
+  }
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
@@ -37,11 +44,11 @@ export function ConfirmationDialog() {
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <Button variant="outline" onClick={handleClose}>
-            Cancel
+          <Button variant="outline" onClick={handleCancel}>
+            {cancelText}
           </Button>
           <Button variant="destructive" onClick={handleConfirm}>
-            Confirm
+            {confirmText}
           </Button>
         </DialogFooter>
       </DialogContent>

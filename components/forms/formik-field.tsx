@@ -38,4 +38,6 @@ export function FormikField({
       )}
     </div>
   );
-} 
+}
+
+export default FormikField; 

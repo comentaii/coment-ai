@@ -59,4 +59,6 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       </div>
     </div>
   );
-} 
+}
+
+export default DashboardLayout; 

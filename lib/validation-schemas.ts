@@ -28,6 +28,24 @@ export const companySignupSchema = yup.object({
     .default('basic'),
 });
 
+export const createJobPostingSchema = yup.object({
+  title: yup.string().required('İlan başlığı zorunludur.').min(5, 'Başlık en az 5 karakter olmalıdır.'),
+  description: yup.string().required('İlan açıklaması zorunludur.').min(20, 'Açıklama en az 20 karakter olmalıdır.'),
+  skills: yup.array().of(yup.string().required()).min(1, 'En az bir yetenek gereklidir.'),
+  linkedinUrl: yup.string().url('Geçerli bir LinkedIn URL\'i giriniz.').optional(),
+});
+
+export const updateJobPostingSchema = yup.object({
+  title: yup.string().min(5, 'Başlık en az 5 karakter olmalıdır.'),
+  description: yup.string().min(20, 'Açıklama en az 20 karakter olmalıdır.'),
+  skills: yup.array().of(yup.string().required()).min(1, 'En az bir yetenek gereklidir.'),
+  status: yup.string().oneOf(['open', 'closed', 'archived'], 'Geçersiz durum değeri.'),
+  linkedinUrl: yup.string().url('Geçerli bir LinkedIn URL\'i giriniz.').optional(),
+});
+
+
 export type UserSignupFormData = yup.InferType<typeof userSignupSchema>;
 export type UserLoginFormData = yup.InferType<typeof userLoginSchema>;
-export type CompanySignupFormData = yup.InferType<typeof companySignupSchema>; 
+export type CompanySignupFormData = yup.InferType<typeof companySignupSchema>;
+export type CreateJobPostingDto = yup.InferType<typeof createJobPostingSchema>;
+export type UpdateJobPostingDto = yup.InferType<typeof updateJobPostingSchema>; 

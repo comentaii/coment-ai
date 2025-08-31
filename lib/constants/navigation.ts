@@ -7,7 +7,8 @@ import {
   Settings, 
   BarChart3, 
   Code, 
-  UserCheck 
+  UserCheck,
+  Briefcase
 } from 'lucide-react';
 import { USER_ROLES, type UserRole } from './roles';
 
@@ -54,11 +55,11 @@ export const NAVIGATION_ITEMS: NavigationItem[] = [
     roles: [USER_ROLES.SUPER_ADMIN, USER_ROLES.HR_MANAGER, USER_ROLES.TECHNICAL_INTERVIEWER],
   },
   {
-    id: 'cv-analysis',
-    label: 'CV Analizi',
-    description: 'CV değerlendirme ve analiz',
-    path: '/cv-analysis',
-    icon: FileText,
+    id: 'job-postings',
+    label: 'İş İlanları',
+    description: 'İlan oluştur ve adayları yönet',
+    path: '/job-postings',
+    icon: Briefcase,
     roles: [USER_ROLES.SUPER_ADMIN, USER_ROLES.HR_MANAGER],
   },
   {

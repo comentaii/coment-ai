@@ -3,8 +3,27 @@
 import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
+import { AlertTriangle, RefreshCw, Home, Copy } from 'lucide-react';
 import Link from 'next/link';
+import { toast } from 'sonner';
+
+// A wrapper component to use the hook inside the class component
+function CopyButton({ textToCopy }: { textToCopy: string }) {
+  const handleCopy = () => {
+    navigator.clipboard.writeText(textToCopy).then(() => {
+      toast.success('Kopyalandı!', {
+        description: 'Hata detayları panoya kopyalandı.',
+      });
+    });
+  };
+
+  return (
+    <Button onClick={handleCopy} size="sm" variant="ghost" className="gap-2">
+      <Copy className="w-4 h-4" />
+      Kopyala
+    </Button>
+  );
+}
 
 interface Props {
   children: ReactNode;
@@ -28,7 +47,7 @@ export class ErrorBoundary extends Component<Props, State> {
     return { hasError: true, error };
   }
 
-  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+  override componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error('ErrorBoundary caught an error:', error, errorInfo);
     
     // Call custom error handler if provided
@@ -42,17 +61,21 @@ export class ErrorBoundary extends Component<Props, State> {
     this.setState({ hasError: false, error: undefined, errorInfo: undefined });
   };
 
-  render() {
+  override render() {
     if (this.state.hasError) {
       // Custom fallback UI
       if (this.props.fallback) {
         return this.props.fallback;
       }
 
+      const componentStack = this.state.errorInfo?.componentStack?.trim();
+      const stackLines = this.state.error?.stack?.split('\n').slice(0, 5).join('\n');
+      const errorDetailsToCopy = `Hata: ${this.state.error?.message}\n\n${componentStack ? `Component Stack:\n${componentStack}\n\n` : ''}Stack Trace (ilk 10 satır):\n${stackLines}`;
+
       // Default error UI
       return (
         <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 p-4">
-          <Card className="w-full max-w-md">
+          <Card className="w-full max-w-xl">
             <CardHeader className="text-center">
               <div className="mx-auto w-16 h-16 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center mb-4">
                 <AlertTriangle className="w-8 h-8 text-red-600 dark:text-red-400" />
@@ -68,20 +91,21 @@ export class ErrorBoundary extends Component<Props, State> {
               
               {process.env.NODE_ENV === 'development' && this.state.error && (
                 <details className="text-xs bg-gray-100 dark:bg-gray-800 p-3 rounded-md">
-                  <summary className="cursor-pointer font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <summary className="cursor-pointer font-medium text-gray-700 dark:text-gray-300 mb-2 flex justify-between items-center">
                     Hata Detayları (Geliştirici Modu)
+                    <CopyButton textToCopy={errorDetailsToCopy} />
                   </summary>
-                  <div className="space-y-2">
+                  <div className="space-y-2 mt-2">
                     <div>
                       <strong>Hata:</strong>
-                      <pre className="mt-1 text-red-600 dark:text-red-400 break-words">
+                      <pre className="mt-1 text-red-600 dark:text-red-400 break-words whitespace-pre-wrap">
                         {this.state.error.message}
                       </pre>
                     </div>
                     {this.state.error.stack && (
                       <div>
                         <strong>Stack Trace:</strong>
-                        <pre className="mt-1 text-gray-600 dark:text-gray-400 text-xs overflow-auto max-h-32">
+                        <pre className="mt-1 text-gray-600 dark:text-gray-400 text-xs overflow-auto max-h-48">
                           {this.state.error.stack}
                         </pre>
                       </div>

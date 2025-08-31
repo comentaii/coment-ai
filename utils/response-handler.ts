@@ -20,8 +20,8 @@ export class ResponseHandler {
   }
 
   static error(
-    message = 'Error', 
-    status = 400, 
+    message: string = 'An unexpected error occurred.',
+    status: number = 500,
     errors?: Record<string, string[]>
   ): NextResponse<ApiResponse> {
     return NextResponse.json(

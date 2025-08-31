@@ -39,5 +39,76 @@
         "availableActions": "Yapabileceğiniz işlemler",
         "systemStatus": "Sistem Durumu",
         "platformStatus": "Platform durumu"
-    }
+    },
+    "CreateJobPostingModal": {
+        "title": "Yeni İş İlanı Oluştur",
+        "description": "Yeni bir iş ilanı oluşturmak için aşağıdaki formu doldurun veya LinkedIn URL'si ile otomatik doldurun.",
+        "descriptionAI": "Yapay zeka destekli yardımcımızla anında iş ilanı oluşturun. Aşağıdaki alana ilan metnini yapıştırın ve formu sizin için dolduralım.",
+        "toast": {
+            "loading": "İş ilanı oluşturuluyor...",
+            "success": "\"{title}\" başlıklı iş ilanı başarıyla oluşturuldu.",
+            "error": "İlan oluşturulamadı: {message}",
+            "defaultError": "İlan oluşturulamadı. Lütfen tekrar deneyin."
+        }
+    },
+    "JobPostingsPage": {
+        "title": "İş İlanları",
+        "description": "Mevcut iş ilanlarınızı yönetin ve yenilerini oluşturun.",
+        "createNewButton": "Yeni İlan Oluştur",
+        "createFirstButton": "İlk İş İlanını Oluştur",
+        "noPostingsTitle": "Henüz İş İlanı Yok",
+        "noPostingsDescription": "İlk iş ilanınızı oluşturarak adayları çekmeye başlayın.",
+        "errorTitle": "Hata",
+        "errorMessage": "İş ilanları yüklenirken bir hata oluştu. Lütfen daha sonra tekrar deneyin."
+    },
+    "JobPostingCard": {
+        "status": {
+            "open": "Açık",
+            "closed": "Kapalı",
+            "archived": "Arşivlendi"
+        },
+        "createdAt": "Oluşturulma",
+        "skills": "Yetenekler",
+        "more": "daha",
+        "viewDetails": "Detayları Gör",
+        "actions": {
+            "open": "İlanı Aç",
+            "close": "İlanı Kapat",
+            "delete": "İlanı Sil"
+        },
+        "deleteConfirm": {
+            "title": "İlanı Silmeyi Onayla",
+            "description": "\"{title}\" başlıklı ilanı silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.",
+            "confirmText": "Evet, Sil",
+            "cancelText": "İptal"
+        },
+        "toast": {
+            "deleting": "İlan siliniyor...",
+            "deletedSuccess": "\"{title}\" ilanı başarıyla silindi.",
+            "deletedError": "İlan silinirken bir hata oluştu.",
+            "updating": "İlan durumu güncelleniyor...",
+            "updatedSuccess": "\"{title}\" ilanı başarıyla güncellendi.",
+            "updatedError": "İlan güncellenirken bir hata oluştu."
+        }
+    },
+    "JobPostingDetailPage": {
+        "errorTitle": "İlan Yüklenemedi",
+        "errorMessage": "İş ilanı detayları getirilirken bir hata oluştu. Lütfen daha sonra tekrar deneyin.",
+        "matchedCandidatesTitle": "Eşleşen Adaylar",
+        "noCandidatesTitle": "Eşleşen Aday Bulunamadı",
+        "noCandidatesDescription": "Bu iş ilanı için henüz uygun bir aday bulunamadı."
+    },
+    "JobPostingForm": {
+        "titleLabel": "İlan Başlığı",
+        "titlePlaceholder": "Örn: Kıdemli Frontend Geliştirici",
+        "descriptionLabel": "İlan Açıklaması",
+        "descriptionPlaceholder": "İşin tanımını, sorumlulukları ve gereksinimleri detaylandırın...",
+        "skillsLabel": "Gerekli Yetenekler",
+        "skillsPlaceholder": "Yetenek eklemek için enter'a basın...",
+        "submitButton": "İş İlanını Kaydet"
+    },
+    "upload_status_processing": "İşleniyor...",
+    "upload_status_success": "Başarılı",
+    "upload_status_error": "Hata",
+    "matchingStartedSuccess": "Eşleştirme işlemi başarıyla başlatıldı. Sonuçlar hazır olduğunda sayfa otomatik olarak güncellenecektir."
 }

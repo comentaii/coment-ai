@@ -32,81 +32,6 @@ interface MenuItem {
   roles: string[];
 }
 
-const menuItems: MenuItem[] = [
-  {
-    id: 'dashboard',
-    label: 'Dashboard',
-    description: 'Ana kontrol paneli',
-    href: '/tr/dashboard',
-    icon: Home,
-    roles: ['super_admin', 'hr_manager', 'technical_interviewer', 'candidate'],
-  },
-  {
-    id: 'candidates',
-    label: 'Adaylar',
-    description: 'Aday yönetimi ve listesi',
-    href: '/tr/candidates',
-    icon: Users,
-    roles: ['super_admin', 'hr_manager'],
-  },
-  {
-    id: 'companies',
-    label: 'Firmalar',
-    description: 'Firma yönetimi',
-    href: '/tr/companies',
-    icon: Building,
-    roles: ['super_admin'],
-  },
-  {
-    id: 'interviews',
-    label: 'Mülakatlar',
-    description: 'Mülakat planlama ve yönetimi',
-    href: '/tr/interviews',
-    icon: Calendar,
-    roles: ['super_admin', 'hr_manager', 'technical_interviewer'],
-  },
-  {
-    id: 'cv-analysis',
-    label: 'CV Analizi',
-    description: 'CV değerlendirme ve analiz',
-    href: '/tr/cv-analysis',
-    icon: FileText,
-    roles: ['super_admin', 'hr_manager'],
-  },
-  {
-    id: 'code-review',
-    label: 'Kod Değerlendirme',
-    description: 'Kod analizi ve puanlama',
-    href: '/tr/code-review',
-    icon: Code,
-    roles: ['super_admin', 'technical_interviewer'],
-  },
-  {
-    id: 'my-interviews',
-    label: 'Mülakatlarım',
-    description: 'Kişisel mülakat geçmişi',
-    href: '/tr/my-interviews',
-    icon: UserCheck,
-    roles: ['candidate'],
-  },
-  {
-    id: 'analytics',
-    label: 'Analitik',
-    description: 'İstatistikler ve raporlar',
-    href: '/tr/analytics',
-    icon: BarChart3,
-    roles: ['super_admin', 'hr_manager', 'technical_interviewer'],
-  },
-  {
-    id: 'settings',
-    label: 'Ayarlar',
-    description: 'Hesap ve sistem ayarları',
-    href: '/tr/settings',
-    icon: Settings,
-    roles: ['super_admin', 'hr_manager', 'technical_interviewer', 'candidate'],
-  },
-];
-
 export function Sidebar() {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
@@ -136,10 +61,16 @@ export function Sidebar() {
     const Icon = item.icon;
     const isActive = isActivePath(item.path);
 
+    const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+      if (onClick) {
+        onClick();
+      }
+    };
+
     return (
       <Link
         href={getLocalizedPath(item.path)}
-        onClick={onClick}
+        onClick={onClick ? handleLinkClick : undefined}
         className={cn(
           "group relative flex items-center gap-3 rounded-lg px-3 py-3 transition-all duration-200",
           isActive
