@@ -3,10 +3,7 @@
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { signIn } from 'next-auth/react';
-import { useAuth } from '@/hooks/use-auth';
 import { loginSchema, LoginDto } from '@/lib/validation-schemas';
-import { FormikForm } from '@/components/ui/formik-form';
-import { FormikField } from '@/components/forms/formik-field';
 import { FormikForm } from '@/components/ui/formik-form';
 import { FormikField } from '@/components/forms/formik-field';
 import { Button } from '@/components/ui/button';
