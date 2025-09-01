@@ -1,35 +1,63 @@
-import { USER_ROLES } from "@/lib/constants";
+export type UserRole = 'super_admin' | 'hr_manager' | 'technical_interviewer' | 'candidate';
 
-// Projedeki tüm rolleri UserRole tipi olarak tanımlıyoruz.
-export type UserRole = keyof typeof USER_ROLES;
+// İzinler (Permissions) şimdilik rollerle aynı olabilir veya daha detaylı olabilir.
+// Örnek olarak birkaç detaylı izin ekleyelim.
+export type Permission = 
+  // Company Management
+  | 'manage_companies'
+  | 'view_company_dashboard'
+  
+  // User Management
+  | 'manage_users'
+  | 'view_users'
 
-// Rol-izin eşlemesini tanımlayan nesne. Bu, projenin yetki matrisidir.
-export const ROLES_PERMISSIONS: Record<UserRole, Permission[]> = {
+  // Candidate Management
+  | 'upload_cv'
+  | 'view_candidate_list'
+  | 'analyze_cv'
+
+  // Interview Management
+  | 'schedule_interview'
+  | 'conduct_interview'
+  | 'view_interview_reports';
+
+export const ROLES = {
+  SUPER_ADMIN: 'super_admin',
+  HR_MANAGER: 'hr_manager',
+  TECHNICAL_INTERVIEWER: 'technical_interviewer',
+  CANDIDATE: 'candidate',
+} as const;
+
+// Rollerin sahip olduğu izinleri tanımlayan bir harita.
+export const rolePermissions: Record<UserRole, Permission[]> = {
   super_admin: [
-    'manage_companies', 'manage_users', 'view_all_statistics', 'manage_settings'
+    'manage_companies',
+    'view_company_dashboard',
+    'manage_users',
+    'view_users',
+    'upload_cv',
+    'view_candidate_list',
+    'analyze_cv',
+    'schedule_interview',
+    'conduct_interview',
+    'view_interview_reports',
   ],
   hr_manager: [
-    'manage_candidates', 'manage_interviews', 'view_company_statistics', 'manage_challenges'
+    'view_company_dashboard',
+    'manage_users', // Sadece kendi şirketindeki kullanıcılar
+    'view_users',   // Sadece kendi şirketindeki kullanıcılar
+    'upload_cv',
+    'view_candidate_list',
+    'analyze_cv',
+    'schedule_interview',
+    'view_interview_reports',
   ],
   technical_interviewer: [
-    'conduct_interview', 'view_assigned_interviews'
+    'view_candidate_list', // Sadece atanmış olanlar
+    'conduct_interview',
+    'view_interview_reports',
   ],
   candidate: [
-    'attend_interview'
+    'conduct_interview', // Sadece kendi mülakatı
   ],
-  guest: [],
 };
-
-// Tüm izinleri tek bir tipte birleştiriyoruz.
-export type Permission = 
-  | 'manage_companies'
-  | 'manage_users'
-  | 'view_all_statistics'
-  | 'manage_settings'
-  | 'manage_candidates'
-  | 'manage_interviews'
-  | 'view_company_statistics'
-  | 'manage_challenges'
-  | 'conduct_interview'
-  | 'view_assigned_interviews'
-  | 'attend_interview';

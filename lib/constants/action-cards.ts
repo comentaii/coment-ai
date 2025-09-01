@@ -6,7 +6,8 @@ import {
   Code, 
   BarChart3,
   Building,
-  Users
+  Users,
+  Briefcase
 } from 'lucide-react';
 import { USER_ROLES, type UserRole } from './roles';
 
@@ -61,10 +62,10 @@ export const ACTION_CARDS: ActionCard[] = [
     roles: [USER_ROLES.SUPER_ADMIN, USER_ROLES.HR_MANAGER, USER_ROLES.TECHNICAL_INTERVIEWER],
   },
   {
-    title: 'CV Analizi',
-    description: 'CV değerlendirme ve analiz',
-    icon: FileText,
-    path: '/cv-analysis',
+    title: 'İş İlanları',
+    description: 'İlan oluşturun ve adayları yönetin',
+    icon: Briefcase,
+    path: '/job-postings',
     color: 'bg-indigo-500',
     roles: [USER_ROLES.SUPER_ADMIN, USER_ROLES.HR_MANAGER],
   },

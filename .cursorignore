@@ -1,0 +1,29 @@
+# Bağımlılıklar
+node_modules/
+
+# Derleme çıktıları ve önbellek
+.next/
+out/
+build/
+dist/
+
+# Ortam değişkenleri
+.env
+.env*.local
+
+# Log ve test raporları
+*.log
+coverage/
+
+# Paket yöneticisi kilit dosyası
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# IDE ve editör ayarları
+.vscode/
+.idea/
+
+# İşletim sistemi dosyaları
+.DS_Store
+Thumbs.db

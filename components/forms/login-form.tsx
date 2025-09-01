@@ -7,6 +7,8 @@ import { useAuth } from '@/hooks/use-auth';
 import { loginSchema, LoginDto } from '@/lib/validation-schemas';
 import { FormikForm } from '@/components/ui/formik-form';
 import { FormikField } from '@/components/forms/formik-field';
+import { FormikForm } from '@/components/ui/formik-form';
+import { FormikField } from '@/components/forms/formik-field';
 import { Button } from '@/components/ui/button';
 import { FormSubmitButton } from '@/components/ui/button';
 import { FormError, FormSuccess } from '@/components/ui/form';
@@ -65,7 +67,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
         onSubmit={handleSubmit}
         className="space-y-4"
       >
-        {(formikProps) => (
+        {(formikProps: FormikProps<UserLoginFormData>) => (
           <>
             <FormikField
               name="email"

@@ -39,5 +39,72 @@
         "availableActions": "Available actions",
         "systemStatus": "System Status",
         "platformStatus": "Platform status"
+    },
+    "CreateJobPostingModal": {
+        "title": "Create New Job Posting",
+        "description": "Fill out the form below to create a new job posting, or use a LinkedIn URL to autofill.",
+        "descriptionAI": "Create a job posting instantly with our AI-powered assistant. Paste the job description below and let us fill out the form for you.",
+        "toast": {
+            "loading": "Creating job posting...",
+            "success": "Job posting \"{title}\" created successfully.",
+            "error": "Failed to create posting: {message}",
+            "defaultError": "Failed to create posting. Please try again."
+        }
+    },
+    "JobPostingsPage": {
+        "title": "Job Postings",
+        "description": "Manage your existing job postings and create new ones.",
+        "createNewButton": "Create New Posting",
+        "createFirstButton": "Create Your First Job Posting",
+        "noPostingsTitle": "No Job Postings Yet",
+        "noPostingsDescription": "Start attracting candidates by creating your first job posting.",
+        "errorTitle": "Error",
+        "errorMessage": "An error occurred while loading the job postings. Please try again later."
+    },
+    "JobPostingCard": {
+        "status": {
+            "open": "Open",
+            "closed": "Closed",
+            "archived": "Archived"
+        },
+        "createdAt": "Created",
+        "skills": "Skills",
+        "more": "more",
+        "viewDetails": "View Details",
+        "actions": {
+            "open": "Open Posting",
+            "close": "Close Posting",
+            "delete": "Delete Posting"
+        },
+        "deleteConfirm": {
+            "title": "Confirm Deletion",
+            "description": "Are you sure you want to delete the posting \"{title}\"? This action cannot be undone.",
+            "confirmText": "Yes, Delete",
+            "cancelText": "Cancel"
+        },
+        "toast": {
+            "deleting": "Deleting posting...",
+            "deletedSuccess": "Posting \"{title}\" deleted successfully.",
+            "deletedError": "An error occurred while deleting the posting.",
+            "updating": "Updating posting status...",
+            "updatedSuccess": "Posting \"{title}\" updated successfully.",
+            "updatedError": "An error occurred while updating the posting."
+        }
+    },
+    "JobPostingDetailPage": {
+        "errorTitle": "Could Not Load Posting",
+        "errorMessage": "An error occurred while fetching the job posting details. Please try again later.",
+        "matchedCandidatesTitle": "Matched Candidates",
+        "noCandidatesTitle": "No Matched Candidates Found",
+        "noCandidatesDescription": "No suitable candidates have been found for this job posting yet."
+    },
+    "JobPostingForm": {
+        "titleLabel": "Job Title",
+        "titlePlaceholder": "e.g., Senior Frontend Developer",
+        "descriptionLabel": "Job Description",
+        "descriptionPlaceholder": "Detail the job's description, responsibilities, and requirements...",
+        "skillsLabel": "Required Skills",
+        "skillsPlaceholder": "Press enter to add a skill...",
+        "submitButton": "Save Job Posting"
     }
 }
