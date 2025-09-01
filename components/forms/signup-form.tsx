@@ -3,11 +3,14 @@
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
-import { FormikForm } from './formik-form';
-import { FormikField } from './formik-field';
+import { useAuth } from '@/hooks/use-auth';
+import { signupSchema, SignupDto } from '@/lib/validation-schemas';
+import { FormikForm } from '@/components/ui/formik-form';
+import { FormikField } from '@/components/forms/formik-field';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { userSignupSchema, UserSignupFormData } from '@/lib/validation-schemas';
+import { FormSubmitButton } from '@/components/ui/button';
+import { FormError, FormSuccess } from '@/components/ui/form';
 
 interface SignupFormProps {
   onSuccess?: () => void;
@@ -18,7 +21,7 @@ export function SignupForm({ onSuccess }: SignupFormProps) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
-  const initialValues: UserSignupFormData = {
+  const initialValues: SignupDto = {
     name: '',
     email: '',
     password: '',
@@ -28,7 +31,7 @@ export function SignupForm({ onSuccess }: SignupFormProps) {
     companyEmail: '',
   };
 
-  const handleSubmit = async (values: UserSignupFormData) => {
+  const handleSubmit = async (values: SignupDto) => {
     setIsLoading(true);
     try {
       const response = await fetch('/api/auth/signup', {
@@ -60,7 +63,7 @@ export function SignupForm({ onSuccess }: SignupFormProps) {
   return (
     <FormikForm
       initialValues={initialValues}
-      validationSchema={userSignupSchema}
+      validationSchema={signupSchema}
       onSubmit={handleSubmit}
       className="space-y-4"
     >

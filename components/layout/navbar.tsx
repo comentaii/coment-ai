@@ -1,5 +1,6 @@
 "use client";
 
+import { signOut } from 'next-auth/react';
 import { useAuth } from '@/hooks/use-auth';
 import { Button } from '@/components/ui/button';
 import { UserRoleBadge } from '@/components/user-role-badge';
@@ -14,24 +15,23 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import Link from 'next/link';
+import { Link } from '@/navigation';
 
-const roleLabels = {
-  super_admin: 'Süper Admin',
-  hr_manager: 'İK Yetkilisi',
-  technical_interviewer: 'Teknik Mülakatçı',
-  candidate: 'Aday',
-};
 
 export function Navbar() {
-  const { session, logout } = useAuth();
+  const { session } = useAuth();
+
+  const handleLogout = () => {
+    console.log("Çıkış yapma fonksiyonu tetiklendi!");
+    signOut({ callbackUrl: '/' });
+  };
 
   return (
     <nav className="bg-white dark:bg-brand-dark border-b border-gray-200 dark:border-gray-700 px-4 py-4">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         <div className="flex items-center space-x-4">
           <Link
-            href="/tr"
+            href="/"
             className="text-2xl font-bold text-brand-green dark:text-green-400"
           >
             Coment-AI
@@ -80,7 +80,7 @@ export function Navbar() {
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
                   <Link
-                    href="/tr/dashboard"
+                    href="/dashboard"
                     className="text-base cursor-pointer"
                   >
                     Dashboard
@@ -88,7 +88,7 @@ export function Navbar() {
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <Link
-                    href="/tr/profile"
+                    href="/profile"
                     className="text-base cursor-pointer"
                   >
                     Profil
@@ -96,7 +96,7 @@ export function Navbar() {
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <Link
-                    href="/tr/settings"
+                    href="/settings"
                     className="text-base cursor-pointer"
                   >
                     Ayarlar
@@ -104,20 +104,25 @@ export function Navbar() {
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
-                  onClick={logout}
-                  className="text-base cursor-pointer text-custom-red dark:text-custom-red"
+                  asChild
+                  className="p-0"
                 >
-                  Çıkış Yap
+                  <button
+                    onClick={handleLogout}
+                    className="w-full h-full text-left text-base cursor-pointer text-red-500 dark:text-red-400 px-2 py-1.5 rounded-sm focus:bg-red-50 focus:text-red-600 dark:focus:bg-red-900/50 dark:focus:text-red-400 outline-none"
+                  >
+                    Çıkış Yap
+                  </button>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
             <div className="flex items-center space-x-4">
               <Button variant="outline" asChild>
-                <Link href="/tr/auth/signin">Giriş Yap</Link>
+                <Link href="/auth/signin">Giriş Yap</Link>
               </Button>
               <Button asChild>
-                <Link href="/tr/auth/signup">Kayıt Ol</Link>
+                <Link href="/auth/signup">Kayıt Ol</Link>
               </Button>
             </div>
           )}

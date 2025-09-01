@@ -1,5 +1,6 @@
 'use client';
 
+import { signOut } from 'next-auth/react';
 import { useAuth } from '@/hooks/use-auth';
 import { Button } from '@/components/ui/button';
 import { UserRoleBadge } from '@/components/user-role-badge';
@@ -14,14 +15,16 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import Link from 'next/link';
-import { useNavigation } from '@/lib/utils/navigation';
+import { Link } from '@/navigation';
 import { USER_ROLES, type UserRole } from '@/lib/constants/roles';
 
 export function DashboardNavbar() {
-  const { session, logout } = useAuth();
-  const { getLocalizedPath } = useNavigation();
+  const { session } = useAuth();
 
+  const handleLogout = () => {
+    signOut({ callbackUrl: '/' });
+  };
+  
   if (!session) {
     return null;
   }
@@ -83,7 +86,7 @@ export function DashboardNavbar() {
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
                 <Link
-                  href={getLocalizedPath('/profile')}
+                  href={'/profile'}
                   className="text-sm cursor-pointer flex items-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-800"
                 >
                   <span>👤</span>
@@ -92,7 +95,7 @@ export function DashboardNavbar() {
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
                 <Link
-                  href={getLocalizedPath('/settings')}
+                  href={'/settings'}
                   className="text-sm cursor-pointer flex items-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-800"
                 >
                   <span>⚙️</span>
@@ -100,12 +103,14 @@ export function DashboardNavbar() {
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem
-                onClick={logout}
-                className="text-sm cursor-pointer text-red-600 dark:text-red-400 flex items-center gap-2 hover:bg-red-50 dark:hover:bg-red-900/20"
-              >
-                <span>🚪</span>
-                Çıkış Yap
+              <DropdownMenuItem asChild className="p-0">
+                <button
+                  onClick={handleLogout}
+                  className="w-full h-full text-left text-sm cursor-pointer text-red-600 dark:text-red-400 flex items-center gap-2 px-2 py-1.5 rounded-sm focus:bg-red-50 dark:focus:bg-red-900/20 outline-none"
+                >
+                  <span>🚪</span>
+                  Çıkış Yap
+                </button>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

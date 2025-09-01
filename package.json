@@ -7,13 +7,15 @@
         "build": "next build",
         "start": "next start",
         "lint": "next lint",
-        "lint:fix": "next lint --fix",
+        "lint:fix": "eslint . --ext .ts,.tsx --fix",
         "type-check": "tsc --noEmit",
         "type-check:watch": "tsc --noEmit --watch",
-        "seed": "node scripts/seed-data.js"
+        "seed": "node scripts/seed-data.js",
+        "db:seed": "node scripts/seed.js",
+        "reset-models": "node scripts/reset-models.js"
     },
     "dependencies": {
-        "@hookform/resolvers": "^3.9.1",
+        "@hookform/resolvers": "^3.6.0",
         "@monaco-editor/react": "^4.7.0",
         "@radix-ui/react-accordion": "^1.2.2",
         "@radix-ui/react-alert-dialog": "^1.1.4",
@@ -43,7 +45,6 @@
         "@radix-ui/react-toggle-group": "^1.1.1",
         "@radix-ui/react-tooltip": "^1.1.6",
         "@reduxjs/toolkit": "^2.7.0",
-
         "@types/yup": "^0.29.14",
         "autoprefixer": "^10.4.20",
         "bcryptjs": "^3.0.2",
@@ -60,7 +61,7 @@
         "mongoose": "^8.13.2",
         "next": "15.2.4",
         "next-auth": "^4.24.11",
-        "next-intl": "^4.1.0",
+        "next-intl": "^3.14.0",
         "next-themes": "^0.4.4",
         "nuqs": "^2.4.3",
         "react": "^19",
@@ -87,17 +88,19 @@
     },
     "devDependencies": {
         "@types/bcryptjs": "^2.4.6",
-        "@types/node": "^22",
+        "@types/node": "^22.17.2",
         "@types/react": "^19",
         "@types/react-dom": "^19",
         "@typescript-eslint/eslint-plugin": "^7.0.0",
         "@typescript-eslint/parser": "^7.0.0",
+        "dotenv": "^17.2.1",
         "eslint": "^8.57.0",
         "eslint-config-next": "^15.2.4",
         "eslint-plugin-unused-imports": "^3.1.0",
         "postcss": "^8",
         "tailwindcss": "^3.4.17",
         "ts-node": "^10.9.2",
+        "tsconfig-paths": "^4.2.0",
         "typescript": "^5.8.3"
     }
 }

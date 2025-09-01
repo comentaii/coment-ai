@@ -1,36 +1,32 @@
+require('dotenv').config({ path: '.env.local' });
 const mongoose = require('mongoose');
 
-async function resetModels() {
-    try {
-        // Connect to MongoDB
-        await mongoose.connect(process.env.MONGODB_URI || 'mongodb+srv://mentorcodeai:RTDmJJixL1EIlu0l@cluster0.88ntzbp.mongodb.net/coment-ai-project');
+const MONGODB_URI = process.env.MONGODB_URI;
 
-        console.log('Connected to MongoDB');
-
-        // Delete existing models to force recreation
-        if (mongoose.models.User) {
-            delete mongoose.models.User;
-            console.log('Deleted User model');
-        }
-
-        if (mongoose.models.Company) {
-            delete mongoose.models.Company;
-            console.log('Deleted Company model');
-        }
-
-        // Clear model cache
-        mongoose.deleteModel('User');
-        mongoose.deleteModel('Company');
-
-        console.log('Model cache cleared');
-
-        // Disconnect
-        await mongoose.disconnect();
-        console.log('Disconnected from MongoDB');
-
-    } catch (error) {
-        console.error('Error resetting models:', error);
+const resetModels = async() => {
+    if (!MONGODB_URI) {
+        console.error('FATAL: MONGODB_URI is not defined in .env.local');
+        process.exit(1);
     }
-}
+
+    try {
+        await mongoose.connect(MONGODB_URI);
+        console.log('MongoDB connected for resetting models...');
+
+        const collections = await mongoose.connection.db.collections();
+
+        for (const collection of collections) {
+            console.log(`Dropping collection: ${collection.collectionName}`);
+            await collection.drop();
+        }
+
+        console.log('\n✅ All collections dropped successfully!');
+    } catch (error) {
+        console.error('❌ Error resetting models:', error);
+    } finally {
+        await mongoose.disconnect();
+        console.log('MongoDB disconnected.');
+    }
+};
 
 resetModels();

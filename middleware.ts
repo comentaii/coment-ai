@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getToken } from 'next-auth/jwt';
 import createMiddleware from 'next-intl/middleware';
+import { USER_ROLES } from '@/lib/constants';
 
 // Create next-intl middleware
 const intlMiddleware = createMiddleware({
@@ -60,7 +61,7 @@ export async function middleware(req: NextRequest) {
       
       // Super admin routes
       if (pathWithoutLocale.startsWith('/admin/')) {
-        if (userRole !== 'super_admin') {
+        if (userRole !== USER_ROLES.SUPER_ADMIN) {
           // Forbidden access, redirect to forbidden page
           return NextResponse.redirect(new URL(`/${locale}/forbidden`, req.url));
         }
@@ -69,7 +70,7 @@ export async function middleware(req: NextRequest) {
       // HR Manager routes
       if (pathWithoutLocale.startsWith('/candidates/') || 
           pathWithoutLocale.startsWith('/interviews/')) {
-        if (!['hr_manager', 'super_admin'].includes(userRole)) {
+        if (![USER_ROLES.HR_MANAGER, USER_ROLES.SUPER_ADMIN].includes(userRole)) {
           // Forbidden access, redirect to forbidden page
           return NextResponse.redirect(new URL(`/${locale}/forbidden`, req.url));
         }
@@ -77,7 +78,7 @@ export async function middleware(req: NextRequest) {
       
       // Technical Interviewer routes
       if (pathWithoutLocale.startsWith('/proctoring/')) {
-        if (!['technical_interviewer', 'hr_manager', 'super_admin'].includes(userRole)) {
+        if (![USER_ROLES.TECHNICAL_INTERVIEWER, USER_ROLES.HR_MANAGER, USER_ROLES.SUPER_ADMIN].includes(userRole)) {
           // Forbidden access, redirect to forbidden page
           return NextResponse.redirect(new URL(`/${locale}/forbidden`, req.url));
         }

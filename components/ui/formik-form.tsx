@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import { Formik, Form, FormikProps, FormikHelpers } from 'formik';
+import { Formik, Form, Field, useFormikContext, FormikProps, FormikHelpers } from 'formik';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -114,6 +114,7 @@ interface FormikSelectProps {
   className?: string;
   error?: string;
   touched?: boolean;
+  disabled?: boolean;
 }
 
 export const FormikSelect: React.FC<FormikSelectProps> = ({
@@ -125,7 +126,10 @@ export const FormikSelect: React.FC<FormikSelectProps> = ({
   className,
   error,
   touched,
+  disabled = false,
 }) => {
+  const { setFieldValue, values } = useFormikContext<any>();
+
   return (
     <div className="space-y-2">
       {label && (
@@ -133,7 +137,14 @@ export const FormikSelect: React.FC<FormikSelectProps> = ({
           {label}
         </Label>
       )}
-      <Select name={name}>
+      <Select
+        name={name}
+        value={values[name]}
+        onValueChange={(value) => {
+          setFieldValue(name, value);
+        }}
+        disabled={disabled}
+      >
         <SelectTrigger className={cn(
           "w-full",
           error && touched && "border-red-500 focus:border-red-500",
@@ -205,6 +216,7 @@ interface FormikFormProps<T> {
   onSubmit: (values: T, formikHelpers: FormikHelpers<T>) => void | Promise<void>;
   children: (formikProps: FormikProps<T>) => React.ReactNode;
   className?: string;
+  enableReinitialize?: boolean;
 }
 
 export function FormikForm<T>({
@@ -213,12 +225,14 @@ export function FormikForm<T>({
   onSubmit,
   children,
   className,
+  enableReinitialize = false,
 }: FormikFormProps<T>) {
   return (
     <Formik
       initialValues={initialValues}
       validationSchema={validationSchema}
       onSubmit={onSubmit}
+      enableReinitialize={enableReinitialize}
     >
       {(formikProps) => (
         <Form className={cn("space-y-6", className)}>

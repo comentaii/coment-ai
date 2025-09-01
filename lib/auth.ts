@@ -1,17 +1,17 @@
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
-import { UserService } from "@/services/db/user.service";
+import { userService } from "@/services/db";
+import { companyService } from "@/services/db";
+import { USER_ROLES } from "@/lib/constants";
 import { connectToDatabase } from "@/lib/db";
-import { USER_ROLES, type UserRole } from "@/lib/constants/roles";
-
-const userService = new UserService();
+import { IUser } from "@/schemas";
 
 export const authOptions: NextAuthOptions = {
   providers: [
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      clientId: process.env['GOOGLE_CLIENT_ID']!,
+      clientSecret: process.env['GOOGLE_CLIENT_SECRET']!,
     }),
     CredentialsProvider({
       name: "credentials",
@@ -37,17 +37,26 @@ export const authOptions: NextAuthOptions = {
         if (!isPasswordValid) {
           throw new Error("Invalid password");
         }
+        
+        let company = null;
+        if (user.company) {
+            const companyDetails = await companyService.findById(user.company.toString());
+            if(companyDetails) {
+                company = {
+                    _id: companyDetails._id.toString(),
+                    name: companyDetails.name,
+                };
+            }
+        }
 
-        const userForAuth = {
-          id: user._id?.toString() || "",
+        return {
+          id: user._id.toString(),
           name: user.name,
           email: user.email,
           image: user.image || null,
           role: user.role,
-          companyId: user.companyId?.toString() || null,
+          company: company,
         };
-
-        return userForAuth;
       },
     }),
   ],
@@ -56,51 +65,57 @@ export const authOptions: NextAuthOptions = {
       if (account?.provider === "google") {
         await connectToDatabase();
         
-        // Check if user exists
         const existingUser = await userService.findByEmail(user.email!);
         
         if (!existingUser) {
-          // Create new user with Google OAuth
           const newUser = await userService.createUser({
             name: user.name!,
             email: user.email!,
             image: user.image!,
-            role: USER_ROLES.CANDIDATE, // Default role for OAuth users
+            role: USER_ROLES.CANDIDATE,
             emailVerified: new Date(),
           });
           
           user.id = newUser._id.toString();
-          user.role = newUser.role;
-          user.companyId = newUser.companyId?.toString() || null;
+          (user as IUser).role = newUser.role;
         } else {
-          // Update existing user's Google info
           await userService.updateUser(existingUser._id.toString(), {
             image: user.image!,
             emailVerified: new Date(),
           });
           
           user.id = existingUser._id.toString();
-          user.role = existingUser.role;
-          user.companyId = existingUser.companyId?.toString() || null;
+          (user as IUser).role = existingUser.role;
+          
+          let company = null;
+          if (existingUser.company) {
+            const companyDetails = await companyService.findById(existingUser.company.toString());
+            if(companyDetails) {
+                company = {
+                    _id: companyDetails._id.toString(),
+                    name: companyDetails.name,
+                };
+            }
+          }
+          (user as IUser).company = company;
         }
       }
       
       return true;
     },
-    jwt: ({ token, user }) => {
+    async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
-        token.userId = user.id;
-        (token as any).role = (user as any).role;
-        (token as any).companyId = (user as any).companyId;
+        token.role = (user as IUser).role;
+        token.company = (user as IUser).company;
       }
       return token;
     },
-    session: ({ session, token }) => {
+    async session({ session, token }) {
       if (token && session.user) {
         session.user.id = token.id;
-        session.user.role = (token as any).role as UserRole;
-        session.user.companyId = (token as any).companyId;
+        session.user.role = token.role;
+        session.user.company = token.company;
       }
       return session;
     },
@@ -139,7 +154,7 @@ export const authOptions: NextAuthOptions = {
   jwt: {
     maxAge: 24 * 60 * 60, // 24 hours (in seconds)
   },
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env['NEXTAUTH_SECRET'],
 };
 
 export default authOptions;

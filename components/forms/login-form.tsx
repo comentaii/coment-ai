@@ -3,10 +3,13 @@
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { signIn } from 'next-auth/react';
-import { FormikForm } from './formik-form';
-import { FormikField } from './formik-field';
+import { useAuth } from '@/hooks/use-auth';
+import { loginSchema, LoginDto } from '@/lib/validation-schemas';
+import { FormikForm } from '@/components/ui/formik-form';
+import { FormikField } from '@/components/forms/formik-field';
 import { Button } from '@/components/ui/button';
-import { userLoginSchema, UserLoginFormData } from '@/lib/validation-schemas';
+import { FormSubmitButton } from '@/components/ui/button';
+import { FormError, FormSuccess } from '@/components/ui/form';
 
 interface LoginFormProps {
   onSuccess?: () => void;
@@ -17,12 +20,12 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
 
-  const initialValues: UserLoginFormData = {
+  const initialValues: LoginDto = {
     email: '',
     password: '',
   };
 
-  const handleSubmit = async (values: UserLoginFormData) => {
+  const handleSubmit = async (values: LoginDto) => {
     setIsLoading(true);
     try {
       const result = await signIn('credentials', {
@@ -58,7 +61,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
     <div className="space-y-4">
       <FormikForm
         initialValues={initialValues}
-        validationSchema={userLoginSchema}
+        validationSchema={loginSchema}
         onSubmit={handleSubmit}
         className="space-y-4"
       >

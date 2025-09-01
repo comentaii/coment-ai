@@ -13,6 +13,9 @@ import { useToast } from '@/hooks/use-toast';
 import { useError } from '@/hooks/use-error';
 import { toastMessages } from '@/lib/utils/toast';
 import { NetworkError, ValidationError, ApiError } from '@/lib/utils/error';
+import { useTranslations } from 'next-intl';
+import { RBACGuard } from '@/components/ui/rbac-guard';
+import { CreateInterviewForm } from '@/components/forms/create-interview-form';
 
 export default function DashboardPage() {
   const { session } = useAuth();
@@ -28,6 +31,7 @@ export default function DashboardPage() {
     errorCount,
     clearError 
   } = useError();
+  const t = useTranslations('dashboard');
 
   if (!session) {
     return null;
@@ -135,6 +139,17 @@ export default function DashboardPage() {
             Coment-AI platformuna hoş geldiniz. Aşağıdaki seçeneklerden birini seçerek başlayın.
           </p>
         </div>
+
+        <RBACGuard requiredRoles={[USER_ROLES.SUPER_ADMIN, USER_ROLES.HR_MANAGER]}>
+          <Card>
+            <CardHeader>
+              <CardTitle>{t('create_interview_title')}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <CreateInterviewForm />
+            </CardContent>
+          </Card>
+        </RBACGuard>
 
         {/* Error Status Card */}
         {lastError && (

@@ -1,61 +1,19 @@
 'use client';
 
-import { useSession, signIn, signOut } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
-import { useToast } from './use-toast';
-import { useError } from './use-error';
-import { toastMessages } from '@/lib/utils/toast';
-import { AuthError } from '@/lib/utils/error';
+import { useSession } from 'next-auth/react';
+import { useMemo } from 'react';
+import { User } from 'next-auth';
 
-export function useAuth() {
+export const useAuth = () => {
   const { data: session, status } = useSession();
-  const router = useRouter();
-  const { success, error } = useToast();
-  const { handleAuthError, handleAsyncError } = useError({
-    showToast: false, // We'll handle toast manually
-  });
 
-  const isAuthenticated = !!session;
-  const isLoading = status === 'loading';
-
-  const login = async (email: string, password: string) => {
-    return handleAsyncError(
-      async () => {
-        const result = await signIn('credentials', {
-          email,
-          password,
-          redirect: false,
-        });
-
-        if (result?.error) {
-          throw new AuthError(result.error);
-        }
-
-        success(toastMessages.loginSuccess);
-        return result;
-      },
-      undefined,
-      toastMessages.loginError
-    );
-  };
-
-  const logout = async () => {
-    return handleAsyncError(
-      async () => {
-        await signOut({ redirect: false });
-        success(toastMessages.logoutSuccess);
-        router.push('/');
-      },
-      undefined,
-      toastMessages.logoutError
-    );
-  };
-
+  const user = useMemo(() => session?.user, [session]);
+  
   return {
+    user: user as User | null,
     session,
-    isAuthenticated,
-    isLoading,
-    login,
-    logout,
+    status, // 'loading', 'authenticated', 'unauthenticated'
+    isAuthenticated: status === 'authenticated',
+    isLoading: status === 'loading',
   };
-} 
+}; 

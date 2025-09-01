@@ -30,4 +30,14 @@ export const companySignupSchema = yup.object({
 
 export type UserSignupFormData = yup.InferType<typeof userSignupSchema>;
 export type UserLoginFormData = yup.InferType<typeof userLoginSchema>;
-export type CompanySignupFormData = yup.InferType<typeof companySignupSchema>; 
+export type CompanySignupFormData = yup.InferType<typeof companySignupSchema>;
+
+export const createInterviewSchema = yup.object({
+  candidateId: yup.string().required('Aday seçimi zorunludur.'),
+  interviewerId: yup.string().required('Mülakatçı seçimi zorunludur.'),
+  challengeId: yup.string().required('Soru seçimi zorunludur.'),
+  companyId: yup.string().required('Şirket bilgisi zorunludur.'),
+  scheduledAt: yup.date().required('Tarih seçimi zorunludur.').min(new Date(), 'Geçmiş bir tarih seçilemez.'),
+});
+
+export type CreateInterviewDto = yup.InferType<typeof createInterviewSchema>; 
