@@ -4,10 +4,13 @@ export interface IUser extends Document {
   name: string;
   email: string;
   password?: string;
-  role: 'super_admin' | 'hr_manager' | 'technical_interviewer' | 'candidate';
+  roles: ('super_admin' | 'hr_manager' | 'technical_interviewer' | 'candidate')[];
   companyId?: string;
   image?: string;
   emailVerified?: Date;
+  isActive: boolean;
+  invitedBy?: string;
+  lastLoginAt?: Date;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -32,10 +35,10 @@ const userSchema = new Schema<IUser>({
     required: false, // Password is optional (for OAuth users)
     minlength: [6, 'Password must be at least 6 characters']
   },
-  role: {
-    type: String,
+  roles: {
+    type: [String],
     enum: ['super_admin', 'hr_manager', 'technical_interviewer', 'candidate'],
-    default: 'candidate',
+    default: ['candidate'],
     required: true
   },
   companyId: {
@@ -50,11 +53,24 @@ const userSchema = new Schema<IUser>({
   emailVerified: {
     type: Date,
     default: null
+  },
+  isActive: {
+    type: Boolean,
+    default: true
+  },
+  invitedBy: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    required: false
+  },
+  lastLoginAt: {
+    type: Date,
+    default: null
   }
 }, {
   timestamps: true,
   toJSON: {
-    transform: function(doc, ret) {
+    transform: function(_doc, ret) {
       delete ret.password;
       return ret;
     }
@@ -63,7 +79,8 @@ const userSchema = new Schema<IUser>({
 
 // Index for better query performance
 userSchema.index({ email: 1 });
-userSchema.index({ role: 1 });
+userSchema.index({ roles: 1 });
 userSchema.index({ companyId: 1 });
+userSchema.index({ isActive: 1 });
 
-export const User = mongoose.models.User || mongoose.model<IUser>('User', userSchema); 
+export const User = mongoose.models['User'] || mongoose.model<IUser>('User', userSchema); 
