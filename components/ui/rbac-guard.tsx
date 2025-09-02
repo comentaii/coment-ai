@@ -1,7 +1,5 @@
-'use client';
-
 import React from 'react';
-import { useRBAC } from '@/hooks/use-rbac';
+import { useRBAC } from '@/hooks/useRBAC';
 import { Permission, UserRole } from '@/types/rbac';
 
 interface RBACGuardProps {
@@ -20,31 +18,39 @@ export function RBACGuard({
   showFallback = true
 }: RBACGuardProps) {
   const { 
+    hasPermission, 
+    hasAnyPermission, 
+    hasAllPermissions,
+    isRole, 
     isAnyRole,
     isLoading,
-    isAuthenticated,
-    hasAllPermissions
+    isAuthenticated 
   } = useRBAC();
 
-  // Session verisi yüklenene kadar hiçbir şey render etme (veya bir skeleton göster)
+  // Loading state
   if (isLoading) {
-    return null; // veya <LoadingSpinner />
+    return <div className="flex items-center justify-center p-4">Loading...</div>;
   }
 
-  // Yüklendikten sonra yetki kontrolünü yap
-  let isAuthorized = false;
-
-  if (isAuthenticated) {
-    const hasRoleAccess = requiredRoles.length === 0 || isAnyRole(requiredRoles);
-    const hasPermissionAccess = requiredPermissions.length === 0 || hasAllPermissions(requiredPermissions);
-    isAuthorized = hasRoleAccess && hasPermissionAccess;
-  }
-  
-  if (isAuthorized) {
-    return <>{children}</>;
+  // Check if user is authenticated
+  if (!isAuthenticated) {
+    return showFallback ? <>{fallback}</> : null;
   }
 
-  return showFallback ? <>{fallback}</> : null;
+  // Check role requirements
+  if (requiredRoles.length > 0 && !isAnyRole(requiredRoles)) {
+    return showFallback ? <>{fallback}</> : null;
+  }
+
+  // Check permission requirements
+  if (requiredPermissions.length > 0) {
+    // If all permissions are required
+    if (!hasAllPermissions(requiredPermissions)) {
+      return showFallback ? <>{fallback}</> : null;
+    }
+  }
+
+  return <>{children}</>;
 }
 
 // Specific role-based guards

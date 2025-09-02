@@ -19,6 +19,11 @@ export const userLoginSchema = yup.object({
   password: yup.string().required('Şifre gereklidir'),
 });
 
+export const userSigninSchema = yup.object({
+  email: yup.string().email('Geçerli email giriniz').required('Email gereklidir'),
+  password: yup.string().required('Şifre gereklidir'),
+});
+
 export const companySignupSchema = yup.object({
   name: yup.string().required('Şirket adı gereklidir').min(2, 'Şirket adı en az 2 karakter olmalıdır'),
   email: yup.string().email('Geçerli email giriniz').required('Email gereklidir'),
@@ -48,4 +53,5 @@ export type UserSignupFormData = yup.InferType<typeof userSignupSchema>;
 export type UserLoginFormData = yup.InferType<typeof userLoginSchema>;
 export type CompanySignupFormData = yup.InferType<typeof companySignupSchema>;
 export type CreateJobPostingDto = yup.InferType<typeof createJobPostingSchema>;
-export type UpdateJobPostingDto = yup.InferType<typeof updateJobPostingSchema>; 
+export type UpdateJobPostingDto = yup.InferType<typeof updateJobPostingSchema>;
+export type UserSigninFormData = yup.InferType<typeof userSigninSchema>; 

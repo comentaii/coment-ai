@@ -3,13 +3,12 @@
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
-import { useAuth } from '@/hooks/use-auth';
-import { signupSchema, SignupDto } from '@/lib/validation-schemas';
 import { FormikForm } from '@/components/ui/formik-form';
 import { FormikField } from '@/components/forms/formik-field';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { userSignupSchema, UserSignupFormData } from '@/lib/validation-schemas';
+import {  UserSignupFormData, userSignupSchema } from '@/lib/validation-schemas';
+import { useToast } from '@/hooks/use-toast';
 
 interface SignupFormProps {
   onSuccess?: () => void;
@@ -21,7 +20,7 @@ export function SignupForm({ onSuccess }: SignupFormProps) {
   const { success, error: showError } = useToast();
   const [isLoading, setIsLoading] = useState(false);
 
-  const initialValues: SignupDto = {
+  const initialValues: UserSignupFormData = {
     name: '',
     email: '',
     password: '',
@@ -48,7 +47,6 @@ export function SignupForm({ onSuccess }: SignupFormProps) {
       }
 
       success(t('signupSuccessDescription'));
-      resetForm();
       router.push('/tr/auth/signin');
       onSuccess?.();
     } catch (err: any) {
@@ -61,7 +59,7 @@ export function SignupForm({ onSuccess }: SignupFormProps) {
   return (
     <FormikForm
       initialValues={initialValues}
-      validationSchema={signupSchema}
+      validationSchema={userSignupSchema}
       onSubmit={handleSubmit}
       className="space-y-4"
     >

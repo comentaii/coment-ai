@@ -1,8 +1,6 @@
 import { BaseService } from './base.service';
-import { User, IUser } from '@/schemas';
+import { User, IUser } from '@/schemas/user.model';
 import bcrypt from 'bcryptjs';
-import mongoose from 'mongoose';
-import { USER_ROLES } from '@/lib/constants';
 
 export class UserService extends BaseService<IUser> {
   constructor() {
@@ -11,6 +9,11 @@ export class UserService extends BaseService<IUser> {
 
   async createUser(userData: Partial<IUser>): Promise<IUser> {
     return this.executeWithErrorHandling(async () => {
+      // Hash password if provided
+      if (userData.password) {
+        userData.password = await bcrypt.hash(userData.password, 12);
+      }
+
       const user = new this.model(userData);
       return user.save();
     });
@@ -24,7 +27,7 @@ export class UserService extends BaseService<IUser> {
 
   async findByEmailWithPassword(email: string): Promise<IUser | null> {
     return this.executeWithErrorHandling(async () => {
-      return this.model.findOne({ email: email.toLowerCase() }).select('+password company').exec();
+      return this.model.findOne({ email: email.toLowerCase() }).select('+password').exec();
     });
   }
 
@@ -35,14 +38,18 @@ export class UserService extends BaseService<IUser> {
 
   async updateUser(id: string, updateData: Partial<IUser>): Promise<IUser | null> {
     return this.executeWithErrorHandling(async () => {
-      // Şifre hash'leme işlemi Mongoose pre-save hook'u tarafından yapılacak.
+      // Hash password if it's being updated
+      if (updateData.password) {
+        updateData.password = await bcrypt.hash(updateData.password, 12);
+      }
+
       return this.model.findByIdAndUpdate(id, updateData, { new: true }).exec();
     });
   }
 
   async findUsersByCompany(companyId: string): Promise<IUser[]> {
     return this.executeWithErrorHandling(async () => {
-      return this.model.find({ company: companyId }).exec();
+      return this.model.find({ companyId }).exec();
     });
   }
 
@@ -51,31 +58,4 @@ export class UserService extends BaseService<IUser> {
       return this.model.find({ role }).exec();
     });
   }
-
-  async findByCompany(companyId: string): Promise<IUser[]> {
-    return this.executeWithErrorHandling(async () => {
-      return this.model.find({ company: companyId }).exec();
-    });
-  }
-
-  /**
-   * Bir şirketteki adayları (candidate rolü) getirir.
-   */
-  async findCandidatesByCompany(companyId: string): Promise<IUser[]> {
-    return this.executeWithErrorHandling(async () => {
-      return this.model.find({ company: companyId, role: USER_ROLES.CANDIDATE }).exec();
-    });
-  }
-
-  /**
-   * Bir şirketteki mülakatçıları (technical_interviewer rolü) getirir.
-   */
-  async findInterviewersByCompany(companyId: string): Promise<IUser[]> {
-    return this.executeWithErrorHandling(async () => {
-      return this.model.find({ company: companyId, role: USER_ROLES.TECHNICAL_INTERVIEWER }).exec();
-    });
-  }
-}
-
-const userService = new UserService();
-export default userService; 
+} 

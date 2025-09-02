@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
 
     // Only add companyId if it exists
     if (companyId) {
-      userData.company = companyId;
+      userData.companyId = companyId;
     }
 
     // Create user
@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
         name: user.name,
         email: user.email,
         role: user.role,
-        company: user.company,
+        companyId: user.companyId,
       },
     });
 

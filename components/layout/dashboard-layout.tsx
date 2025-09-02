@@ -46,9 +46,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       {/* Main Content Area */}
       <div className="lg:ml-20 xl:ml-72 transition-all duration-300 ease-in-out min-h-screen">
         {/* Top Navbar */}
-        <div className="sticky top-0 z-20 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 shadow-sm">
           <DashboardNavbar />
-        </div>
         
         {/* Main Content */}
         <main className="min-h-[calc(100vh-4rem)] p-4 lg:p-6">

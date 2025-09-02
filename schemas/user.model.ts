@@ -1,12 +1,11 @@
 import mongoose, { Document, Schema } from 'mongoose';
-import bcrypt from 'bcryptjs';
 
 export interface IUser extends Document {
   name: string;
   email: string;
   password?: string;
   role: 'super_admin' | 'hr_manager' | 'technical_interviewer' | 'candidate';
-  company?: mongoose.Types.ObjectId;
+  companyId?: string;
   image?: string;
   emailVerified?: Date;
   createdAt: Date;
@@ -39,10 +38,10 @@ const userSchema = new Schema<IUser>({
     default: 'candidate',
     required: true
   },
-  company: {
+  companyId: {
     type: Schema.Types.ObjectId,
     ref: 'Company',
-    required: false
+    required: false // Company ID is optional for all users
   },
   image: {
     type: String,
@@ -53,26 +52,18 @@ const userSchema = new Schema<IUser>({
     default: null
   }
 }, {
-  timestamps: true
-});
-
-// Hash password before saving
-userSchema.pre<IUser>('save', async function (next) {
-  if (!this.isModified('password') || !this.password) {
-    return next();
-  }
-  try {
-    const salt = await bcrypt.genSalt(12);
-    this.password = await bcrypt.hash(this.password, salt);
-    next();
-  } catch (error: any) {
-    next(error);
+  timestamps: true,
+  toJSON: {
+    transform: function(doc, ret) {
+      delete ret.password;
+      return ret;
+    }
   }
 });
 
 // Index for better query performance
 userSchema.index({ email: 1 });
 userSchema.index({ role: 1 });
-userSchema.index({ company: 1 });
+userSchema.index({ companyId: 1 });
 
-export default userSchema; 
+export const User = mongoose.models.User || mongoose.model<IUser>('User', userSchema); 
