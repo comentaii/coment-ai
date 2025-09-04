@@ -5,7 +5,7 @@ import { challengeService } from '@/services/db';
 import { getTranslations } from 'next-intl/server';
 import { USER_ROLES } from '@/lib/constants';
 
-export async function GET(req: NextRequest, { params }: { params: { companyId: string } }) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ companyId: string }> }) {
   const t = await getTranslations('api');
   try {
     const token = await getToken({ req });
@@ -13,7 +13,7 @@ export async function GET(req: NextRequest, { params }: { params: { companyId: s
       return responseHandler.forbidden(t('error.forbidden'));
     }
 
-    const companyId = params.companyId;
+    const { companyId } = await params;
 
     // Authorization check: User must be a super_admin or belong to the requested company
     if (!token.roles.includes('super_admin') && token.companyId !== companyId) {

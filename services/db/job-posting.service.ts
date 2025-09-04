@@ -15,6 +15,7 @@ export class JobPostingService extends BaseService<IJobPosting> {
   }
   
   async findByIdWithPopulatedCreator(id: string): Promise<IJobPosting | null> {
+    this.validateId(id);
     return this.executeWithErrorHandling(async () => {
       return this.model.findById(id).populate('createdBy', 'name email').exec();
     });

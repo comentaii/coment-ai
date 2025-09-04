@@ -106,5 +106,20 @@
         "skillsLabel": "Required Skills",
         "skillsPlaceholder": "Press enter to add a skill...",
         "submitButton": "Save Job Posting"
+    },
+    "api": {
+        "job-postings": {
+            "success": {
+                "updated": "Job posting updated successfully",
+                "deleted": "Job posting deleted successfully",
+                "created": "Job posting created successfully"
+            },
+            "error": {
+                "notFound": "Job posting not found",
+                "forbidden": "You don't have permission to perform this action",
+                "unauthorized": "Unauthorized access",
+                "generic": "An error occurred"
+            }
+        }
     }
 }

@@ -1,5 +1,6 @@
 import { Schema, model, models, Document, Types } from 'mongoose';
 import { USER_ROLES } from '@/lib/constants/roles';
+import { User } from './user.model';
 
 export interface IJobPosting extends Document {
   title: string;
@@ -27,18 +28,13 @@ const jobPostingSchema = new Schema<IJobPosting>(
       type: Schema.Types.ObjectId,
       ref: 'User',
       required: true,
-      validate: {
-        validator: async function (value: Types.ObjectId) {
-          const user = await models.User.findById(value);
-          return user && (user.role === USER_ROLES.SUPER_ADMIN || user.role === USER_ROLES.HR_MANAGER);
-        },
-        message: 'Job posting can only be created by a Super Admin or HR Manager.',
-      },
     },
   },
   { timestamps: true }
 );
 
-const JobPosting = models.JobPosting || model<IJobPosting>('JobPosting', jobPostingSchema);
+// Force model recreation to clear cache
+delete models['JobPosting'];
+const JobPosting = model<IJobPosting>('JobPosting', jobPostingSchema);
 
 export default JobPosting;
