@@ -11,7 +11,6 @@ import { useNavigation } from '@/lib/utils/navigation';
 import { USER_ROLES, type UserRole } from '@/lib/constants/roles';
 import { useToast } from '@/hooks/use-toast';
 import { useError } from '@/hooks/use-error';
-import { toastMessages } from '@/lib/utils/toast';
 import { NetworkError, ValidationError, ApiError } from '@/lib/utils/error';
 import { useTranslations } from 'next-intl';
 import { RBACGuard } from '@/components/ui/rbac-guard';
@@ -22,7 +21,6 @@ export default function DashboardPage() {
   const { getLocalizedPath } = useNavigation();
   const { success, error, warning, info, loading, promise } = useToast();
   const { 
-    handleError, 
     handleAsyncError, 
     handleNetworkError, 
     handleValidationError, 

@@ -1,18 +1,12 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { SignupForm } from '@/components/forms/signup-form';
 import Link from 'next/link';
 
 export default function SignUpPage() {
   const t = useTranslations('Auth');
-  const router = useRouter();
-
-  const handleSuccess = () => {
-    router.push('/tr/dashboard');
-  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-brand-dark py-12 px-4 sm:px-6 lg:px-8">
@@ -32,7 +26,7 @@ export default function SignUpPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <SignupForm onSuccess={handleSuccess} />
+            <SignupForm />
             
             <div className="mt-8 text-center">
               <p className="text-base text-gray-600 dark:text-gray-400">

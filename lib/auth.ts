@@ -128,9 +128,9 @@ export const authOptions: NextAuthOptions = {
     },
   },
   pages: {
-    signIn: "/auth/signin",
-    signOut: "/auth/signout",
-    error: "/auth/error",
+    signIn: "/tr/auth/signin",
+    signOut: "/tr/auth/signout",
+    error: "/tr/auth/error",
   },
   session: {
     strategy: "jwt",

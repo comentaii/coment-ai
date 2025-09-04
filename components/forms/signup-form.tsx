@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
+import { signIn } from 'next-auth/react';
 import { FormikForm } from '@/components/ui/formik-form';
 import { FormikField } from '@/components/forms/formik-field';
 import { Button } from '@/components/ui/button';
@@ -47,8 +48,21 @@ export function SignupForm({ onSuccess }: SignupFormProps) {
       }
 
       success(t('signupSuccessDescription'));
-      router.push('/tr/auth/signin');
-      onSuccess?.();
+      
+      // Automatically sign in the user after successful signup
+      const signInResult = await signIn('credentials', {
+        email: values.email,
+        password: values.password,
+        redirect: false,
+      });
+
+      if (signInResult?.ok) {
+        router.push('/tr/dashboard');
+        onSuccess?.();
+      } else {
+        // If auto sign-in fails, redirect to sign-in page
+        router.push('/tr/auth/signin');
+      }
     } catch (err: any) {
       showError(err.message);
     } finally {
