@@ -11,7 +11,7 @@ const userService = new UserService();
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -37,7 +37,8 @@ export async function PUT(
     await connectToDatabase();
 
     // Get target user
-    const targetUser = await userService.findById(params.id);
+    const { id } = await params;
+    const targetUser = await userService.findById(id);
     if (!targetUser) {
       return ResponseHandler.error('Kullanıcı bulunamadı', 404);
     }
@@ -48,7 +49,7 @@ export async function PUT(
     }
 
     // Update user roles
-    const updatedUser = await userService.updateUserRoles(params.id, body.roles);
+    const updatedUser = await userService.updateUserRoles(id, body.roles);
 
     return ResponseHandler.success(
       { user: updatedUser },
@@ -62,7 +63,7 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -82,15 +83,17 @@ export async function DELETE(
       return ResponseHandler.error('Bu işlem için yetkiniz yok', 403);
     }
 
+    const { id } = await params;
+
     // Prevent self-deletion
-    if (params.id === session.user.id) {
+    if (id === session.user.id) {
       return ResponseHandler.error('Kendi hesabınızı silemezsiniz', 400);
     }
 
     await connectToDatabase();
 
     // Get target user
-    const targetUser = await userService.findById(params.id);
+    const targetUser = await userService.findById(id);
     if (!targetUser) {
       return ResponseHandler.error('Kullanıcı bulunamadı', 404);
     }
@@ -101,7 +104,7 @@ export async function DELETE(
     }
 
     // Deactivate user instead of deleting
-    const deactivatedUser = await userService.deactivateUser(params.id);
+    const deactivatedUser = await userService.deactivateUser(id);
 
     return ResponseHandler.success(
       { user: deactivatedUser },
@@ -112,4 +115,3 @@ export async function DELETE(
     return ResponseHandler.error('Kullanıcı deaktive edilemedi');
   }
 }
-

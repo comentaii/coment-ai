@@ -31,7 +31,7 @@ export async function middleware(req: NextRequest) {
   // Handle auth pages - redirect logged in users to dashboard
   if (pathWithoutLocale.startsWith('/auth/')) {
     try {
-      const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+      const token = await getToken({ req, secret: process.env['NEXTAUTH_SECRET'] });
       
       if (token) {
         // User is logged in, redirect to dashboard
@@ -49,7 +49,7 @@ export async function middleware(req: NextRequest) {
       pathWithoutLocale.startsWith('/interviews/') || 
       pathWithoutLocale.startsWith('/proctoring/')) {
     try {
-      const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+      const token = await getToken({ req, secret: process.env['NEXTAUTH_SECRET'] });
       
       if (!token) {
         // User not authenticated, redirect to unauthorized page
@@ -57,11 +57,11 @@ export async function middleware(req: NextRequest) {
       }
 
       // Role-based access control
-      const userRole = token.role as string;
+      const userRoles = token.roles as string[] || [];
       
       // Super admin routes
       if (pathWithoutLocale.startsWith('/admin/')) {
-        if (userRole !== USER_ROLES.SUPER_ADMIN) {
+        if (!userRoles.includes(USER_ROLES.SUPER_ADMIN)) {
           // Forbidden access, redirect to forbidden page
           return NextResponse.redirect(new URL(`/${locale}/forbidden`, req.url));
         }
@@ -70,7 +70,7 @@ export async function middleware(req: NextRequest) {
       // HR Manager routes
       if (pathWithoutLocale.startsWith('/candidates/') || 
           pathWithoutLocale.startsWith('/interviews/')) {
-        if (![USER_ROLES.HR_MANAGER, USER_ROLES.SUPER_ADMIN].includes(userRole)) {
+        if (!userRoles.includes(USER_ROLES.HR_MANAGER) && !userRoles.includes(USER_ROLES.SUPER_ADMIN)) {
           // Forbidden access, redirect to forbidden page
           return NextResponse.redirect(new URL(`/${locale}/forbidden`, req.url));
         }
@@ -78,7 +78,9 @@ export async function middleware(req: NextRequest) {
       
       // Technical Interviewer routes
       if (pathWithoutLocale.startsWith('/proctoring/')) {
-        if (![USER_ROLES.TECHNICAL_INTERVIEWER, USER_ROLES.HR_MANAGER, USER_ROLES.SUPER_ADMIN].includes(userRole)) {
+        if (!userRoles.includes(USER_ROLES.TECHNICAL_INTERVIEWER) && 
+            !userRoles.includes(USER_ROLES.HR_MANAGER) && 
+            !userRoles.includes(USER_ROLES.SUPER_ADMIN)) {
           // Forbidden access, redirect to forbidden page
           return NextResponse.redirect(new URL(`/${locale}/forbidden`, req.url));
         }

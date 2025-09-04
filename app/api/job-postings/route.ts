@@ -4,10 +4,8 @@ import { ResponseHandler } from '@/utils/response-handler';
 import { createJobPostingSchema } from '@/lib/validation-schemas';
 import jobPostingService from '@/services/db/job-posting.service';
 import { IJobPosting } from '@/schemas/job-posting.model';
-import { ROLES, UserRole } from '@/types/rbac';
 import { getTranslations } from 'next-intl/server';
-
-const SECRET = process.env.NEXTAUTH_SECRET;
+import { UserService } from '@/services/db/user.service';
 
 // GET all job postings
 export async function GET(req: NextRequest) {
@@ -35,7 +33,8 @@ export async function GET(req: NextRequest) {
     return ResponseHandler.forbidden(t('error.forbidden'));
     
   } catch (error) {
-    return ResponseHandler.error(error as Error, t('error.generic'));
+    const errorMessage = error instanceof Error ? error.message : t('error.generic');
+    return ResponseHandler.error(errorMessage);
   }
 }
 
@@ -45,7 +44,7 @@ export async function POST(req: NextRequest) {
   try {
     const token = await getToken({ req });
 
-    if (!token || !token.roles || !token.roles.includes('hr_manager')) {
+    if (!token || !token.roles || (!token.roles.includes('hr_manager') && !token.roles.includes('super_admin'))) {
       return ResponseHandler.forbidden(t('error.forbidden'));
     }
 
@@ -60,7 +59,7 @@ export async function POST(req: NextRequest) {
 
     const newJobPosting = await jobPostingService.create(jobPostingData);
 
-    return ResponseHandler.success(newJobPosting, 'Job posting created successfully.', 201);
+    return ResponseHandler.success(newJobPosting, t('success.created'), 201);
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
     return ResponseHandler.error(errorMessage);

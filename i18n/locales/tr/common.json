@@ -110,5 +110,20 @@
     "upload_status_processing": "İşleniyor...",
     "upload_status_success": "Başarılı",
     "upload_status_error": "Hata",
-    "matchingStartedSuccess": "Eşleştirme işlemi başarıyla başlatıldı. Sonuçlar hazır olduğunda sayfa otomatik olarak güncellenecektir."
+    "matchingStartedSuccess": "Eşleştirme işlemi başarıyla başlatıldı. Sonuçlar hazır olduğunda sayfa otomatik olarak güncellenecektir.",
+    "api": {
+        "job-postings": {
+            "success": {
+                "updated": "İş ilanı başarıyla güncellendi",
+                "deleted": "İş ilanı başarıyla silindi",
+                "created": "İş ilanı başarıyla oluşturuldu"
+            },
+            "error": {
+                "notFound": "İş ilanı bulunamadı",
+                "forbidden": "Bu işlemi yapma yetkiniz yok",
+                "unauthorized": "Yetkisiz erişim",
+                "generic": "Bir hata oluştu"
+            }
+        }
+    }
 }

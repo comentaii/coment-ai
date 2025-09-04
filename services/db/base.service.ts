@@ -1,5 +1,6 @@
 import { Model, Document, FilterQuery } from 'mongoose';
 import { connectToDatabase } from '@/lib/db';
+import mongoose from 'mongoose';
 
 export abstract class BaseService<T extends Document> {
   protected model: Model<T>;
@@ -24,6 +25,12 @@ export abstract class BaseService<T extends Document> {
     }
   }
 
+  protected validateId(id: string): void {
+    if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+      throw new Error('Invalid ID format');
+    }
+  }
+
   async findAll(filter: FilterQuery<T> = {}): Promise<T[]> {
     return this.executeWithErrorHandling(async () => {
       return this.model.find(filter).exec();
@@ -45,12 +52,14 @@ export abstract class BaseService<T extends Document> {
   }
 
   async update(id: string, data: Partial<T>): Promise<T | null> {
+    this.validateId(id);
     return this.executeWithErrorHandling(async () => {
       return this.model.findByIdAndUpdate(id, data, { new: true }).exec();
     });
   }
 
   async delete(id: string): Promise<boolean> {
+    this.validateId(id);
     return this.executeWithErrorHandling(async () => {
       const result = await this.model.findByIdAndDelete(id).exec();
       return !!result;

@@ -3,10 +3,10 @@ import { getToken } from 'next-auth/jwt';
 import { ResponseHandler } from '@/utils/response-handler';
 import jobPostingService from '@/services/db/job-posting.service';
 import { updateJobPostingSchema } from '@/lib/validation-schemas';
-import { ROLES, UserRole } from '@/types/rbac';
+import { ROLES } from '@/types/rbac';
 import { getTranslations } from 'next-intl/server';
 
-const SECRET = process.env.NEXTAUTH_SECRET;
+const SECRET = process.env['NEXTAUTH_SECRET'];
 
 interface RouteParams {
   params: Promise<{ id: string }>;
@@ -37,11 +37,12 @@ export async function GET(req: NextRequest, { params }: RouteParams) {
 }
 
 // UPDATE a job posting by ID
-export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(req: NextRequest, { params }: RouteParams) {
+  const { id } = await params;
   const t = await getTranslations('api.job-postings');
   try {
     const token = await getToken({ req });
-    const jobPosting = await jobPostingService.findById(params.id);
+    const jobPosting = await jobPostingService.findById(id);
 
     if (!jobPosting) {
       return ResponseHandler.notFound(t('error.notFound'));
@@ -58,20 +59,22 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
     const body = await req.json();
     await updateJobPostingSchema.validate(body);
 
-    const updatedJobPosting = await jobPostingService.update(params.id, body);
+    const updatedJobPosting = await jobPostingService.update(id, body);
     return ResponseHandler.success({ jobPosting: updatedJobPosting }, t('success.updated'));
 
   } catch (error) {
-    return ResponseHandler.error(error as Error, t('error.generic'));
+    const errorMessage = error instanceof Error ? error.message : t('error.generic');
+    return ResponseHandler.error(errorMessage);
   }
 }
 
 // DELETE a job posting by ID
-export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(req: NextRequest, { params }: RouteParams) {
+  const { id } = await params;
   const t = await getTranslations('api.job-postings');
   try {
     const token = await getToken({ req });
-    const jobPosting = await jobPostingService.findById(params.id);
+    const jobPosting = await jobPostingService.findById(id);
 
     if (!jobPosting) {
       return ResponseHandler.notFound(t('error.notFound'));
@@ -85,10 +88,11 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
       return ResponseHandler.forbidden(t('error.forbidden'));
     }
 
-    await jobPostingService.delete(params.id);
+    await jobPostingService.delete(id);
     return ResponseHandler.success(null, t('success.deleted'));
 
   } catch (error) {
-    return ResponseHandler.error(error as Error, t('error.generic'));
+    const errorMessage = error instanceof Error ? error.message : t('error.generic');
+    return ResponseHandler.error(errorMessage);
   }
 }

@@ -9,7 +9,7 @@ const SECRET = process.env.NEXTAUTH_SECRET;
 // GET - Get all candidates (matched and unmatched) for a job posting
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const token = await getToken({ req });
@@ -18,7 +18,7 @@ export async function GET(
       return ResponseHandler.forbidden();
     }
 
-    const jobPostingId = params.id;
+    const { id: jobPostingId } = await params;
     const companyId = token.companyId as string;
 
     if (!companyId) {
