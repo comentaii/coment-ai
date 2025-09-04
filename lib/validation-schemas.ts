@@ -49,9 +49,69 @@ export const updateJobPostingSchema = yup.object({
 });
 
 
+// Interview schemas
+export const createInterviewSchema = yup.object({
+  jobPostingId: yup.string().required('İş ilanı ID gereklidir'),
+  interviewerId: yup.string().required('Mülakatçı ID gereklidir'),
+  scheduledDate: yup.string().required('Mülakat tarihi gereklidir'),
+  candidateIds: yup.array().of(yup.string().required()).min(1, 'En az bir aday seçilmelidir'),
+  notes: yup.string().optional(),
+});
+
+export const updateInterviewSchema = yup.object({
+  scheduledDate: yup.string().optional(),
+  status: yup.string().oneOf(['scheduled', 'active', 'completed', 'cancelled']).optional(),
+  notes: yup.string().optional(),
+});
+
+// User management schemas
+export const loginSchema = yup.object({
+  email: yup.string().email('Geçerli email giriniz').required('Email gereklidir'),
+  password: yup.string().required('Şifre gereklidir'),
+});
+
+export const inviteUserSchema = yup.object({
+  email: yup.string().email('Geçerli email giriniz').required('Email gereklidir'),
+  name: yup.string().required('İsim gereklidir').min(2, 'İsim en az 2 karakter olmalıdır'),
+  role: yup.string()
+    .oneOf(['hr_manager', 'technical_interviewer'], 'Geçerli bir rol seçiniz')
+    .required('Rol gereklidir'),
+});
+
+export const updateUserRolesSchema = yup.object({
+  roles: yup.array().of(yup.string().required()).min(1, 'En az bir rol seçilmelidir'),
+});
+
+// Interview session schemas
+export const createInterviewSessionSchema = yup.object({
+  jobPostingId: yup.string().required('İş ilanı ID gereklidir'),
+  interviewerId: yup.string().required('Mülakatçı ID gereklidir'),
+  scheduledDate: yup.string().required('Mülakat tarihi gereklidir'),
+  candidateIds: yup.array().of(yup.string().required()).min(1, 'En az bir aday seçilmelidir'),
+  notes: yup.string().optional(),
+});
+
+export const updateInterviewSessionSchema = yup.object({
+  scheduledDate: yup.string().optional(),
+  status: yup.string().oneOf(['scheduled', 'active', 'completed', 'cancelled']).optional(),
+  notes: yup.string().optional(),
+});
+
+// Type exports
 export type UserSignupFormData = yup.InferType<typeof userSignupSchema>;
 export type UserLoginFormData = yup.InferType<typeof userLoginSchema>;
 export type CompanySignupFormData = yup.InferType<typeof companySignupSchema>;
 export type CreateJobPostingDto = yup.InferType<typeof createJobPostingSchema>;
 export type UpdateJobPostingDto = yup.InferType<typeof updateJobPostingSchema>;
-export type UserSigninFormData = yup.InferType<typeof userSigninSchema>; 
+export type UserSigninFormData = yup.InferType<typeof userSigninSchema>;
+export type CreateInterviewDto = yup.InferType<typeof createInterviewSchema>;
+export type UpdateInterviewDto = yup.InferType<typeof updateInterviewSchema>;
+export type LoginFormData = yup.InferType<typeof loginSchema>;
+export type InviteUserDto = yup.InferType<typeof inviteUserSchema>;
+export type UpdateUserRolesDto = yup.InferType<typeof updateUserRolesSchema>;
+export type CreateInterviewSessionDto = yup.InferType<typeof createInterviewSessionSchema>;
+export type UpdateInterviewSessionDto = yup.InferType<typeof updateInterviewSessionSchema>;
+
+// Additional type aliases for backward compatibility
+export type InviteUserFormData = InviteUserDto;
+export type UpdateUserRolesFormData = UpdateUserRolesDto; 

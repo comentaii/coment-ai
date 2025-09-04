@@ -134,3 +134,7 @@ export const {
   useGetUpcomingSessionsQuery,
   useGetSessionsByInterviewerQuery,
 } = interviewApi;
+
+// Additional exports for backward compatibility
+export const useCreateInterviewMutation = useCreateInterviewSessionMutation;
+export const useGetInterviewDetailsQuery = useGetInterviewSessionByIdQuery;
