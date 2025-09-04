@@ -64,7 +64,7 @@ const companySchema = new Schema<ICompany>({
 });
 
 // Index for better query performance
-companySchema.index({ email: 1 });
+// Note: email index is already created by unique: true in schema
 companySchema.index({ domain: 1 });
 companySchema.index({ isActive: 1 });
 

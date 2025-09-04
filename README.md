@@ -1,5 +1,5 @@
 # Coment-AI - Clean Project Structure
-
+  
 ## Overview
 This project has been cleaned up and restructured according to the `.cursor` rules. All page content has been removed while keeping the core infrastructure and configurations intact.
 

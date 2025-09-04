@@ -67,7 +67,7 @@ const CandidateProfileSchema = new Schema<ICandidateProfile>({
 });
 
 CandidateProfileSchema.index({ companyId: 1 });
-CandidateProfileSchema.index({ userId: 1 });
+// Note: userId index is already created by unique: true in schema
 
 
 export const CandidateProfile = mongoose.models.CandidateProfile || mongoose.model<ICandidateProfile>('CandidateProfile', CandidateProfileSchema);

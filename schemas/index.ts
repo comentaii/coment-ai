@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
-import UserSchema, { IUser } from './user.model';
-import CompanySchema, { ICompany } from './company.model';
-import ChallengeSchema, { IChallenge } from './challenge.model';
-import InterviewSchema, { IInterview } from './interview.model';
+import { User as UserModel, IUser } from './user.model';
+import { Company as CompanyModel, ICompany } from './company.model';
+import { Challenge as ChallengeModel, IChallenge } from './challenge.model';
+import { Interview as InterviewModel, IInterview } from './interview.model';
 
 export { default as JobApplicationSchema } from './job-application.model';
 export { default as JobPostingSchema } from './job-posting.model';

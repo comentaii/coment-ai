@@ -50,4 +50,7 @@ const ChallengeSchema: Schema<IChallenge> = new Schema(
   }
 );
 
+const Challenge = mongoose.models.Challenge || mongoose.model<IChallenge>('Challenge', ChallengeSchema);
+
+export { Challenge };
 export default ChallengeSchema;
