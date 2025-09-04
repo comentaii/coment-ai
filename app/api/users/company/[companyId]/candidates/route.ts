@@ -18,7 +18,7 @@ export async function GET(req: NextRequest, { params }: { params: { companyId: s
     }
 
     const candidates = await userService.findCandidatesByCompany(companyId);
-    return responseHandler.success({ candidates });
+    return responseHandler.success(candidates);
     
   } catch (error) {
     return responseHandler.error(error as Error);

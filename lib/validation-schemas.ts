@@ -51,6 +51,15 @@ export const updateJobPostingSchema = yup.object({
 
 // Interview schemas
 export const createInterviewSchema = yup.object({
+  candidateId: yup.string().required('Aday seçimi gereklidir'),
+  interviewerId: yup.string().required('Mülakatçı seçimi gereklidir'),
+  challengeId: yup.string().required('Soru seçimi gereklidir'),
+  companyId: yup.string().required('Şirket ID gereklidir'),
+  scheduledAt: yup.date().required('Mülakat tarihi gereklidir'),
+  notes: yup.string().optional(),
+});
+
+export const createInterviewSessionSchema = yup.object({
   jobPostingId: yup.string().required('İş ilanı ID gereklidir'),
   interviewerId: yup.string().required('Mülakatçı ID gereklidir'),
   scheduledDate: yup.string().required('Mülakat tarihi gereklidir'),
@@ -82,14 +91,7 @@ export const updateUserRolesSchema = yup.object({
   roles: yup.array().of(yup.string().required()).min(1, 'En az bir rol seçilmelidir'),
 });
 
-// Interview session schemas
-export const createInterviewSessionSchema = yup.object({
-  jobPostingId: yup.string().required('İş ilanı ID gereklidir'),
-  interviewerId: yup.string().required('Mülakatçı ID gereklidir'),
-  scheduledDate: yup.string().required('Mülakat tarihi gereklidir'),
-  candidateIds: yup.array().of(yup.string().required()).min(1, 'En az bir aday seçilmelidir'),
-  notes: yup.string().optional(),
-});
+// Interview session schemas (already defined above)
 
 export const updateInterviewSessionSchema = yup.object({
   scheduledDate: yup.string().optional(),

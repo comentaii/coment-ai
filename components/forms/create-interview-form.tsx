@@ -3,8 +3,8 @@
 import React, { useState } from 'react';
 import { FormikHelpers } from 'formik';
 import { FormikForm, FormikSelect, FormSubmitButton } from '@/components/ui/formik-form';
-// import { createInterviewSchema, CreateInterviewDto } from '@/lib/validation-schemas';
-import { useCreateInterviewSessionMutation, CreateInterviewSessionRequest } from '@/services/api/interviewApi';
+import { createInterviewSchema, CreateInterviewDto } from '@/lib/validation-schemas';
+import { useCreateInterviewMutation } from '@/services/api/interviewApi';
 import { useGetCandidatesByCompanyQuery, useGetInterviewersByCompanyQuery } from '@/services/api/userApi';
 import { useGetChallengesByCompanyQuery } from '@/services/api/challengeApi';
 import { useAuth } from '@/hooks/use-auth';
@@ -18,10 +18,9 @@ import { Skeleton } from '@/components/ui/skeleton';
 export function CreateInterviewForm() {
   const { user, isLoading: isAuthLoading } = useAuth();
   const { promise } = useToast();
-  const [createInterview, { isLoading }] = useCreateInterviewSessionMutation();
+  const [createInterview, { isLoading }] = useCreateInterviewMutation();
   const [createdInterviewLink, setCreatedInterviewLink] = useState<string | null>(null);
-
-  const { companyId } = useAuth(); // Destructure companyId directly from useAuth
+  const companyId = user?.companyId;
 
   const { data: candidates, isLoading: isLoadingCandidates } = useGetCandidatesByCompanyQuery(companyId!, { skip: !companyId });
   const { data: interviewers, isLoading: isLoadingInterviewers } = useGetInterviewersByCompanyQuery(companyId!, { skip: !companyId });
@@ -31,20 +30,20 @@ export function CreateInterviewForm() {
   const interviewerOptions = interviewers?.map(i => ({ value: String(i._id), label: `${i.name} (${i.email})` })) || [];
   const challengeOptions = challenges?.map(ch => ({ value: String(ch._id), label: ch.title })) || [];
 
-  const initialValues: CreateInterviewSessionRequest = {
-    jobPostingId: '', 
+  const initialValues: CreateInterviewDto = {
+    candidateId: '', 
     interviewerId: '', 
-    scheduledDate: new Date().toISOString(),
-    candidateIds: [],
-    notes: '',
+    challengeId: '', 
+    companyId: companyId || '', 
+    scheduledAt: new Date(),
   };
 
-  const handleSubmit = async (values: CreateInterviewSessionRequest, { resetForm }: FormikHelpers<CreateInterviewSessionRequest>) => {
+  const handleSubmit = async (values: CreateInterviewDto, { resetForm }: FormikHelpers<CreateInterviewDto>) => {
     setCreatedInterviewLink(null);
     await promise(createInterview(values).unwrap(), {
       loading: 'Mülakat oluşturuluyor...',
-      success: (newInterview) => {
-        setCreatedInterviewLink(`/interview/${newInterview.session._id}`);
+      success: (response) => {
+        setCreatedInterviewLink(`/interview/${response.interview._id}`);
         resetForm();
         return 'Mülakat başarıyla oluşturuldu!';
       },
@@ -79,36 +78,35 @@ export function CreateInterviewForm() {
     <div className="space-y-4">
       <FormikForm 
         initialValues={initialValues} 
-        // validationSchema={createInterviewSchema} 
+        validationSchema={createInterviewSchema} 
         onSubmit={handleSubmit} 
         enableReinitialize
       >
         {(formikProps) => (
           <>
             <FormikSelect 
-              name="jobPostingId" 
-              label="İş İlanı Seçin" 
-              options={challengeOptions} 
-              disabled={isLoadingChallenges}
-              touched={formikProps.touched.jobPostingId}
-              error={formikProps.errors.jobPostingId}
+              name="candidateId" 
+              label="Aday Seçin" 
+              options={candidateOptions} 
+              disabled={isLoadingCandidates}
+              touched={formikProps.touched.candidateId || false}
+              error={formikProps.errors.candidateId || ''}
             />
             <FormikSelect 
               name="interviewerId" 
               label="Mülakatçı Seçin" 
               options={interviewerOptions}
               disabled={isLoadingInterviewers}
-              touched={formikProps.touched.interviewerId}
-              error={formikProps.errors.interviewerId}
+              touched={formikProps.touched.interviewerId || false}
+              error={formikProps.errors.interviewerId || ''}
             />
             <FormikSelect 
-              name="candidateIds" 
-              label="Adaylar Seçin" 
-              options={candidateOptions}
-              disabled={isLoadingCandidates}
-              touched={formikProps.touched.candidateIds}
-              error={formikProps.errors.candidateIds}
-              multiple
+              name="challengeId" 
+              label="Soru Seçin" 
+              options={challengeOptions}
+              disabled={isLoadingChallenges}
+              touched={formikProps.touched.challengeId || false}
+              error={formikProps.errors.challengeId || ''}
             />
             <FormSubmitButton loading={isLoading}>Mülakat Oluştur ve Link Al</FormSubmitButton>
           </>

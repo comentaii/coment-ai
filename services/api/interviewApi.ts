@@ -1,6 +1,6 @@
 import { baseApi } from './base-api';
-import { CreateInterviewSessionDto, UpdateInterviewSessionDto } from '@/lib/validation-schemas';
-import { IInterviewSession, IInterviewSlot } from '@/schemas';
+import { CreateInterviewSessionDto, UpdateInterviewSessionDto, CreateInterviewDto } from '@/lib/validation-schemas';
+import { IInterviewSession, IInterviewSlot, IInterview } from '@/schemas';
 
 export interface InterviewSessionWithSlots {
   session: IInterviewSession;
@@ -31,6 +31,18 @@ export interface GetInterviewSessionsParams {
 
 export const interviewApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
+    // Create simple interview
+    createInterview: builder.mutation<{
+      interview: IInterview;
+    }, CreateInterviewDto>({
+      query: (data) => ({
+        url: 'interviews',
+        method: 'POST',
+        body: data,
+      }),
+      invalidatesTags: ['Interview'],
+    }),
+
     // Create interview session
     createInterviewSession: builder.mutation<{
       session: IInterviewSession;
@@ -126,6 +138,7 @@ export const interviewApi = baseApi.injectEndpoints({
 });
 
 export const {
+  useCreateInterviewMutation,
   useCreateInterviewSessionMutation,
   useGetInterviewSessionsQuery,
   useGetInterviewSessionByIdQuery,
@@ -136,5 +149,4 @@ export const {
 } = interviewApi;
 
 // Additional exports for backward compatibility
-export const useCreateInterviewMutation = useCreateInterviewSessionMutation;
 export const useGetInterviewDetailsQuery = useGetInterviewSessionByIdQuery;
