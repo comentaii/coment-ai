@@ -138,7 +138,6 @@ export default function DashboardPage() {
           </p>
         </div>
 
-        <RBACGuard requiredRoles={[USER_ROLES.SUPER_ADMIN, USER_ROLES.HR_MANAGER]}>
           <Card>
             <CardHeader>
               <CardTitle>{t('create_interview_title')}</CardTitle>
@@ -147,7 +146,6 @@ export default function DashboardPage() {
               <CreateInterviewForm />
             </CardContent>
           </Card>
-        </RBACGuard>
 
         {/* Error Status Card */}
         {lastError && (

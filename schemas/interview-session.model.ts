@@ -62,4 +62,5 @@ InterviewSessionSchema.index({ companyId: 1, scheduledDate: 1 });
 InterviewSessionSchema.index({ interviewerId: 1, status: 1 });
 InterviewSessionSchema.index({ jobPostingId: 1, status: 1 });
 
-export const InterviewSession = mongoose.model<IInterviewSession>('InterviewSession', InterviewSessionSchema);
+// Prevent model overwrite error in development
+export const InterviewSession = mongoose.models.InterviewSession || mongoose.model<IInterviewSession>('InterviewSession', InterviewSessionSchema);

@@ -20,8 +20,7 @@ export function CreateInterviewForm() {
   const { promise } = useToast();
   const [createInterview, { isLoading }] = useCreateInterviewMutation();
   const [createdInterviewLink, setCreatedInterviewLink] = useState<string | null>(null);
-
-  const companyId = user?.company?._id;
+  const companyId = user?.companyId;
 
   const { data: candidates, isLoading: isLoadingCandidates } = useGetCandidatesByCompanyQuery(companyId!, { skip: !companyId });
   const { data: interviewers, isLoading: isLoadingInterviewers } = useGetInterviewersByCompanyQuery(companyId!, { skip: !companyId });
@@ -43,8 +42,8 @@ export function CreateInterviewForm() {
     setCreatedInterviewLink(null);
     await promise(createInterview(values).unwrap(), {
       loading: 'Mülakat oluşturuluyor...',
-      success: (newInterview) => {
-        setCreatedInterviewLink(`/interview/${newInterview._id}`);
+      success: (response) => {
+        setCreatedInterviewLink(`/interview/${response.interview._id}`);
         resetForm();
         return 'Mülakat başarıyla oluşturuldu!';
       },
@@ -90,24 +89,24 @@ export function CreateInterviewForm() {
               label="Aday Seçin" 
               options={candidateOptions} 
               disabled={isLoadingCandidates}
-              touched={formikProps.touched.candidateId}
-              error={formikProps.errors.candidateId}
+              touched={formikProps.touched.candidateId || false}
+              error={formikProps.errors.candidateId || ''}
             />
             <FormikSelect 
               name="interviewerId" 
               label="Mülakatçı Seçin" 
               options={interviewerOptions}
               disabled={isLoadingInterviewers}
-              touched={formikProps.touched.interviewerId}
-              error={formikProps.errors.interviewerId}
+              touched={formikProps.touched.interviewerId || false}
+              error={formikProps.errors.interviewerId || ''}
             />
             <FormikSelect 
               name="challengeId" 
               label="Soru Seçin" 
               options={challengeOptions}
               disabled={isLoadingChallenges}
-              touched={formikProps.touched.challengeId}
-              error={formikProps.errors.challengeId}
+              touched={formikProps.touched.challengeId || false}
+              error={formikProps.errors.challengeId || ''}
             />
             <FormSubmitButton loading={isLoading}>Mülakat Oluştur ve Link Al</FormSubmitButton>
           </>

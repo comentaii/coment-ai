@@ -113,7 +113,7 @@ interface FormikSelectProps {
   required?: boolean;
   className?: string;
   error?: string;
-  touched?: boolean;
+  touched?: boolean | undefined;
   disabled?: boolean;
 }
 

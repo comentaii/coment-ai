@@ -71,6 +71,16 @@ export class UserService extends BaseService<IUser> {
     });
   }
 
+  async findCandidatesByCompany(companyId: string): Promise<IUser[]> {
+    return this.executeWithErrorHandling(async () => {
+      return this.model.find({ 
+        companyId, 
+        isActive: true,
+        roles: { $in: ['candidate'] }
+      }).exec();
+    });
+  }
+
   async findInterviewersByCompany(companyId: string): Promise<IUser[]> {
     return this.executeWithErrorHandling(async () => {
       return this.model.find({ 

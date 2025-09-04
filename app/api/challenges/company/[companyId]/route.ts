@@ -21,7 +21,7 @@ export async function GET(req: NextRequest, { params }: { params: { companyId: s
     }
 
     const challenges = await challengeService.findByCompany(companyId);
-    return responseHandler.success({ challenges });
+    return responseHandler.success(challenges);
     
   } catch (error) {
     return responseHandler.error(error as Error);

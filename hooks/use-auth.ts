@@ -14,9 +14,10 @@ export function useAuth() {
   const { handleAuthError, handleAsyncError } = useError({
     showToast: false, // We'll handle toast manually
   });
-
+  
   const isAuthenticated = !!session;
   const isLoading = status === 'loading';
+  const user = session?.user || null;
 
   const login = async (email: string, password: string) => {
     return handleAsyncError(
@@ -53,9 +54,10 @@ export function useAuth() {
 
   return {
     session,
+    user,
     isAuthenticated,
     isLoading,
     login,
     logout,
   };
-} 
+}
