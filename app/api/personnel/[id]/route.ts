@@ -112,3 +112,4 @@ export async function DELETE(
     return ResponseHandler.error('Kullanıcı deaktive edilemedi');
   }
 }
+

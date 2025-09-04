@@ -17,7 +17,7 @@ export const jobPostingApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getJobPostings: builder.query<IJobPosting[], void>({
       query: () => 'job-postings',
-      transformResponse: (response: { data: IJobPosting[] }) => response.data,
+      transformResponse: (response: { data: { jobPostings: IJobPosting[] } }) => response.data.jobPostings,
       providesTags: (result) =>
         result
           ? [

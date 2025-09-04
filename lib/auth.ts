@@ -43,9 +43,13 @@ export const authOptions: NextAuthOptions = {
           name: user.name,
           email: user.email,
           image: user.image || null,
-          role: user.role,
+          roles: Array.isArray((user as any).roles) && (user as any).roles.length > 0
+            ? (user as any).roles
+            : (user as any).role
+              ? [(user as any).role]
+              : [USER_ROLES.CANDIDATE],
           companyId: user.companyId?.toString() || null,
-        };
+        } as any;
 
         return userForAuth;
       },
@@ -65,12 +69,12 @@ export const authOptions: NextAuthOptions = {
             name: user.name!,
             email: user.email!,
             image: user.image!,
-            role: USER_ROLES.CANDIDATE, // Default role for OAuth users
+            roles: [USER_ROLES.CANDIDATE], // Default role for OAuth users
             emailVerified: new Date(),
           });
           
           user.id = newUser._id.toString();
-          user.role = newUser.role;
+          (user as any).roles = (newUser as any).roles;
           user.companyId = newUser.companyId?.toString() || null;
         } else {
           // Update existing user's Google info
@@ -80,7 +84,7 @@ export const authOptions: NextAuthOptions = {
           });
           
           user.id = existingUser._id.toString();
-          user.role = existingUser.role;
+          (user as any).roles = (existingUser as any).roles ?? (existingUser as any).role ? [(existingUser as any).role] : [USER_ROLES.CANDIDATE];
           user.companyId = existingUser.companyId?.toString() || null;
         }
       }
@@ -91,7 +95,7 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         token.id = user.id;
         token.userId = user.id;
-        (token as any).role = (user as any).role;
+        (token as any).roles = (user as any).roles ?? ((user as any).role ? [(user as any).role] : [USER_ROLES.CANDIDATE]);
         (token as any).companyId = (user as any).companyId;
       }
       return token;
@@ -99,7 +103,8 @@ export const authOptions: NextAuthOptions = {
     session: ({ session, token }) => {
       if (token && session.user) {
         session.user.id = token.id;
-        session.user.role = (token as any).role as UserRole;
+        // @ts-ignore - extend session with roles array
+        session.user.roles = (token as any).roles as UserRole[];
         session.user.companyId = (token as any).companyId;
       }
       return session;

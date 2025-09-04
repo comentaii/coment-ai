@@ -8,18 +8,20 @@ export async function GET(req: NextRequest, { params }: { params: { companyId: s
   const t = await getTranslations('api');
   try {
     const token = await getToken({ req });
-    if (!token) {
-      return responseHandler.unauthorized(t('error.unauthorized'));
+    if (!token || !token.roles) {
+      return responseHandler.forbidden(t('error.forbidden'));
     }
 
     const companyId = params.companyId;
-    if (token.role !== 'super_admin' && (token.company as { _id: string })?._id !== companyId) {
-        return responseHandler.forbidden(t('error.forbidden'));
+
+    // Authorization check: User must be a super_admin or belong to the requested company
+    if (!token.roles.includes('super_admin') && token.companyId !== companyId) {
+      return responseHandler.forbidden(t('error.forbidden'));
     }
 
     const interviewers = await userService.findInterviewersByCompany(companyId);
     return responseHandler.success({ interviewers });
-    
+
   } catch (error) {
     return responseHandler.error(error as Error);
   }

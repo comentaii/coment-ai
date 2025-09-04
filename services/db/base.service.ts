@@ -1,4 +1,4 @@
-import { Model, Document } from 'mongoose';
+import { Model, Document, FilterQuery } from 'mongoose';
 import { connectToDatabase } from '@/lib/db';
 
 export abstract class BaseService<T extends Document> {
@@ -24,15 +24,16 @@ export abstract class BaseService<T extends Document> {
     }
   }
 
-  async findById(id: string): Promise<T | null> {
+  async findAll(filter: FilterQuery<T> = {}): Promise<T[]> {
     return this.executeWithErrorHandling(async () => {
-      return this.model.findById(id).exec();
+      return this.model.find(filter).exec();
     });
   }
 
-  async findAll(): Promise<T[]> {
+  async findById(id: string): Promise<T | null> {
+    this.validateId(id);
     return this.executeWithErrorHandling(async () => {
-      return this.model.find().exec();
+      return this.model.findById(id).exec();
     });
   }
 

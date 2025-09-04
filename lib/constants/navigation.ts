@@ -96,6 +96,28 @@ export const NAVIGATION_ITEMS: NavigationItem[] = [
   },
 ];
 
-export const getNavigationItemsByRole = (role: UserRole): NavigationItem[] => {
-  return NAVIGATION_ITEMS.filter(item => item.roles.includes(role));
+/**
+ * Filters navigation items based on the user's roles.
+ * A user will see an item if they have at least one of the roles required for that item.
+ * @param {UserRole[]} roles - The array of roles the user has.
+ * @returns {NavigationItem[]} The filtered list of navigation items.
+ */
+export const getNavigationItemsByRoles = (roles: UserRole[]): NavigationItem[] => {
+  if (!roles || roles.length === 0) {
+    // Default to candidate navigation if no roles are provided
+    return NAVIGATION_ITEMS.filter(item => item.roles.includes(USER_ROLES.CANDIDATE));
+  }
+  
+  // Use a Set to avoid duplicate navigation items if a user has multiple roles
+  // that can see the same item.
+  const accessibleNavItems = new Set<NavigationItem>();
+
+  NAVIGATION_ITEMS.forEach(item => {
+    // An item is accessible if the user has at least one of the required roles for it.
+    if (item.roles.some(requiredRole => roles.includes(requiredRole))) {
+      accessibleNavItems.add(item);
+    }
+  });
+
+  return Array.from(accessibleNavItems);
 };

@@ -12,13 +12,9 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const token = await getToken({ req, secret: SECRET });
-    if (!token || !token.sub) {
-      return ResponseHandler.unauthorized();
-    }
+    const token = await getToken({ req });
 
-    // Ensure only HR Managers or Super Admins can view candidates
-    if (![ROLES.HR_MANAGER, ROLES.SUPER_ADMIN].includes(token.role as UserRole)) {
+    if (!token || !token.roles || !token.roles.includes('hr_manager')) {
       return ResponseHandler.forbidden();
     }
 

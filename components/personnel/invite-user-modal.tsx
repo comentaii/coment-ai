@@ -145,3 +145,4 @@ export function InviteUserModal({ isOpen, onClose, onInvite }: InviteUserModalPr
     </Dialog>
   );
 }
+

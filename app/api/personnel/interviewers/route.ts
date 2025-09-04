@@ -32,3 +32,4 @@ export async function GET(request: NextRequest) {
     return ResponseHandler.error('Mülakatçı listesi alınamadı');
   }
 }
+

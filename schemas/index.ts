@@ -4,13 +4,20 @@ import CompanySchema, { ICompany } from './company.model';
 import ChallengeSchema, { IChallenge } from './challenge.model';
 import InterviewSchema, { IInterview } from './interview.model';
 
-const models = {
-  User: mongoose.models.User || mongoose.model<IUser>('User', UserSchema),
-  Company: mongoose.models.Company || mongoose.model<ICompany>('Company', CompanySchema),
-  Challenge: mongoose.models.Challenge || mongoose.model<IChallenge>('Challenge', ChallengeSchema),
-  Interview: mongoose.models.Interview || mongoose.model<IInterview>('Interview', InterviewSchema),
-};
+export { default as JobApplicationSchema } from './job-application.model';
+export { default as JobPostingSchema } from './job-posting.model';
+export { User as UserSchema } from './user.model';
+export { Company as CompanySchema } from './company.model';
+export { default as InterviewSessionSchema } from './interview-session.model';
+export { default as InterviewSlotSchema } from './interview-slot.model';
+export { default as CandidateProfileSchema } from './candidate-profile.model';
 
-export const { User, Company, Challenge, Interview } = models;
+export * from './user.model';
+export * from './company.model';
+export * from './job-posting.model';
+export * from './job-application.model';
+export * from './interview-session.model';
+export * from './interview-slot.model';
+export * from './candidate-profile.model';
 
 export type { IUser, ICompany, IChallenge, IInterview }; 

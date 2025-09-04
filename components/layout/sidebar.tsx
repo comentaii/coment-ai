@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/use-auth';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -22,6 +22,10 @@ import {
 } from 'lucide-react';
 import { useNavigation } from '@/lib/utils/navigation';
 import { USER_ROLES, type UserRole } from '@/lib/constants/roles';
+import { usePathname } from 'next/navigation';
+import { useTranslations } from 'next-intl';
+import { ThemeToggle } from '@/components/theme-toggle';
+import { getNavigationItemsByRoles } from '@/lib/constants/navigation';
 
 interface MenuItem {
   id: string;
@@ -32,14 +36,30 @@ interface MenuItem {
   roles: string[];
 }
 
+interface NavigationItem {
+  href: string;
+  label: string;
+  icon: React.ComponentType<{ className?: string }>;
+}
+
 export function Sidebar() {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const { session } = useAuth();
   const { locale, getLocalizedPath, getNavigationItemsByRole, isActivePath } = useNavigation();
+  const pathname = usePathname();
+  const t = useTranslations('Navigation');
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const userRole = (session?.user?.role as UserRole) || USER_ROLES.CANDIDATE;
   const filteredMenuItems = getNavigationItemsByRole(userRole);
+
+  const userRoles = session?.user?.roles || [];
+  const navigationItems = getNavigationItemsByRoles(userRoles);
 
   const toggleSidebar = () => {
     setIsCollapsed(!isCollapsed);
@@ -171,12 +191,8 @@ export function Sidebar() {
 
         {/* Navigation Menu */}
         <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
-          {filteredMenuItems.map((item) => (
-            <MenuItemComponent
-              key={item.id}
-              item={item}
-              isCollapsed={isCollapsed}
-            />
+          {navigationItems.map((item) => (
+            <MenuItemComponent key={item.href} item={item} t={t} currentPath={pathname} />
           ))}
         </nav>
 
@@ -225,13 +241,8 @@ export function Sidebar() {
 
           {/* Mobile Navigation */}
           <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
-            {filteredMenuItems.map((item) => (
-              <MenuItemComponent
-                key={item.id}
-                item={item}
-                isCollapsed={false}
-                onClick={closeMobileSidebar}
-              />
+            {navigationItems.map((item) => (
+              <MenuItemComponent key={item.href} item={item} t={t} currentPath={pathname} />
             ))}
           </nav>
 

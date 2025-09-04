@@ -1,4 +1,13 @@
-export { default as userService } from './user.service';
-export { default as companyService } from './company.service';
-export { default as challengeService } from './challenge.service';
-export { default as interviewService } from './interview.service'; 
+import { challengeService } from './challenge.service';
+import { companyService } from './company.service';
+import { jobPostingService } from './job-posting.service';
+import { userService } from './user.service';
+import { interviewSessionService } from './interview-session.service';
+
+export {
+  challengeService,
+  companyService,
+  jobPostingService,
+  userService,
+  interviewSessionService
+}; 

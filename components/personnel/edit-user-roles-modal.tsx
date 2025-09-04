@@ -128,3 +128,4 @@ export function EditUserRolesModal({ isOpen, onClose, user, onUpdate }: EditUser
     </Dialog>
   );
 }
+

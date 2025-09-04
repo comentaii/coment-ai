@@ -5,37 +5,48 @@ import { createJobPostingSchema } from '@/lib/validation-schemas';
 import jobPostingService from '@/services/db/job-posting.service';
 import { IJobPosting } from '@/schemas/job-posting.model';
 import { ROLES, UserRole } from '@/types/rbac';
+import { getTranslations } from 'next-intl/server';
 
 const SECRET = process.env.NEXTAUTH_SECRET;
 
 // GET all job postings
 export async function GET(req: NextRequest) {
+  const t = await getTranslations('api.job-postings');
   try {
-    const token = await getToken({ req, secret: SECRET });
-    if (!token || !token.sub) {
-      return ResponseHandler.unauthorized();
+    const token = await getToken({ req });
+
+    if (!token || !token.roles) {
+      return ResponseHandler.unauthorized(t('error.unauthorized'));
+    }
+    
+    // An HR manager can only see their own company's postings
+    if (token.roles.includes('hr_manager') && token.companyId) {
+      const jobPostings = await jobPostingService.findAll({ company: token.companyId });
+      return ResponseHandler.success({ jobPostings });
     }
 
-    const jobPostings = await jobPostingService.findByCompany(token.companyId as string);
-
-    return ResponseHandler.success(jobPostings);
+    // A super admin can see all postings
+    if (token.roles.includes('super_admin')) {
+      const jobPostings = await jobPostingService.findAll();
+      return ResponseHandler.success({ jobPostings });
+    }
+    
+    // Other roles are forbidden
+    return ResponseHandler.forbidden(t('error.forbidden'));
+    
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
-    return ResponseHandler.error(errorMessage);
+    return ResponseHandler.error(error as Error, t('error.generic'));
   }
 }
 
 // POST a new job posting
 export async function POST(req: NextRequest) {
+  const t = await getTranslations('api.job-postings');
   try {
-    const token = await getToken({ req, secret: SECRET });
-    if (!token || !token.sub) {
-      return ResponseHandler.unauthorized();
-    }
+    const token = await getToken({ req });
 
-    // Ensure only HR Managers or Super Admins can create job postings
-    if (![ROLES.HR_MANAGER, ROLES.SUPER_ADMIN].includes(token.role as UserRole)) {
-      return ResponseHandler.forbidden();
+    if (!token || !token.roles || !token.roles.includes('hr_manager')) {
+      return ResponseHandler.forbidden(t('error.forbidden'));
     }
 
     const body = await req.json();

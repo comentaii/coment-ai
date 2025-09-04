@@ -270,7 +270,11 @@ export default function DashboardPage() {
               <div className="space-y-1">
                 <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Rol</p>
                 <div className="flex items-center gap-2">
-                  <UserRoleBadge role={userRole} />
+                  {session.user?.roles?.length > 0 ? (
+                    session.user.roles.map((role) => <UserRoleBadge key={role} role={role} />)
+                  ) : (
+                    <UserRoleBadge role="candidate" />
+                  )}
                 </div>
               </div>
               <div className="space-y-1">

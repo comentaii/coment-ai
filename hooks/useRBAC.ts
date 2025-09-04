@@ -6,9 +6,12 @@ export function useRBAC() {
 
   const isLoading = status === 'loading';
   const isAuthenticated = status === 'authenticated';
-  const userRole = session?.user?.role as UserRole | undefined;
+  const userRoles = (session?.user as any)?.roles as UserRole[] | undefined;
+  const primaryRole = userRoles && userRoles.length > 0 ? userRoles[0] : undefined;
 
-  const userPermissions = userRole ? rolePermissions[userRole] : [];
+  const userPermissions: Permission[] = (userRoles && userRoles.length)
+    ? Array.from(new Set(userRoles.flatMap((r) => rolePermissions[r] || [])))
+    : [];
 
   const hasPermission = (permission: Permission): boolean => {
     return userPermissions.includes(permission);
@@ -23,16 +26,17 @@ export function useRBAC() {
   };
 
   const isRole = (role: UserRole): boolean => {
-    return userRole === role;
+    return (userRoles || []).includes(role);
   };
 
   const isAnyRole = (roles: UserRole[]): boolean => {
-    if (!userRole) return false;
-    return roles.includes(userRole);
+    if (!userRoles || userRoles.length === 0) return false;
+    return roles.some((r) => userRoles.includes(r));
   };
 
   return {
-    userRole,
+    userRole: (primaryRole as UserRole | undefined),
+    userRoles,
     userPermissions,
     isLoading,
     isAuthenticated,
