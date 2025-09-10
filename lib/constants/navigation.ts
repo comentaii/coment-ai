@@ -8,7 +8,8 @@ import {
   BarChart3, 
   Code, 
   UserCheck,
-  Briefcase
+  Briefcase,
+  Terminal
 } from 'lucide-react';
 import { USER_ROLES, type UserRole } from './roles';
 
@@ -77,6 +78,14 @@ export const NAVIGATION_ITEMS: NavigationItem[] = [
     path: '/my-interviews',
     icon: UserCheck,
     roles: [USER_ROLES.CANDIDATE],
+  },
+  {
+    id: 'interview-screen',
+    label: 'Kodlama Mülakat',
+    description: 'AI destekli kodlama mülakat ekranı',
+    path: '/interview-screen',
+    icon: Terminal,
+    roles: [USER_ROLES.SUPER_ADMIN, USER_ROLES.HR_MANAGER, USER_ROLES.TECHNICAL_INTERVIEWER, USER_ROLES.CANDIDATE],
   },
   {
     id: 'analytics',

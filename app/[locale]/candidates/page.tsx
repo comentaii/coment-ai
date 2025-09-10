@@ -17,11 +17,48 @@ import { CvUploadModal } from '@/components/candidates/cv-upload-modal';
 type ViewMode = 'grid' | 'list';
 
 function CandidateList() {
-  const { data: candidates, isLoading, isError } = useGetCompanyCandidatesQuery();
+  const { data: candidates, isLoading, isError, isFetching, error } = useGetCompanyCandidatesQuery();
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
 
+  // Debug logging to see what data we're getting
+  console.log('Candidates data:', {
+    candidates,
+    type: typeof candidates,
+    isArray: Array.isArray(candidates),
+    length: candidates?.length,
+    isLoading,
+    isError,
+    error
+  });
+
+  // Show error state if there's an error
+  if (isError) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>Error Loading Candidates</CardTitle>
+          <CardDescription>
+            There was an error loading the candidates. Please try again.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-2">
+            <Button onClick={() => window.location.reload()}>
+              Retry
+            </Button>
+            {error && (
+              <pre className="text-xs bg-gray-100 p-2 rounded overflow-auto">
+                {JSON.stringify(error, null, 2)}
+              </pre>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
   // Intelligent Empty State: Show uploader if no candidates exist and not loading
-  if (!isLoading && (!candidates || candidates.length === 0)) {
+  if (!isLoading && !isFetching && (!candidates || candidates.length === 0)) {
     return (
       <Card>
         <CardHeader>
@@ -69,8 +106,8 @@ function CandidateList() {
       <CardContent>
         <GenericList
           data={candidates || []}
-          isLoading={isLoading}
-          isError={isError}
+          isLoading={isLoading || isFetching}
+          isError={false} // We handle errors above
           renderItem={(candidate) =>
             viewMode === 'grid' ? (
               <CandidateCard candidate={candidate} />
@@ -104,7 +141,12 @@ export default function CandidatesPage() {
     <DashboardLayout>
       <RBACGuard
         requiredRoles={['hr_manager', 'super_admin']}
-        fallback={<p className="p-6">You do not have permission to access this page.</p>}
+        fallback={
+          <div className="p-6">
+            <p>You do not have permission to access this page.</p>
+            <p className="text-sm text-gray-500 mt-2">Required roles: hr_manager, super_admin</p>
+          </div>
+        }
       >
         <div className="p-4 sm:p-6 lg:p-8 space-y-6">
           <CandidateList />

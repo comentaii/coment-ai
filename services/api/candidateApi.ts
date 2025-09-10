@@ -12,7 +12,7 @@ export const candidateApi = baseApi.injectEndpoints({
     getCompanyCandidates: builder.query<PopulatedCandidateProfile[], void>({
       query: () => 'candidates',
       providesTags: (result) =>
-        result
+        result && Array.isArray(result)
           ? [
               ...result.map(({ _id }) => ({ type: 'Candidates' as const, id: _id })),
               { type: 'Candidates', id: 'LIST' },

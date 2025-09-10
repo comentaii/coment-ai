@@ -111,24 +111,30 @@ export const authOptions: NextAuthOptions = {
     redirect: ({ url, baseUrl }) => {
       // If URL is already a full URL and on the same domain
       if (url.startsWith(baseUrl)) {
-        // Extract locale from URL and redirect to dashboard
         const urlPath = url.replace(baseUrl, '');
-        if (urlPath.startsWith('/en/') || urlPath.startsWith('/tr/')) {
-          return url; // Keep as is if it already has locale
+        // If the URL already has a locale and is not a sign-in page, keep it
+        if ((urlPath.startsWith('/en/') || urlPath.startsWith('/tr/')) && !urlPath.includes('/auth/')) {
+          return url;
         }
-        // If no locale, redirect to default locale dashboard
-        return `${baseUrl}/tr/dashboard`;
+        // Only redirect to dashboard for sign-in pages or pages without locale
+        if (urlPath.includes('/auth/') || (!urlPath.startsWith('/en/') && !urlPath.startsWith('/tr/'))) {
+          return `${baseUrl}/tr/dashboard`;
+        }
+        return url;
       }
       // If relative URL
       if (url.startsWith('/')) {
-        // Check for locale
-        if (url.startsWith('/en/') || url.startsWith('/tr/')) {
+        // Don't redirect if it's already a valid route with locale
+        if ((url.startsWith('/en/') || url.startsWith('/tr/')) && !url.includes('/auth/')) {
           return `${baseUrl}${url}`;
         }
-        // If no locale, add default locale
-        return `${baseUrl}/tr${url}`;
+        // Only redirect to dashboard for auth pages or pages without locale
+        if (url.includes('/auth/') || (!url.startsWith('/en/') && !url.startsWith('/tr/'))) {
+          return `${baseUrl}/tr/dashboard`;
+        }
+        return `${baseUrl}${url}`;
       }
-      return baseUrl;
+      return `${baseUrl}/tr/dashboard`;
     },
   },
   pages: {

@@ -9,7 +9,11 @@ import { toast } from 'sonner';
 import { UploadCloud, File as FileIcon, X } from 'lucide-react';
 import axios from 'axios';
 
-export function CvUploader() {
+interface CvUploaderProps {
+  onUploadComplete?: () => void;
+}
+
+export function CvUploader({ onUploadComplete }: CvUploaderProps) {
   const dispatch = useAppDispatch();
   const [files, setFiles] = useState<File[]>([]);
 
@@ -77,6 +81,9 @@ export function CvUploader() {
           dispatch(updateUploadTaskStatus({ id: task.id, status: 'success' }));
         });
         toast.success(`${tasks.length} CV başarıyla yüklendi.`);
+        
+        // Call the callback to close modal and refresh data
+        onUploadComplete?.();
       }
     } catch (error) {
       tasks.forEach(task => {

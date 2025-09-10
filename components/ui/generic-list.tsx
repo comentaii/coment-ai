@@ -59,7 +59,7 @@ export function GenericList<T extends { _id: any }>({
     return <div className="p-4 text-red-500">{error}</div>;
   }
 
-  if (!data || data.length === 0) {
+  if (!data || !Array.isArray(data) || data.length === 0) {
     return <div className="p-4">{emptyState}</div>;
   }
 
