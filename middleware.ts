@@ -13,18 +13,35 @@ const intlMiddleware = createMiddleware({
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  // Skip middleware for API routes and static files
-  if (pathname.startsWith('/api') || pathname.startsWith('/_next') || pathname.startsWith('/favicon.ico')) {
+  // Rule A: Next-auth routes are completely excluded from any processing.
+  if (pathname.startsWith('/api/auth')) {
     return NextResponse.next();
   }
 
-  // Handle internationalization first
+  // Rule B & C are handled by the intlMiddleware itself.
+  // We provide a matcher that excludes all API routes from its processing.
+  // This means it will only handle page routes for redirection.
   const intlResponse = intlMiddleware(req);
-  if (intlResponse) {
-    return intlResponse;
+
+  // For API routes that still need i18n context (all except /api/auth),
+  // we need a different approach. Since the default intlMiddleware skips them,
+  // we can manually set the locale header here if needed, but for now, let's rely
+  // on the default locale logic of getTranslations.
+  // The main fix is to prevent intlMiddleware from ever touching non-auth API routes.
+  
+  // The rest of the logic is for auth checks on page routes.
+  // This part only runs if intlMiddleware didn't redirect.
+
+  if (pathname.startsWith('/api')) {
+    // For all other API routes, we just let them pass through.
+    // The i18n context will be picked up by getTranslations on the server.
+    return NextResponse.next();
   }
 
-  // Extract locale and path without locale
+
+  const finalResponse = intlResponse || NextResponse.next();
+  
+  // Extract locale and path without locale for page routes
   const locale = pathname.startsWith('/en/') ? 'en' : 'tr';
   const pathWithoutLocale = pathname.replace(/^\/(tr|en)/, '');
 
@@ -99,23 +116,9 @@ export async function middleware(req: NextRequest) {
 // Configure which paths the middleware should run on
 export const config = {
   matcher: [
-    // Root path
-    '/',
-    // Auth pages
-    '/en/auth/:path*',
-    '/tr/auth/:path*',
-    // Protected routes
-    '/en/admin/:path*',
-    '/tr/admin/:path*',
-    '/en/dashboard/:path*',
-    '/tr/dashboard/:path*',
-    '/en/candidates/:path*',
-    '/tr/candidates/:path*',
-    '/en/interviews/:path*',
-    '/tr/interviews/:path*',
-    '/en/proctoring/:path*',
-    '/tr/proctoring/:path*',
-    // Other paths (excluding static files)
-    '/((?!_next|.*\\..*).*)'
+    // Match all routes except static files and _next internal files
+    '/((?!_next|.*\\..*).*)',
+    // Re-include API routes for manual handling, but next-auth is already excluded above.
+    '/api/:path*'
   ],
 };

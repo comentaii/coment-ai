@@ -1,14 +1,17 @@
 'use client';
+import React from 'react';
 import { useGetJobPostingByIdQuery, useLazyGetJobPostingByIdQuery, useGetCandidatesForJobQuery, useTriggerMatchingMutation, useMatchCandidateToJobMutation } from '@/services/api/job-posting-api';
+import { useGetInterviewSessionsQuery } from '@/services/api/interviewApi';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
-import { AlertTriangle, Briefcase, Tag, Users, Zap } from 'lucide-react';
+import { AlertTriangle, Briefcase, Tag, Users, Zap, Calendar } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { CandidateMatchCard } from '@/components/job-postings/candidate-match-card';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { useEffect, useState } from 'react';
 import { Progress } from '@/components/ui/progress';
+import { ScheduleInterviewModal } from '@/components/interviews/schedule-interview-modal';
 
 interface MatchingStatus {
   status: 'idle' | 'start' | 'progress' | 'completed' | 'error';
@@ -25,12 +28,14 @@ export default function JobPostingDetailPage() {
 
 
   const [matchingStatus, setMatchingStatus] = useState<MatchingStatus>({ status: 'idle' });
+  const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
   const [triggerRefresh, { data, isLoading, isError }] = useLazyGetJobPostingByIdQuery();
   const { data: candidatesData, refetch: refetchCandidates } = useGetCandidatesForJobQuery(id || '', {
     skip: !id,
   });
   const [triggerMatching, { isLoading: isMatching }] = useTriggerMatchingMutation();
   const [matchCandidate] = useMatchCandidateToJobMutation();
+  const { data: interviewSessionsData } = useGetInterviewSessionsQuery();
 
   useEffect(() => {
     if (id) {
@@ -48,6 +53,17 @@ export default function JobPostingDetailPage() {
   if (!jobPosting || !('title' in jobPosting) || !('description' in jobPosting) || !('skills' in jobPosting)) {
     return null;
   }
+
+  // Check if there are any interview sessions for this job posting
+  console.log('interviewSessionsData:', interviewSessionsData);
+  console.log('interviewSessionsData.data:', interviewSessionsData?.data);
+  console.log('interviewSessionsData.data.sessions:', interviewSessionsData?.data?.sessions);
+  console.log('Array.isArray(interviewSessionsData?.data?.sessions):', Array.isArray(interviewSessionsData?.data?.sessions));
+  
+  const hasInterviewSessions = Array.isArray(interviewSessionsData?.data?.sessions) && 
+    interviewSessionsData.data.sessions.some(
+      (session: any) => session.jobPostingId === id
+    ) || false;
 
   const handleStartMatching = async () => {
     if (!id) return;
@@ -119,6 +135,27 @@ export default function JobPostingDetailPage() {
                 <span key={skill} className="px-3 py-1 text-sm font-medium bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-full">{skill}</span>
             ))}
         </div>
+        
+        {/* Interview Status */}
+        {hasInterviewSessions && (
+          <div className="mt-4 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
+            <div className="flex items-center">
+              <Calendar className="w-5 h-5 text-green-600 dark:text-green-400 mr-2" />
+              <div>
+                <h4 className="font-medium text-green-900 dark:text-green-100">
+                  Mülakat Planlandı
+                </h4>
+                <p className="text-sm text-green-700 dark:text-green-300">
+                  Bu iş ilanı için mülakat oturumu oluşturulmuş. Detayları görüntülemek için{' '}
+                  <a href="/tr/interviews" className="underline hover:no-underline">
+                    Mülakatlar sayfasını
+                  </a>{' '}
+                  ziyaret edin.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Matched Candidates Section */}
@@ -128,14 +165,30 @@ export default function JobPostingDetailPage() {
                 <Users className="w-7 h-7 mr-3 text-brand-green"/>
                 {t('matchedCandidatesTitle')}
             </h2>
-            <Button 
-              onClick={handleStartMatching} 
-              disabled={isMatching || matchingStatus.status === 'progress' || matchingStatus.status === 'start'}
-              title="Aday havuzunu tara ve eşleştir"
-            >
+            <div className="flex space-x-3">
+              <Button 
+                onClick={() => {
+                  console.log('Mülakat Planla butonuna tıklandı');
+                  console.log('candidatesData:', candidatesData);
+                  console.log('matched candidates:', candidatesData?.matched?.length || 0);
+                  setIsScheduleModalOpen(true);
+                }}
+                disabled={!candidatesData?.matched || candidatesData.matched.length === 0 || hasInterviewSessions}
+                variant="outline"
+                title={hasInterviewSessions ? "Bu iş ilanı için mülakat zaten planlanmış" : "Seçili adaylar için mülakat planla"}
+              >
+                <Calendar className="w-4 h-4 mr-2"/>
+                {hasInterviewSessions ? "Mülakat Planlandı" : "Mülakat Planla"}
+              </Button>
+              <Button 
+                onClick={handleStartMatching} 
+                disabled={isMatching || matchingStatus.status === 'progress' || matchingStatus.status === 'start'}
+                title="Aday havuzunu tara ve eşleştir"
+              >
                 <Zap className="w-4 h-4 mr-2"/>
                 {isMatching ? 'Taranıyor...' : matchingStatus.status === 'progress' ? 'Taranıyor...' : 'Eşleşmeleri Tara / Güncelle'}
-            </Button>
+              </Button>
+            </div>
         </div>
 
         {/* Matching Progress Bar */}
@@ -217,6 +270,18 @@ export default function JobPostingDetailPage() {
           </div>
         )}
       </div>
+
+      {/* Schedule Interview Modal */}
+      <ScheduleInterviewModal
+        isOpen={isScheduleModalOpen}
+        onClose={() => setIsScheduleModalOpen(false)}
+        jobPostingId={id || ''}
+        jobPostingTitle={jobPosting.title}
+        onSuccess={() => {
+          // Refresh data if needed
+          refetchCandidates();
+        }}
+      />
     </div>
   );
 }

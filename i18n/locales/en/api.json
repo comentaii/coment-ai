@@ -1,30 +1,51 @@
 {
+  "success": {
+    "fetched": "{entity} fetched successfully.",
+    "created": "{entity} created successfully.",
+    "updated": "{entity} updated successfully.",
+    "deleted": "{entity} deleted successfully."
+  },
+  "error": {
+    "notFound": "{entity} not found.",
+    "forbidden": "You do not have permission to perform this action.",
+    "unauthorized": "Unauthorized. Please log in.",
+    "generic": "An unexpected error occurred. Please try again later.",
+    "validation": "Validation failed. Please check your input.",
+    "failedToFetch": "Failed to fetch {entity}.",
+    "failedToCreate": "Failed to create {entity}.",
+    "failedToUpdate": "Failed to update {entity}.",
+    "failedToDelete": "Failed to delete {entity}."
+  },
+  "entity": {
+    "jobPosting": "Job Posting",
+    "jobPostings": "Job Postings",
+    "candidate": "Candidate",
+    "candidates": "Candidates",
+    "interview": "Interview",
+    "interviews": "Interviews",
+    "interviewSession": "Interview Session",
+    "interviewSessions": "Interview Sessions",
+    "user": "User",
+    "users": "Users",
+    "interviewer": "Interviewer",
+    "interviewers": "Interviewers",
+    "company": "Company",
+    "companies": "Companies",
+    "personnel": "Personnel",
+    "challenge": "Challenge",
+    "challenges": "Challenges"
+  },
+  "job-postings": {
     "success": {
-        "default": "Operation completed successfully.",
-        "created": "{entity} created successfully.",
-        "updated": "{entity} updated successfully.",
-        "deleted": "{entity} deleted successfully.",
-        "fetched": "{entity} data fetched successfully.",
-        "login": "Login successful. Redirecting...",
-        "logout": "Logout successful. Redirecting...",
-        "register": "Registration successful. Please verify your email."
+        "updated": "Job posting updated successfully",
+        "deleted": "Job posting deleted successfully",
+        "created": "Job posting created successfully"
     },
     "error": {
-        "default": "An unexpected error occurred.",
-        "notFound": "{entity} not found.",
-        "alreadyExists": "This {entity} already exists.",
-        "invalidCredentials": "Invalid email or password.",
-        "unauthorized": "You are not authorized to perform this action.",
-        "forbidden": "You do not have permission to access this resource.",
-        "validation": "Validation error. Please check your inputs.",
-        "server": "Server error. Please try again later.",
-        "badRequest": "Bad request. Please check your data.",
-        "rateLimit": "Too many requests. Please wait a moment."
-    },
-    "entity": {
-        "user": "User",
-        "company": "Company",
-        "challenge": "Challenge",
-        "candidate": "Candidate"
+        "notFound": "Job posting not found",
+        "forbidden": "You don't have permission to perform this action",
+        "unauthorized": "Unauthorized access",
+        "generic": "An error occurred"
     }
+  }
 }

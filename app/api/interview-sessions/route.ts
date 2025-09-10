@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
     if (!session?.user?.companyId) {
-      return responseHandler.error('Unauthorized', 401);
+      return responseHandler.error(t('error.unauthorized'), 401);
     }
 
     const body = await request.json();
@@ -29,12 +29,12 @@ export async function POST(request: NextRequest) {
         slots: result.slots,
         message: 'Interview session created successfully'
       },
-      t('success.created', { entity: 'Interview Session' })
+      t('success.created', { entity: t('entity.interviewSession') })
     );
   } catch (error) {
     console.error('Error creating interview session:', error);
     return responseHandler.error(
-      error instanceof Error ? error.message : 'Failed to create interview session'
+      error instanceof Error ? error.message : t('error.failedToCreate', { entity: t('entity.interviewSession') })
     );
   }
 }
@@ -45,7 +45,7 @@ export async function GET(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
     if (!session?.user?.companyId) {
-      return responseHandler.error('Unauthorized', 401);
+      return responseHandler.error(t('error.unauthorized'), 401);
     }
 
     const { searchParams } = new URL(request.url);
@@ -68,12 +68,12 @@ export async function GET(request: NextRequest) {
 
     return responseHandler.success(
       { sessions },
-      t('success.fetched', { entity: 'Interview Sessions' })
+      t('success.fetched', { entity: t('entity.interviewSessions') })
     );
   } catch (error) {
     console.error('Error fetching interview sessions:', error);
     return responseHandler.error(
-      error instanceof Error ? error.message : 'Failed to fetch interview sessions'
+      error instanceof Error ? error.message : t('error.failedToFetch', { entity: t('entity.interviewSessions') })
     );
   }
 }

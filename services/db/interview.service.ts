@@ -26,7 +26,17 @@ class InterviewService extends BaseService<IInterview> {
         .exec();
     });
   }
+
+  async getInterviewsByCompany(companyId: string): Promise<IInterview[]> {
+    return this.executeWithErrorHandling(async () => {
+      return this.model
+        .find({ companyId: new mongoose.Types.ObjectId(companyId) })
+        .populate('jobPostingId', 'title')
+        .populate('interviewerId', 'name email')
+        .sort({ scheduledDate: -1 })
+        .exec();
+    });
+  }
 }
 
-const interviewService = new InterviewService();
-export default interviewService;
+export const interviewService = new InterviewService();

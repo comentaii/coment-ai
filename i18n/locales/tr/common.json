@@ -111,18 +111,45 @@
     "upload_status_success": "Başarılı",
     "upload_status_error": "Hata",
     "matchingStartedSuccess": "Eşleştirme işlemi başarıyla başlatıldı. Sonuçlar hazır olduğunda sayfa otomatik olarak güncellenecektir.",
-    "api": {
-        "job-postings": {
-            "success": {
-                "updated": "İş ilanı başarıyla güncellendi",
-                "deleted": "İş ilanı başarıyla silindi",
-                "created": "İş ilanı başarıyla oluşturuldu"
+    "InterviewsPage": {
+        "title": "Mülakatlar",
+        "description": "Planlanan ve tamamlanan mülakat oturumlarınızı görüntüleyin.",
+        "errorTitle": "Mülakatlar Yüklenirken Hata Oluştu",
+        "errorMessage": "Lütfen sayfayı yenileyin veya daha sonra tekrar deneyin.",
+        "noSessionsTitle": "Henüz mülakat planlanmamış",
+        "noSessionsDescription": "İş ilanları sayfasından mülakat planlayabilirsiniz.",
+        "status": {
+            "scheduled": "Planlandı",
+            "active": "Aktif",
+            "completed": "Tamamlandı",
+            "cancelled": "İptal Edildi",
+            "unknown": "Bilinmiyor"
+        },
+        "card": {
+            "jobTitlePlaceholder": "İş İlanı",
+            "interviewer": "Mülakatçı: {name}",
+            "interviewer_unassigned": "Mülakatçı: Belirtilmemiş",
+            "candidates": "{count} aday",
+            "candidates_plural": "{count} aday",
+            "notes": "Notlar:",
+            "interviewerLinkTitle": "Mülakatçı Linki",
+            "interviewerLinkDescription": "Bu linki mülakatçıya gönderin",
+            "copyButton": "Kopyala",
+            "viewButton": "Görüntüle",
+            "editButton": "Düzenle",
+            "cancelButton": "İptal Et",
+            "cancelConfirm": {
+                "title": "Mülakatı İptal Et",
+                "description": "\"{title}\" ilanı için planlanan mülakatı iptal etmek istediğinizden emin misiniz? Bu işlem geri alınamaz.",
+                "confirmText": "Evet, İptal Et",
+                "cancelText": "Vazgeç"
             },
-            "error": {
-                "notFound": "İş ilanı bulunamadı",
-                "forbidden": "Bu işlemi yapma yetkiniz yok",
-                "unauthorized": "Yetkisiz erişim",
-                "generic": "Bir hata oluştu"
+            "toast": {
+                "copySuccess": "Mülakatçı linki panoya kopyalandı!",
+                "cancelSuccessTitle": "Başarılı",
+                "cancelSuccessDescription": "Mülakat başarıyla iptal edildi.",
+                "cancelErrorTitle": "Hata",
+                "cancelErrorDescription": "Mülakat iptal edilirken bir hata oluştu."
             }
         }
     }

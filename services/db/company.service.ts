@@ -1,7 +1,7 @@
 import { BaseService } from './base.service';
 import { Company, ICompany } from '@/schemas/company.model';
 
-export class CompanyService extends BaseService<ICompany> {
+class CompanyService extends BaseService<ICompany> {
   constructor() {
     super(Company);
   }
@@ -40,4 +40,6 @@ export class CompanyService extends BaseService<ICompany> {
       return this.model.find({ isActive: true }).exec();
     });
   }
-} 
+}
+
+export const companyService = new CompanyService(); 

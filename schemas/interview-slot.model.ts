@@ -65,5 +65,4 @@ InterviewSlotSchema.index({ sessionId: 1, status: 1 });
 InterviewSlotSchema.index({ candidateId: 1, status: 1 });
 InterviewSlotSchema.index({ sessionId: 1, candidateId: 1 }, { unique: true });
 
-// Prevent model overwrite error in development
 export const InterviewSlot = mongoose.models.InterviewSlot || mongoose.model<IInterviewSlot>('InterviewSlot', InterviewSlotSchema);

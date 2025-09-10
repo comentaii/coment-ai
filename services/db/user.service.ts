@@ -83,11 +83,18 @@ export class UserService extends BaseService<IUser> {
 
   async findInterviewersByCompany(companyId: string): Promise<IUser[]> {
     return this.executeWithErrorHandling(async () => {
-      return this.model.find({ 
+      const query = { 
         companyId, 
-        isActive: true,
         roles: { $in: ['hr_manager', 'technical_interviewer'] }
-      }).exec();
+      };
+      
+      console.log('Query for interviewers:', query);
+      
+      const result = await this.model.find(query).exec();
+      console.log('Query result count:', result.length);
+      console.log('Query result:', result.map(u => ({ id: u._id, name: u.name, roles: u.roles, isActive: u.isActive, companyId: u.companyId })));
+      
+      return result;
     });
   }
 
@@ -114,4 +121,6 @@ export class UserService extends BaseService<IUser> {
       return this.model.findByIdAndUpdate(id, { lastLoginAt: new Date() }, { new: true }).exec();
     });
   }
-} 
+}
+
+export const userService = new UserService(); 

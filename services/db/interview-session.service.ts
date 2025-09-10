@@ -71,15 +71,14 @@ export class InterviewSessionService extends BaseService<IInterviewSession> {
       if (options.interviewerId) query.interviewerId = new mongoose.Types.ObjectId(options.interviewerId);
       if (options.jobPostingId) query.jobPostingId = new mongoose.Types.ObjectId(options.jobPostingId);
 
-      return this.find(query, {
-        populate: [
-          { path: 'jobPostingId', select: 'title' },
-          { path: 'interviewerId', select: 'name email' }
-        ],
-        sort: { scheduledDate: -1 },
-        limit: options.limit || 50,
-        skip: options.skip || 0
-      });
+      return this.model.find(query)
+        .populate('jobPostingId', 'title')
+        .populate('interviewerId', 'name email')
+        .populate('slots')
+        .sort({ scheduledDate: -1 })
+        .limit(options.limit || 50)
+        .skip(options.skip || 0)
+        .exec();
     });
   }
 
@@ -91,13 +90,11 @@ export class InterviewSessionService extends BaseService<IInterviewSession> {
     slots: IInterviewSlot[];
   } | null> {
     return this.executeWithErrorHandling(async () => {
-      const session = await this.findById(sessionId, {
-        populate: [
-          { path: 'jobPostingId', select: 'title description skills' },
-          { path: 'interviewerId', select: 'name email' },
-          { path: 'companyId', select: 'name' }
-        ]
-      });
+      const session = await this.model.findById(sessionId)
+        .populate('jobPostingId', 'title description skills')
+        .populate('interviewerId', 'name email')
+        .populate('companyId', 'name')
+        .exec();
 
       if (!session) return null;
 
@@ -137,15 +134,13 @@ export class InterviewSessionService extends BaseService<IInterviewSession> {
       
       if (options.status) query.status = options.status;
 
-      return this.find(query, {
-        populate: [
-          { path: 'jobPostingId', select: 'title' },
-          { path: 'companyId', select: 'name' }
-        ],
-        sort: { scheduledDate: -1 },
-        limit: options.limit || 50,
-        skip: options.skip || 0
-      });
+      return this.model.find(query)
+        .populate('jobPostingId', 'title')
+        .populate('companyId', 'name')
+        .sort({ scheduledDate: -1 })
+        .limit(options.limit || 50)
+        .skip(options.skip || 0)
+        .exec();
     });
   }
 
@@ -154,18 +149,16 @@ export class InterviewSessionService extends BaseService<IInterviewSession> {
    */
   async getUpcomingSessions(companyId: string, limit: number = 10): Promise<IInterviewSession[]> {
     return this.executeWithErrorHandling(async () => {
-      return this.find({
+      return this.model.find({
         companyId: new mongoose.Types.ObjectId(companyId),
         scheduledDate: { $gte: new Date() },
         status: { $in: ['scheduled', 'active'] }
-      }, {
-        populate: [
-          { path: 'jobPostingId', select: 'title' },
-          { path: 'interviewerId', select: 'name email' }
-        ],
-        sort: { scheduledDate: 1 },
-        limit
-      });
+      })
+        .populate('jobPostingId', 'title')
+        .populate('interviewerId', 'name email')
+        .sort({ scheduledDate: 1 })
+        .limit(limit)
+        .exec();
     });
   }
 }

@@ -4,6 +4,7 @@ import { responseHandler } from '@/utils/response-handler';
 import { challengeService } from '@/services/db';
 import { USER_ROLES } from '@/lib/constants';
 import { getTranslations } from 'next-intl/server';
+import { createChallengeSchema } from '@/lib/validation/challenge';
 
 export async function POST(req: NextRequest) {
   const t = await getTranslations('api');
@@ -16,16 +17,16 @@ export async function POST(req: NextRequest) {
 
     const body = await req.json();
     
-    // Gelen body'e kullanıcının şirket bilgisini ekle
-    const challengeData = { ...body, company: (token.company as { _id: string })._id };
+    await createChallengeSchema.validate(body);
 
-    const newChallenge = await challengeService.create(challengeData);
-
+    const challenge = await challengeService.create(body);
     return responseHandler.success(
-      { challenge: newChallenge },
+      { challenge },
       t('success.created', { entity: t('entity.challenge') })
-    );
+      );
   } catch (error) {
-    return responseHandler.error(error as Error);
+    return responseHandler.error(
+      error instanceof Error ? error.message : t('error.failedToCreate', { entity: t('entity.challenge') })
+      );
   }
 }

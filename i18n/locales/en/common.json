@@ -107,18 +107,45 @@
         "skillsPlaceholder": "Press enter to add a skill...",
         "submitButton": "Save Job Posting"
     },
-    "api": {
-        "job-postings": {
-            "success": {
-                "updated": "Job posting updated successfully",
-                "deleted": "Job posting deleted successfully",
-                "created": "Job posting created successfully"
+    "InterviewsPage": {
+        "title": "Interviews",
+        "description": "View your scheduled and completed interview sessions.",
+        "errorTitle": "Error Loading Interviews",
+        "errorMessage": "Please refresh the page or try again later.",
+        "noSessionsTitle": "No interviews scheduled yet",
+        "noSessionsDescription": "You can schedule interviews from the job postings page.",
+        "status": {
+            "scheduled": "Scheduled",
+            "active": "Active",
+            "completed": "Completed",
+            "cancelled": "Cancelled",
+            "unknown": "Unknown"
+        },
+        "card": {
+            "jobTitlePlaceholder": "Job Posting",
+            "interviewer": "Interviewer: {name}",
+            "interviewer_unassigned": "Interviewer: Unassigned",
+            "candidates": "{count} candidate",
+            "candidates_plural": "{count} candidates",
+            "notes": "Notes:",
+            "interviewerLinkTitle": "Interviewer Link",
+            "interviewerLinkDescription": "Send this link to the interviewer",
+            "copyButton": "Copy",
+            "viewButton": "View",
+            "editButton": "Edit",
+            "cancelButton": "Cancel",
+            "cancelConfirm": {
+                "title": "Cancel Interview",
+                "description": "Are you sure you want to cancel the interview for the posting \"{title}\"? This action cannot be undone.",
+                "confirmText": "Yes, Cancel",
+                "cancelText": "Go Back"
             },
-            "error": {
-                "notFound": "Job posting not found",
-                "forbidden": "You don't have permission to perform this action",
-                "unauthorized": "Unauthorized access",
-                "generic": "An error occurred"
+            "toast": {
+                "copySuccess": "Interviewer link copied to clipboard!",
+                "cancelSuccessTitle": "Success",
+                "cancelSuccessDescription": "The interview has been successfully cancelled.",
+                "cancelErrorTitle": "Error",
+                "cancelErrorDescription": "An error occurred while cancelling the interview."
             }
         }
     }

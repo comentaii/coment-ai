@@ -54,7 +54,15 @@ const InterviewSessionSchema = new Schema<IInterviewSession>({
   }
 }, {
   timestamps: true,
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true },
   collection: 'interview_sessions'
+});
+
+InterviewSessionSchema.virtual('slots', {
+  ref: 'InterviewSlot',
+  localField: '_id',
+  foreignField: 'sessionId',
 });
 
 // Compound indexes for efficient queries
@@ -62,5 +70,4 @@ InterviewSessionSchema.index({ companyId: 1, scheduledDate: 1 });
 InterviewSessionSchema.index({ interviewerId: 1, status: 1 });
 InterviewSessionSchema.index({ jobPostingId: 1, status: 1 });
 
-// Prevent model overwrite error in development
 export const InterviewSession = mongoose.models.InterviewSession || mongoose.model<IInterviewSession>('InterviewSession', InterviewSessionSchema);

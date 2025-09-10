@@ -1,30 +1,51 @@
 {
+  "success": {
+    "fetched": "{entity} başarıyla getirildi.",
+    "created": "{entity} başarıyla oluşturuldu.",
+    "updated": "{entity} başarıyla güncellendi.",
+    "deleted": "{entity} başarıyla silindi."
+  },
+  "error": {
+    "notFound": "{entity} bulunamadı.",
+    "forbidden": "Bu işlemi yapma yetkiniz yok.",
+    "unauthorized": "Yetkisiz erişim. Lütfen giriş yapın.",
+    "generic": "Beklenmedik bir hata oluştu. Lütfen daha sonra tekrar deneyin.",
+    "validation": "Doğrulama başarısız oldu. Lütfen girdilerinizi kontrol edin.",
+    "failedToFetch": "{entity} getirilemedi.",
+    "failedToCreate": "{entity} oluşturulamadı.",
+    "failedToUpdate": "{entity} güncellenemedi.",
+    "failedToDelete": "{entity} silinemedi."
+  },
+  "entity": {
+    "jobPosting": "İş İlanı",
+    "jobPostings": "İş İlanları",
+    "candidate": "Aday",
+    "candidates": "Adaylar",
+    "interview": "Mülakat",
+    "interviews": "Mülakatlar",
+    "interviewSession": "Mülakat Oturumu",
+    "interviewSessions": "Mülakat Oturumları",
+    "user": "Kullanıcı",
+    "users": "Kullanıcılar",
+    "interviewer": "Mülakatçı",
+    "interviewers": "Mülakatçılar",
+    "company": "Şirket",
+    "companies": "Şirketler",
+    "personnel": "Personel",
+    "challenge": "Teknik Görev",
+    "challenges": "Teknik Görevler"
+  },
+  "job-postings": {
     "success": {
-        "default": "İşlem başarıyla tamamlandı.",
-        "created": "{entity} başarıyla oluşturuldu.",
-        "updated": "{entity} başarıyla güncellendi.",
-        "deleted": "{entity} başarıyla silindi.",
-        "fetched": "{entity} verileri başarıyla getirildi.",
-        "login": "Giriş başarılı. Yönlendiriliyorsunuz...",
-        "logout": "Çıkış başarılı. Yönlendiriliyorsunuz...",
-        "register": "Kayıt başarılı. Lütfen e-postanızı doğrulayın."
+        "updated": "İş ilanı başarıyla güncellendi",
+        "deleted": "İş ilanı başarıyla silindi",
+        "created": "İş ilanı başarıyla oluşturuldu"
     },
     "error": {
-        "default": "Beklenmeyen bir hata oluştu.",
-        "notFound": "{entity} bulunamadı.",
-        "alreadyExists": "Bu {entity} zaten mevcut.",
-        "invalidCredentials": "Geçersiz e-posta veya şifre.",
-        "unauthorized": "Bu işlemi yapmak için yetkiniz yok.",
-        "forbidden": "Bu kaynağa erişim izniniz yok.",
-        "validation": "Doğrulama hatası. Lütfen girdilerinizi kontrol edin.",
-        "server": "Sunucu hatası. Lütfen daha sonra tekrar deneyin.",
-        "badRequest": "Geçersiz istek. Lütfen verilerinizi kontrol edin.",
-        "rateLimit": "Çok fazla istek gönderdiniz. Lütfen bir süre bekleyin."
-    },
-    "entity": {
-        "user": "Kullanıcı",
-        "company": "Şirket",
-        "challenge": "Meydan Okuma",
-        "candidate": "Aday"
+        "notFound": "İş ilanı bulunamadı",
+        "forbidden": "Bu işlemi yapma yetkiniz yok",
+        "unauthorized": "Yetkisiz erişim",
+        "generic": "Bir hata oluştu"
     }
+  }
 }

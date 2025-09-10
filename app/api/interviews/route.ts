@@ -5,6 +5,27 @@ import { createInterviewSchema } from '@/lib/validation-schemas';
 import { interviewService } from '@/services/db';
 import { USER_ROLES } from '@/lib/constants';
 import { getTranslations } from 'next-intl/server';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
+
+export async function GET(req: NextRequest) {
+  const t = await getTranslations('api');
+  try {
+    const session = await getServerSession(authOptions);
+    const companyId = session?.user?.companyId;
+
+    if (!companyId) {
+      return responseHandler.unauthorized(t('error.unauthorized'));
+    }
+
+    const interviews = await interviewService.getInterviewsByCompany(companyId);
+    return responseHandler.success({ interviews });
+  } catch (error) {
+    return responseHandler.error(
+      error instanceof Error ? error.message : t('error.failedToFetch', { entity: t('entityPlural.interviews') })
+    );
+  }
+}
 
 export async function POST(req: NextRequest) {
   const t = await getTranslations('api');
@@ -19,21 +40,17 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     await createInterviewSchema.validate(body);
     
-    const { candidateId, interviewerId, challengeId, companyId, scheduledAt } = body;
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.companyId) {
+      return responseHandler.error(t('error.unauthorized'), 401);
+    }
 
-    const newInterview = await interviewService.create({
-        candidate: candidateId,
-        interviewer: interviewerId,
-        challenge: challengeId,
-        company: companyId,
-        scheduledAt,
-    });
+    const result = await interviewService.createInterviewForCandidates(body);
 
-    return responseHandler.success(
-      { interview: newInterview },
-      t('success.created', { entity: t('entity.interview') })
-    );
+    return responseHandler.success(result, t('success.created', { entity: t('entity.interview') }));
   } catch (error) {
-    return responseHandler.error(error as Error);
+    return responseHandler.error(
+      error instanceof Error ? error.message : t('error.failedToCreate', { entity: t('entity.interview') })
+    );
   }
 }

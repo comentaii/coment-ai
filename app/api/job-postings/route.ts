@@ -1,67 +1,59 @@
 import { NextRequest } from 'next/server';
 import { getToken } from 'next-auth/jwt';
-import { ResponseHandler } from '@/utils/response-handler';
-import { createJobPostingSchema } from '@/lib/validation-schemas';
-import jobPostingService from '@/services/db/job-posting.service';
-import { IJobPosting } from '@/schemas/job-posting.model';
+import { responseHandler } from '@/utils/response-handler';
+import { jobPostingService } from '@/services/db';
 import { getTranslations } from 'next-intl/server';
-import { UserService } from '@/services/db/user.service';
 
 // GET all job postings
 export async function GET(req: NextRequest) {
-  const t = await getTranslations('api.job-postings');
+  const t = await getTranslations('api');
   try {
     const token = await getToken({ req });
+    // @ts-ignore
+    const companyId = token?.companyId;
 
-    if (!token || !token.roles) {
-      return ResponseHandler.unauthorized(t('error.unauthorized'));
-    }
-    
-    // An HR manager can only see their own company's postings
-    if (token.roles.includes('hr_manager') && token.companyId) {
-      const jobPostings = await jobPostingService.findAll({ company: token.companyId });
-      return ResponseHandler.success({ jobPostings });
+    if (!token || !companyId) {
+      return responseHandler.error(t('error.unauthorized'), 401);
     }
 
-    // A super admin can see all postings
-    if (token.roles.includes('super_admin')) {
-      const jobPostings = await jobPostingService.findAll();
-      return ResponseHandler.success({ jobPostings });
-    }
-    
-    // Other roles are forbidden
-    return ResponseHandler.forbidden(t('error.forbidden'));
-    
+    const jobPostings = await jobPostingService.findByCompany(companyId);
+    return responseHandler.success(jobPostings);
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : t('error.generic');
-    return ResponseHandler.error(errorMessage);
+    console.error('Failed to fetch job postings:', error);
+    return responseHandler.error(
+      t('error.failedToFetch', { entity: t('entity.jobPostings') })
+    );
   }
 }
 
-// POST a new job posting
+// CREATE a new job posting
 export async function POST(req: NextRequest) {
-  const t = await getTranslations('api.job-postings');
+  const t = await getTranslations('api');
   try {
     const token = await getToken({ req });
+    const companyId = token?.companyId;
+    const userId = token?.id;
 
-    if (!token || !token.roles || (!token.roles.includes('hr_manager') && !token.roles.includes('super_admin'))) {
-      return ResponseHandler.forbidden(t('error.forbidden'));
+    if (!token || !companyId || !userId) {
+      return responseHandler.error(t('error.unauthorized'), 401);
     }
 
     const body = await req.json();
-    await createJobPostingSchema.validate(body);
-    
-    const jobPostingData: Partial<IJobPosting> = {
+
+    const newJobPosting = await jobPostingService.create({
       ...body,
-      createdBy: token.sub,
-      company: token.companyId,
-    };
+      company: companyId,
+      createdBy: userId,
+    });
 
-    const newJobPosting = await jobPostingService.create(jobPostingData);
-
-    return ResponseHandler.success(newJobPosting, t('success.created'), 201);
+    return responseHandler.success(
+      newJobPosting,
+      t('success.created', { entity: t('entity.jobPosting') })
+    );
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
-    return ResponseHandler.error(errorMessage);
+    console.error('Failed to create job posting:', error);
+    return responseHandler.error(
+      t('error.failedToCreate', { entity: t('entity.jobPosting') })
+    );
   }
 }
