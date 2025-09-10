@@ -7,22 +7,14 @@ export const userSignupSchema = yup.object({
   confirmPassword: yup.string()
     .oneOf([yup.ref('password')], 'Şifreler eşleşmiyor')
     .required('Şifre tekrarı gereklidir'),
-  role: yup.string()
-    .oneOf(['hr_manager', 'technical_interviewer', 'candidate'], 'Geçerli bir rol seçiniz')
-    .required('Rol gereklidir'),
+  roles: yup.array()
+    .of(yup.string().oneOf(['super_admin', 'hr_manager', 'technical_interviewer', 'candidate'], 'Geçersiz rol'))
+    .min(1, 'En az bir rol seçilmelidir')
+    .required('Rol seçimi gereklidir'),
   companyName: yup.string().optional(),
   companyEmail: yup.string().email('Geçerli şirket email giriniz').optional(),
 });
 
-export const userLoginSchema = yup.object({
-  email: yup.string().email('Geçerli email giriniz').required('Email gereklidir'),
-  password: yup.string().required('Şifre gereklidir'),
-});
-
-export const userSigninSchema = yup.object({
-  email: yup.string().email('Geçerli email giriniz').required('Email gereklidir'),
-  password: yup.string().required('Şifre gereklidir'),
-});
 
 export const companySignupSchema = yup.object({
   name: yup.string().required('Şirket adı gereklidir').min(2, 'Şirket adı en az 2 karakter olmalıdır'),
@@ -82,9 +74,10 @@ export const loginSchema = yup.object({
 export const inviteUserSchema = yup.object({
   email: yup.string().email('Geçerli email giriniz').required('Email gereklidir'),
   name: yup.string().required('İsim gereklidir').min(2, 'İsim en az 2 karakter olmalıdır'),
-  role: yup.string()
-    .oneOf(['hr_manager', 'technical_interviewer'], 'Geçerli bir rol seçiniz')
-    .required('Rol gereklidir'),
+  roles: yup.array()
+    .of(yup.string().oneOf(['hr_manager', 'technical_interviewer'], 'Geçersiz rol'))
+    .min(1, 'En az bir rol seçilmelidir')
+    .required('Rol seçimi gereklidir'),
 });
 
 export const updateUserRolesSchema = yup.object({
@@ -101,11 +94,9 @@ export const updateInterviewSessionSchema = yup.object({
 
 // Type exports
 export type UserSignupFormData = yup.InferType<typeof userSignupSchema>;
-export type UserLoginFormData = yup.InferType<typeof userLoginSchema>;
 export type CompanySignupFormData = yup.InferType<typeof companySignupSchema>;
 export type CreateJobPostingDto = yup.InferType<typeof createJobPostingSchema>;
 export type UpdateJobPostingDto = yup.InferType<typeof updateJobPostingSchema>;
-export type UserSigninFormData = yup.InferType<typeof userSigninSchema>;
 export type CreateInterviewDto = yup.InferType<typeof createInterviewSchema>;
 export type UpdateInterviewDto = yup.InferType<typeof updateInterviewSchema>;
 export type LoginFormData = yup.InferType<typeof loginSchema>;

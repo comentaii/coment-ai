@@ -7,9 +7,11 @@ import { signIn } from 'next-auth/react';
 import { FormikForm } from '@/components/ui/formik-form';
 import { FormikField } from '@/components/forms/formik-field';
 import { Button } from '@/components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Label } from '@/components/ui/label';
 import {  UserSignupFormData, userSignupSchema } from '@/lib/validation-schemas';
 import { useToast } from '@/hooks/use-toast';
+import { USER_ROLES } from '@/lib/constants/roles';
 
 interface SignupFormProps {
   onSuccess?: () => void;
@@ -26,7 +28,7 @@ export function SignupForm({ onSuccess }: SignupFormProps) {
     email: '',
     password: '',
     confirmPassword: '',
-    role: 'candidate',
+    roles: ['candidate'],
     companyName: '',
     companyEmail: '',
   };
@@ -114,29 +116,42 @@ export function SignupForm({ onSuccess }: SignupFormProps) {
             touched={formikProps.touched.confirmPassword}
           />
 
-          <div className="space-y-2">
-            <label className="text-sm font-medium">Rol</label>
-            <Select
-              value={formikProps.values.role}
-              onValueChange={(value) => {
-                formikProps.setFieldValue('role', value);
-              }}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Rol seçiniz" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="candidate">Aday</SelectItem>
-                <SelectItem value="hr_manager">İK Yetkilisi</SelectItem>
-                <SelectItem value="technical_interviewer">Teknik Mülakatçı</SelectItem>
-              </SelectContent>
-            </Select>
-            {formikProps.errors.role && formikProps.touched.role && (
-              <p className="text-sm text-red-500">{formikProps.errors.role}</p>
+          <div className="space-y-3">
+            <label className="text-sm font-medium">Roller</label>
+            <div className="space-y-2">
+              {[
+                { value: USER_ROLES.CANDIDATE, label: 'Aday' },
+                { value: USER_ROLES.HR_MANAGER, label: 'İK Yetkilisi' },
+                { value: USER_ROLES.TECHNICAL_INTERVIEWER, label: 'Teknik Mülakatçı' },
+              ].map((role) => (
+                <div key={role.value} className="flex items-center space-x-2">
+                  <Checkbox
+                    id={`role-${role.value}`}
+                    checked={formikProps.values.roles?.includes(role.value) || false}
+                    onCheckedChange={(checked) => {
+                      const currentRoles = formikProps.values.roles || [];
+                      if (checked) {
+                        formikProps.setFieldValue('roles', [...currentRoles, role.value]);
+                      } else {
+                        formikProps.setFieldValue('roles', currentRoles.filter(r => r !== role.value));
+                      }
+                    }}
+                  />
+                  <Label 
+                    htmlFor={`role-${role.value}`}
+                    className="text-sm font-normal cursor-pointer"
+                  >
+                    {role.label}
+                  </Label>
+                </div>
+              ))}
+            </div>
+            {formikProps.errors.roles && formikProps.touched.roles && (
+              <p className="text-sm text-red-500">{formikProps.errors.roles}</p>
             )}
           </div>
 
-          {(formikProps.values.role === 'hr_manager' || formikProps.values.role === 'technical_interviewer') && (
+          {(formikProps.values.roles?.includes(USER_ROLES.HR_MANAGER) || formikProps.values.roles?.includes(USER_ROLES.TECHNICAL_INTERVIEWER)) && (
             <div className="space-y-4 p-4 border rounded-lg bg-gray-50 dark:bg-gray-900">
               <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300">
                 Şirket Bilgileri (Opsiyonel)

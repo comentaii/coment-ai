@@ -16,7 +16,7 @@ export async function GET(
       return responseHandler.error(t('error.unauthorized'), 401);
     }
 
-    if (token.role !== 'super_admin' && (token.company as { _id: string })?._id !== params.companyId) {
+    if (!(token.roles as string[])?.includes('super_admin') && token.companyId !== params.companyId) {
         return responseHandler.forbidden(t('error.forbidden'));
     }
 

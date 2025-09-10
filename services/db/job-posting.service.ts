@@ -3,7 +3,7 @@ import JobPosting, { IJobPosting } from '@/schemas/job-posting.model';
 import mongoose from 'mongoose';
 import { jobMatchingService } from '@/services/jobs/job-matching.service';
 
-class JobPostingService extends BaseService<IJobPosting> {
+export class JobPostingService extends BaseService<IJobPosting> {
   constructor() {
     super(JobPosting);
   }

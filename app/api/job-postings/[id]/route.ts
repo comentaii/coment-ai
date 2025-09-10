@@ -25,7 +25,7 @@ export async function GET(req: NextRequest, { params }: RouteParams) {
     }
 
     // Ensure the user can only access job postings from their own company
-    if (token.role !== ROLES.SUPER_ADMIN && jobPosting.company.toString() !== token.companyId) {
+    if (!(token.roles as string[])?.includes(ROLES.SUPER_ADMIN) && jobPosting.company.toString() !== token.companyId) {
         return responseHandler.forbidden("You don't have permission to access this resource.");
     }
 
@@ -49,8 +49,8 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
     }
 
     // Authorization check: User must be a super_admin or the hr_manager of the company that owns the posting
-    const isOwner = token?.roles?.includes('hr_manager') && String(jobPosting.company) === token.companyId;
-    const isSuperAdmin = token?.roles?.includes('super_admin');
+    const isOwner = (token?.roles as string[])?.includes('hr_manager') && String(jobPosting.company) === token.companyId;
+    const isSuperAdmin = (token?.roles as string[])?.includes('super_admin');
 
     if (!isOwner && !isSuperAdmin) {
       return responseHandler.forbidden(t('error.forbidden'));
@@ -81,8 +81,8 @@ export async function DELETE(req: NextRequest, { params }: RouteParams) {
     }
 
     // Authorization check: User must be a super_admin or the hr_manager of the company that owns the posting
-    const isOwner = token?.roles?.includes('hr_manager') && String(jobPosting.company) === token.companyId;
-    const isSuperAdmin = token?.roles?.includes('super_admin');
+    const isOwner = (token?.roles as string[])?.includes('hr_manager') && String(jobPosting.company) === token.companyId;
+    const isSuperAdmin = (token?.roles as string[])?.includes('super_admin');
 
     if (!isOwner && !isSuperAdmin) {
       return responseHandler.forbidden(t('error.forbidden'));

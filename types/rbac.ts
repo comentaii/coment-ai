@@ -61,3 +61,6 @@ export const rolePermissions: Record<UserRole, Permission[]> = {
     'conduct_interview', // Sadece kendi mülakatı
   ],
 };
+
+// Backward compatibility için alias
+export const ROLES_PERMISSIONS = rolePermissions;

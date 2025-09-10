@@ -73,7 +73,7 @@ export function Navbar() {
                       {session.user?.email}
                     </p>
                     <div className="mt-2">
-                      <UserRoleBadge role={session.user?.role || "candidate"} />
+                      <UserRoleBadge role={session.user?.roles?.[0] || "candidate"} />
                     </div>
                   </div>
                 </DropdownMenuLabel>

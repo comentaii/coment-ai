@@ -1,7 +1,7 @@
 import { BaseService } from './base.service';
 import { Challenge, IChallenge } from '@/schemas';
 
-class ChallengeService extends BaseService<IChallenge> {
+export class ChallengeService extends BaseService<IChallenge> {
   constructor() {
     super(Challenge);
   }

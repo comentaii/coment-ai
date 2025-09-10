@@ -13,7 +13,7 @@ export async function POST(
 ) {
   try {
     const token = await getToken({ req });
-    if (!token || !token.roles || !token.roles.includes('hr_manager')) {
+    if (!token || !(token.roles as string[])?.includes('hr_manager')) {
       return ResponseHandler.forbidden();
     }
 

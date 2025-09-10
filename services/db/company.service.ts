@@ -1,7 +1,7 @@
 import { BaseService } from './base.service';
 import { Company, ICompany } from '@/schemas/company.model';
 
-class CompanyService extends BaseService<ICompany> {
+export class CompanyService extends BaseService<ICompany> {
   constructor() {
     super(Company);
   }

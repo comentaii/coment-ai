@@ -1,14 +1,10 @@
 import { NextRequest } from 'next/server';
 import { userSignupSchema } from '@/lib/validation-schemas';
-import { UserService } from '@/services/db/user.service';
-import { CompanyService } from '@/services/db/company.service';
+import { userService, companyService } from '@/services/db';
 import { connectToDatabase } from '@/lib/db';
 import { ResponseHandler } from '@/utils/response-handler';
 import { toastMessages } from '@/lib/utils/toast';
 import { USER_ROLES } from '@/lib/constants/roles';
-
-const userService = new UserService();
-const companyService = new CompanyService();
 
 export async function POST(request: NextRequest) {
   try {
@@ -27,8 +23,8 @@ export async function POST(request: NextRequest) {
 
     let companyId: string | undefined = undefined;
 
-    // If user is HR Manager or Technical Interviewer and provided company info, create/check company
-    if ((body.role === USER_ROLES.HR_MANAGER || body.role === USER_ROLES.TECHNICAL_INTERVIEWER) && 
+    // If user has HR Manager or Technical Interviewer role and provided company info, create/check company
+    if ((body.roles.includes(USER_ROLES.HR_MANAGER) || body.roles.includes(USER_ROLES.TECHNICAL_INTERVIEWER)) && 
         body.companyName && body.companyEmail) {
       
       // Check if company exists
@@ -51,7 +47,7 @@ export async function POST(request: NextRequest) {
       name: body.name,
       email: body.email,
       password: body.password,
-      role: body.role,
+      roles: body.roles,
     };
 
     // Only add companyId if it exists
@@ -68,7 +64,7 @@ export async function POST(request: NextRequest) {
         id: user._id,
         name: user.name,
         email: user.email,
-        role: user.role,
+        roles: user.roles,
         companyId: user.companyId,
       },
     });

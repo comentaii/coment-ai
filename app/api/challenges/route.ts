@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
   try {
     const token = await getToken({ req });
 
-    if (!token || ![USER_ROLES.HR_MANAGER, USER_ROLES.SUPER_ADMIN].includes(token.role as string)) {
+    if (!token || !(token.roles as string[])?.some(role => [USER_ROLES.HR_MANAGER, USER_ROLES.SUPER_ADMIN].includes(role))) {
       return responseHandler.forbidden(t('error.forbidden'));
     }
 

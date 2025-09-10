@@ -1,11 +1,10 @@
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
-import { UserService } from "@/services/db/user.service";
+import { userService } from "@/services/db";
 import { connectToDatabase } from "@/lib/db";
 import { USER_ROLES, type UserRole } from "@/lib/constants/roles";
 
-const userService = new UserService();
 
 export const authOptions: NextAuthOptions = {
   providers: [

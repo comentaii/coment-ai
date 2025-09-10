@@ -10,22 +10,12 @@ import {
   ChevronRight,
   Menu,
   X,
-  Home,
-  Users,
-  Building,
-  Calendar,
-  FileText,
-  Code,
-  UserCheck,
-  BarChart3,
-  Settings,
 } from 'lucide-react';
 import { useNavigation } from '@/lib/utils/navigation';
-import { USER_ROLES, type UserRole } from '@/lib/constants/roles';
+import { USER_ROLES } from '@/lib/constants/roles';
 import { usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { ThemeToggle } from '@/components/theme-toggle';
-import { getNavigationItemsByRoles } from '@/lib/constants/navigation';
+import { ThemeToggle } from '@/components/ui/theme-toggle';
 
 interface MenuItem {
   id: string;
@@ -46,7 +36,7 @@ export function Sidebar() {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const { session } = useAuth();
-  const { locale, getLocalizedPath, getNavigationItemsByRole, isActivePath } = useNavigation();
+  const { locale, getLocalizedPath, getNavigationItemsByRole, getNavigationItemsByRoles, isActivePath } = useNavigation();
   const pathname = usePathname();
   const t = useTranslations('Navigation');
   const [isMounted, setIsMounted] = useState(false);
@@ -55,10 +45,8 @@ export function Sidebar() {
     setIsMounted(true);
   }, []);
 
-  const userRole = (session?.user?.role as UserRole) || USER_ROLES.CANDIDATE;
-  const filteredMenuItems = getNavigationItemsByRole(userRole);
-
-  const userRoles = session?.user?.roles || [];
+  const userRoles = session?.user?.roles || [USER_ROLES.CANDIDATE];
+  const primaryRole = userRoles[0] || USER_ROLES.CANDIDATE;
   const navigationItems = getNavigationItemsByRoles(userRoles);
 
   const toggleSidebar = () => {
@@ -210,7 +198,7 @@ export function Sidebar() {
                   {session.user.name || 'Kullanıcı'}
                 </p>
                 <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
-                  {session.user.role || 'candidate'}
+                  {primaryRole}
                 </p>
               </div>
             </div>
@@ -260,7 +248,7 @@ export function Sidebar() {
                     {session.user.name || 'Kullanıcı'}
                   </p>
                   <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
-                    {session.user.role || 'candidate'}
+                    {primaryRole}
                   </p>
                 </div>
               </div>

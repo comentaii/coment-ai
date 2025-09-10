@@ -2,7 +2,7 @@ import { Interview, IInterview } from '@/schemas';
 import { BaseService } from './base.service';
 import mongoose from 'mongoose';
 
-class InterviewService extends BaseService<IInterview> {
+export class InterviewService extends BaseService<IInterview> {
   constructor() {
     super(Interview);
   }
