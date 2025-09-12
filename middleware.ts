@@ -32,12 +32,18 @@ export async function middleware(req: NextRequest) {
   // The rest of the logic is for auth checks on page routes.
   // This part only runs if intlMiddleware didn't redirect.
 
-  if (pathname.startsWith('/api')) {
-    // For all other API routes, we just let them pass through.
-    // The i18n context will be picked up by getTranslations on the server.
-    return NextResponse.next();
+  // Rule D: Secure all API routes except for authentication endpoints.
+  if (pathname.startsWith('/api/') && !pathname.startsWith('/api/auth')) {
+    const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+    if (!token) {
+      // If no token is found, return a 401 Unauthorized response.
+      // This is the standard way to protect APIs.
+      return new NextResponse(JSON.stringify({ message: 'Authentication required' }), {
+        status: 401,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
   }
-
 
   const finalResponse = intlResponse || NextResponse.next();
   
@@ -48,7 +54,7 @@ export async function middleware(req: NextRequest) {
   // Handle auth pages - redirect logged in users to dashboard
   if (pathWithoutLocale.startsWith('/auth/')) {
     try {
-      const token = await getToken({ req, secret: process.env['NEXTAUTH_SECRET'] });
+      const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
       
       if (token) {
         // User is logged in, redirect to dashboard
@@ -66,7 +72,7 @@ export async function middleware(req: NextRequest) {
       pathWithoutLocale.startsWith('/interviews/') || 
       pathWithoutLocale.startsWith('/proctoring/')) {
     try {
-      const token = await getToken({ req, secret: process.env['NEXTAUTH_SECRET'] });
+      const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
       
       if (!token) {
         // User not authenticated, redirect to unauthorized page

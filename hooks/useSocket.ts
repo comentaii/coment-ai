@@ -8,6 +8,8 @@ import { updateUploadTaskStatus, UploadTask } from '@/store/features/uploadSlice
 import { candidateApi } from '@/services/api/candidateApi';
 
 let socket: Socket | null = null;
+const SOCKET_SERVER_URL = process.env.NEXT_PUBLIC_SOCKET_SERVER_URL || 'http://localhost:3001';
+
 
 // Define the shape of the data received from the socket
 interface UploadStatusData {
@@ -23,14 +25,13 @@ export function useSocket() {
   const [isConnected, setIsConnected] = useState(socket?.connected || false);
 
   useEffect(() => {
-    const initializeSocket = async () => {
-      // Ensure the socket server is running on the backend
-      await fetch('/api/socket');
+    const initializeSocket = () => {
+      // No need to fetch anymore, we connect directly.
+      // await fetch('/api/socket');
 
       if (!socket) {
-        socket = io({
-          path: '/api/socket', // Match the server-side path
-        });
+        // Connect to the standalone Socket.IO server
+        socket = io(SOCKET_SERVER_URL);
 
         socket.on('connect', () => {
           console.log('[Socket.IO] Connected to server.');

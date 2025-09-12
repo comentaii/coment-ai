@@ -114,11 +114,14 @@ export async function POST(request: NextRequest) {
         console.error(`Error processing file ${file.name}:`, error);
 
         let errorMessage = 'Failed to process CV.';
-        let errorType: 'validation' | 'server' = 'server';
+        let errorType: 'validation' | 'server' | 'ai' = 'server';
 
         if (error.message && error.message.includes('User validation failed: email: Email is required')) {
           errorMessage = 'Processing failed: Could not identify an email in the document. Please upload a valid CV.';
           errorType = 'validation';
+        } else if (error.message && error.message.includes('AI returned data in an invalid format')) {
+          errorMessage = `AI analysis failed for ${file.name}. The AI couldn't process the document structure. Please try a different CV format.`;
+          errorType = 'ai';
         }
 
         results.push({

@@ -1,5 +1,6 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { readFile } from 'fs/promises';
+import { cvAnalysisResultSchema, CVAnalysisResultDto } from '@/lib/validation-schemas';
 
 // Initialize the Google Generative AI client
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
@@ -7,18 +8,7 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 const modelId = process.env.GEMINI_MODEL_ID || 'gemini-1.5-flash-latest';
 const model = genAI.getGenerativeModel({ model: modelId });
 
-// Define the structure for the CV analysis result
-interface CVAnalysisResult {
-  summary: string;
-  technicalSkills: string[];
-  experienceLevel: 'Junior' | 'Mid-level' | 'Senior' | 'Lead' | 'Unknown';
-  fullName?: string;
-  contactInfo?: {
-    email?: string;
-    phone?: string;
-  };
-}
-
+// Define the structure for the CV analysis result - REMOVED, will use DTO from validation-schemas
 // Helper function to convert file to base64
 async function fileToGenerativePart(path: string, mimeType: string) {
     const data = await readFile(path, { encoding: "base64" });
@@ -36,7 +26,7 @@ class GeminiService {
    * @param filePath The absolute path to the CV PDF file.
    * @returns A structured JSON object with the analysis results.
    */
-  public async analyzeCV(filePath: string): Promise<CVAnalysisResult> {
+  public async analyzeCV(filePath: string): Promise<CVAnalysisResultDto> {
     try {
       console.log(`[GeminiService] Step 1: Converting PDF to base64 for file: ${filePath}`);
       const imageParts = [
@@ -52,10 +42,10 @@ class GeminiService {
         1.  "fullName": The full name of the candidate.
         2.  "contactInfo": An object with "email" and "phone" number if available.
         3.  "summary": A concise 2-3 sentence summary of the candidate's professional profile.
-        4.  "technicalSkills": An array of the top 10 most relevant technical skills (e.g., programming languages, frameworks, databases).
+        4.  "skills": An array of the top 10 most relevant technical skills (e.g., programming languages, frameworks, databases). If no relevant skills are found, return an empty array [].
         5.  "experienceLevel": Categorize the experience level as "Junior", "Mid-level", "Senior", "Lead", or "Unknown".
 
-        Respond ONLY with a valid JSON object without any markdown formatting (e.g., no \`\`\`json).
+        Respond ONLY with a valid JSON object without any markdown formatting (e.g., no \`\`\`json). The "skills" field must always be an array.
       `;
 
       const result = await model.generateContent([prompt, ...imageParts]);
@@ -65,13 +55,23 @@ class GeminiService {
       console.log(`[GeminiService] Step 3: Received response from Gemini.`);
       const cleanedJson = jsonResponse.replace(/```json/g, '').replace(/```/g, '');
       
-      const parsedResult: CVAnalysisResult = JSON.parse(cleanedJson);
-      console.log(`[GeminiService] Step 4: Parsed Gemini response successfully.`);
-      
-      return parsedResult;
+      const parsedResult = JSON.parse(cleanedJson);
+      console.log('[GeminiService] Step 4: Parsed Gemini response.');
+
+      // Validate the parsed result against our canonical schema
+      const validatedResult = await cvAnalysisResultSchema.validate(parsedResult, {
+        abortEarly: false,
+        stripUnknown: true,
+      });
+      console.log('[GeminiService] Step 5: Validated response against schema successfully.');
+
+      return validatedResult as CVAnalysisResultDto;
 
     } catch (error) {
       console.error(`[GeminiService] Error analyzing CV with Gemini for file ${filePath}:`, error);
+      if (error instanceof Error && error.name === 'ValidationError') {
+        throw new Error('AI returned data in an invalid format.');
+      }
       throw new Error('Failed to analyze CV using AI.');
     }
   }

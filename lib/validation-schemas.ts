@@ -61,7 +61,7 @@ export const createInterviewSessionSchema = yup.object({
 
 export const updateInterviewSchema = yup.object({
   scheduledDate: yup.string().optional(),
-  status: yup.string().oneOf(['scheduled', 'active', 'completed', 'cancelled']).optional(),
+  status: yup.string().oneOf(['planned', 'completed', 'cancelled']).optional(),
   notes: yup.string().optional(),
 });
 
@@ -107,4 +107,17 @@ export type UpdateInterviewSessionDto = yup.InferType<typeof updateInterviewSess
 
 // Additional type aliases for backward compatibility
 export type InviteUserFormData = InviteUserDto;
-export type UpdateUserRolesFormData = UpdateUserRolesDto; 
+export type UpdateUserRolesFormData = UpdateUserRolesDto;
+
+export const cvAnalysisResultSchema = yup.object({
+  fullName: yup.string().required(),
+  contactInfo: yup.object({
+    email: yup.string().email().optional(),
+    phone: yup.string().optional(),
+  }).required(),
+  summary: yup.string().required(),
+  skills: yup.array(yup.string()).required(),
+  experienceLevel: yup.string().oneOf(['Junior', 'Mid-level', 'Senior', 'Lead', 'Unknown']).required(),
+});
+
+export type CVAnalysisResultDto = yup.InferType<typeof cvAnalysisResultSchema>; 

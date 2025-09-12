@@ -17,7 +17,9 @@ import { CvUploadModal } from '@/components/candidates/cv-upload-modal';
 type ViewMode = 'grid' | 'list';
 
 function CandidateList() {
-  const { data: candidates, isLoading, isError, isFetching, error } = useGetCompanyCandidatesQuery();
+  const { data: candidates, isLoading, isError, isFetching, error } = useGetCompanyCandidatesQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+  });
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
 
   // Debug logging to see what data we're getting

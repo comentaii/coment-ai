@@ -1,6 +1,5 @@
 import { NextRequest } from 'next/server';
-import { getServerSession } from 'next-auth/next';
-import { authOptions } from '@/lib/auth';
+import { getToken } from 'next-auth/jwt';
 import { candidateProfileService } from '@/services/db/candidate-profile.service';
 import { UserService } from '@/services/db/user.service';
 import { connectToDatabase } from '@/lib/db';
@@ -14,13 +13,14 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
-    const session = await getServerSession(authOptions);
+    const token = await getToken({ req: request, secret: process.env.NEXTAUTH_SECRET });
+    const userRoles = (token?.roles as string[]) || [];
 
-    if (!session || !session.user?.companyId || !['hr_manager', 'super_admin'].includes(session.user.role)) {
+    if (!token || !token.companyId || !['hr_manager', 'super_admin'].some(role => userRoles.includes(role))) {
       return responseHandler.error('Unauthorized', 401);
     }
 
-    const { id } = params;
+    const id = params.id;
     
     if (!id || !mongoose.Types.ObjectId.isValid(id)) {
       return responseHandler.error('Invalid profile ID.', 400);
@@ -35,7 +35,7 @@ export async function DELETE(
     }
     
     // Security check: ensure the profile belongs to the user's company
-    if (profile.companyId.toString() !== session.user.companyId) {
+    if (profile.companyId.toString() !== token.companyId) {
       return responseHandler.error('Forbidden', 403);
     }
 
