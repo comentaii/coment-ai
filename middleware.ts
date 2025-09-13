@@ -11,53 +11,60 @@ const intlMiddleware = createMiddleware({
 });
 
 export async function middleware(req: NextRequest) {
-  const { pathname } = req.nextUrl;
-
-  // Rule A: Next-auth routes are completely excluded from any processing.
-  if (pathname.startsWith('/api/auth')) {
-    return NextResponse.next();
+  const secret = process.env.NEXTAUTH_SECRET;
+  if (!secret) {
+    console.error('NEXTAUTH_SECRET is not set. Authentication will not work.');
+    return new NextResponse(JSON.stringify({ message: 'Server configuration error' }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
+    });
   }
 
-  // Rule B & C are handled by the intlMiddleware itself.
-  // We provide a matcher that excludes all API routes from its processing.
-  // This means it will only handle page routes for redirection.
-  const intlResponse = intlMiddleware(req);
+  const { pathname } = req.nextUrl;
 
-  // For API routes that still need i18n context (all except /api/auth),
-  // we need a different approach. Since the default intlMiddleware skips them,
-  // we can manually set the locale header here if needed, but for now, let's rely
-  // on the default locale logic of getTranslations.
-  // The main fix is to prevent intlMiddleware from ever touching non-auth API routes.
-  
-  // The rest of the logic is for auth checks on page routes.
-  // This part only runs if intlMiddleware didn't redirect.
+  // Check if the path is an API route, ignoring any potential locale prefix
+  const pathWithoutLocale = pathname.replace(/^\/(tr|en)/, '');
 
-  // Rule D: Secure all API routes except for authentication endpoints.
-  if (pathname.startsWith('/api/') && !pathname.startsWith('/api/auth')) {
-    const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+  if (pathWithoutLocale.startsWith('/api/')) {
+    // This is an API route. It should not be processed for i18n redirects.
+    // 1. Handle public auth endpoints
+    if (pathWithoutLocale.startsWith('/api/auth')) {
+      return NextResponse.next();
+    }
+
+    // 2. Secure all other API endpoints
+    const token = await getToken({ req, secret });
     if (!token) {
-      // If no token is found, return a 401 Unauthorized response.
-      // This is the standard way to protect APIs.
       return new NextResponse(JSON.stringify({ message: 'Authentication required' }), {
         status: 401,
         headers: { 'Content-Type': 'application/json' },
       });
     }
+
+    // 3. If the original path had a locale, rewrite it to remove the locale prefix
+    // so Next.js can find the correct API route file in `app/api/...`.
+    if (pathname !== pathWithoutLocale) {
+      return NextResponse.rewrite(new URL(pathWithoutLocale, req.url));
+    }
+
+    // If no locale was present (e.g., a direct call to /api/...), just continue.
+    return NextResponse.next();
   }
 
-  const finalResponse = intlResponse || NextResponse.next();
-  
-  // Extract locale and path without locale for page routes
-  const locale = pathname.startsWith('/en/') ? 'en' : 'tr';
-  const pathWithoutLocale = pathname.replace(/^\/(tr|en)/, '');
+  // If it's not an API route, it's a page. Let next-intl handle it first.
+  const intlResponse = intlMiddleware(req);
+
+  // Then, apply page-level authentication and authorization.
+  // Note: pathWithoutLocale is already calculated above.
 
   // Handle auth pages - redirect logged in users to dashboard
   if (pathWithoutLocale.startsWith('/auth/')) {
     try {
-      const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+      const token = await getToken({ req, secret });
       
       if (token) {
         // User is logged in, redirect to dashboard
+        const locale = pathname.startsWith('/en/') ? 'en' : 'tr';
         return NextResponse.redirect(new URL(`/${locale}/dashboard`, req.url));
       }
     } catch (error) {
@@ -72,7 +79,8 @@ export async function middleware(req: NextRequest) {
       pathWithoutLocale.startsWith('/interviews/') || 
       pathWithoutLocale.startsWith('/proctoring/')) {
     try {
-      const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+      const token = await getToken({ req, secret });
+      const locale = pathname.startsWith('/en/') ? 'en' : 'tr';
       
       if (!token) {
         // User not authenticated, redirect to unauthorized page
@@ -109,14 +117,15 @@ export async function middleware(req: NextRequest) {
         }
       }
     } catch (error) {
+      const locale = pathname.startsWith('/en/') ? 'en' : 'tr';
       console.error('Authentication check error:', error);
       // On error, redirect to unauthorized page
       return NextResponse.redirect(new URL(`/${locale}/unauthorized`, req.url));
     }
   }
 
-  // Continue for other routes
-  return NextResponse.next();
+  // For all other page routes, return the response from the intl middleware.
+  return intlResponse;
 }
 
 // Configure which paths the middleware should run on

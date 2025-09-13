@@ -4,16 +4,18 @@ import { useAuth } from '@/hooks/use-auth';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { LandingLayout } from '@/components/layout/landing-layout';
+import { useLocale } from 'next-intl';
 
 export default function HomePage() {
   const { session } = useAuth();
   const router = useRouter();
+  const locale = useLocale();
 
   useEffect(() => {
     if (session) {
-      router.push('/tr/dashboard');
+      router.push(`/${locale}/dashboard`);
     }
-  }, [session, router]);
+  }, [session, router, locale]);
 
   return (
     <LandingLayout>
