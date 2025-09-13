@@ -16,6 +16,7 @@ import { USER_ROLES } from '@/lib/constants/roles';
 import { usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
+import { SidebarLogo } from '@/components/ui/logo';
 
 interface MenuItem {
   id: string;
@@ -160,11 +161,14 @@ export function Sidebar() {
           <Link
             href={getLocalizedPath('/dashboard')}
             className={cn(
-              "text-xl font-bold text-brand-green dark:text-green-400 transition-all duration-200",
-              isCollapsed && "text-center block"
+              "transition-all duration-200",
+              isCollapsed && "flex justify-center w-full"
             )}
           >
-            {isCollapsed ? "CA" : "CodileAI"}
+            <SidebarLogo 
+              isCollapsed={isCollapsed}
+              onClick={() => window.location.href = getLocalizedPath('/dashboard')}
+            />
           </Link>
           
           <Button
@@ -218,8 +222,14 @@ export function Sidebar() {
         <div className="flex flex-col h-full">
           {/* Mobile Header */}
           <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-800">
-            <Link href={getLocalizedPath('/dashboard')} className="text-xl font-bold text-brand-green dark:text-green-400">
-              CodileAI
+            <Link 
+              href={getLocalizedPath('/dashboard')}
+              onClick={() => window.location.href = getLocalizedPath('/dashboard')}
+            >
+              <SidebarLogo 
+                isCollapsed={false}
+                onClick={() => window.location.href = getLocalizedPath('/dashboard')}
+              />
             </Link>
             <Button
               variant="ghost"

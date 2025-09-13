@@ -4,12 +4,16 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Lock, Shield, Home, ArrowLeft, Mail } from 'lucide-react';
+import { Logo } from '@/components/ui/logo';
 
 export default function ForbiddenPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 p-4">
       <Card className="w-full max-w-md text-center">
         <CardHeader>
+          <div className="flex justify-center mb-6">
+            <Logo size="lg" />
+          </div>
           <div className="mx-auto w-20 h-20 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center mb-6">
             <Lock className="w-10 h-10 text-red-600 dark:text-red-400" />
           </div>

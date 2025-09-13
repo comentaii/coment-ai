@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Link } from '@/navigation';
+import { Logo } from '@/components/ui/logo';
 
 
 export function Navbar() {
@@ -32,9 +33,13 @@ export function Navbar() {
         <div className="flex items-center space-x-4">
           <Link
             href="/"
-            className="text-2xl font-bold text-brand-green dark:text-green-400"
+            onClick={() => window.location.href = '/'}
           >
-            CodileAI
+            <Logo 
+              size="lg"
+              clickable
+              onClick={() => window.location.href = '/'}
+            />
           </Link>
         </div>
 
