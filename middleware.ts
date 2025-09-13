@@ -72,26 +72,35 @@ export async function middleware(req: NextRequest) {
     }
   }
 
-  // Handle protected routes - redirect non-authenticated users to unauthorized page
-  if (pathWithoutLocale.startsWith('/dashboard/') || 
-      pathWithoutLocale.startsWith('/admin/') || 
-      pathWithoutLocale.startsWith('/candidates/') || 
-      pathWithoutLocale.startsWith('/interviews/') || 
-      pathWithoutLocale.startsWith('/proctoring/')) {
+  // Handle protected routes
+  const protectedRoutes = [
+    '/dashboard', 
+    '/admin', 
+    '/super-admin',
+    '/candidates', 
+    '/interviews', 
+    '/proctoring'
+  ];
+
+  if (protectedRoutes.some(route => pathWithoutLocale.startsWith(route))) {
     try {
       const token = await getToken({ req, secret });
       const locale = pathname.startsWith('/en/') ? 'en' : 'tr';
       
       if (!token) {
-        // User not authenticated, redirect to unauthorized page
-        return NextResponse.redirect(new URL(`/${locale}/unauthorized`, req.url));
+        // User not authenticated, redirect to the sign-in page
+        const signInUrl = new URL(`/${locale}/auth/signin`, req.url);
+        // Add a callbackUrl so the user is redirected back to the page they
+        // were trying to access after they successfully log in.
+        signInUrl.searchParams.set('callbackUrl', req.url);
+        return NextResponse.redirect(signInUrl);
       }
 
       // Role-based access control
       const userRoles = token.roles as string[] || [];
       
       // Super admin routes
-      if (pathWithoutLocale.startsWith('/admin/')) {
+      if (pathWithoutLocale.startsWith('/admin') || pathWithoutLocale.startsWith('/super-admin')) {
         if (!userRoles.includes(USER_ROLES.SUPER_ADMIN)) {
           // Forbidden access, redirect to forbidden page
           return NextResponse.redirect(new URL(`/${locale}/forbidden`, req.url));
@@ -99,8 +108,8 @@ export async function middleware(req: NextRequest) {
       }
       
       // HR Manager routes
-      if (pathWithoutLocale.startsWith('/candidates/') || 
-          pathWithoutLocale.startsWith('/interviews/')) {
+      if (pathWithoutLocale.startsWith('/candidates') || 
+          pathWithoutLocale.startsWith('/interviews')) {
         if (!userRoles.includes(USER_ROLES.HR_MANAGER) && !userRoles.includes(USER_ROLES.SUPER_ADMIN)) {
           // Forbidden access, redirect to forbidden page
           return NextResponse.redirect(new URL(`/${locale}/forbidden`, req.url));
@@ -108,7 +117,7 @@ export async function middleware(req: NextRequest) {
       }
       
       // Technical Interviewer routes
-      if (pathWithoutLocale.startsWith('/proctoring/')) {
+      if (pathWithoutLocale.startsWith('/proctoring')) {
         if (!userRoles.includes(USER_ROLES.TECHNICAL_INTERVIEWER) && 
             !userRoles.includes(USER_ROLES.HR_MANAGER) && 
             !userRoles.includes(USER_ROLES.SUPER_ADMIN)) {
@@ -118,9 +127,10 @@ export async function middleware(req: NextRequest) {
       }
     } catch (error) {
       const locale = pathname.startsWith('/en/') ? 'en' : 'tr';
-      console.error('Authentication check error:', error);
-      // On error, redirect to unauthorized page
-      return NextResponse.redirect(new URL(`/${locale}/unauthorized`, req.url));
+      // On error, redirect to sign-in page as a fallback
+      const signInUrl = new URL(`/${locale}/auth/signin`, req.url);
+      signInUrl.searchParams.set('callbackUrl', req.url);
+      return NextResponse.redirect(signInUrl);
     }
   }
 

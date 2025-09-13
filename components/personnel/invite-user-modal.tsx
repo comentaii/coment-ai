@@ -1,58 +1,61 @@
 'use client';
 
 import { useState } from 'react';
-import { useFormik } from 'formik';
-import { X, UserPlus } from 'lucide-react';
+import { UserPlus } from 'lucide-react';
+import { FormikHelpers } from 'formik';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { FormikForm, FormikField, FormikSelect } from '@/components/ui/formik-form';
+import { Button, FormSubmitButton } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
-import { FormikForm } from '@/components/ui/formik-form';
+import { Label } from '@/components/ui/label';
 import { inviteUserSchema, InviteUserFormData } from '@/lib/validation-schemas';
-import { ROLE_LABELS } from '@/lib/constants/roles';
+import { ROLE_LABELS, USER_ROLES } from '@/lib/constants/roles';
+import { ICompany } from '@/schemas/company.model';
+
+type T = (key: string) => string;
 
 interface InviteUserModalProps {
   isOpen: boolean;
   onClose: () => void;
   onInvite: (data: InviteUserFormData) => Promise<void>;
+  companies: ICompany[];
+  t: T;
 }
 
-export function InviteUserModal({ isOpen, onClose, onInvite }: InviteUserModalProps) {
+export function InviteUserModal({ isOpen, onClose, onInvite, companies, t }: InviteUserModalProps) {
   const [isLoading, setIsLoading] = useState(false);
 
-  const formik = useFormik<InviteUserFormData>({
-    initialValues: {
-      name: '',
-      email: '',
-      roles: [],
-    },
-    validationSchema: inviteUserSchema,
-    onSubmit: async (values) => {
-      setIsLoading(true);
-      try {
-        await onInvite(values);
-        formik.resetForm();
-      } catch (error) {
-        console.error('Error inviting user:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    },
-  });
-
-  const handleRoleChange = (role: string, checked: boolean) => {
-    const currentRoles = formik.values.roles;
-    if (checked) {
-      formik.setFieldValue('roles', [...currentRoles, role]);
-    } else {
-      formik.setFieldValue('roles', currentRoles.filter(r => r !== role));
-    }
+  const initialValues: InviteUserFormData = {
+    name: '',
+    email: '',
+    roles: [],
+    companyId: '',
   };
 
+  const handleSubmit = async (
+    values: InviteUserFormData,
+    { resetForm }: FormikHelpers<InviteUserFormData>
+  ) => {
+    setIsLoading(true);
+    try {
+      await onInvite(values);
+      resetForm();
+      onClose();
+    } catch (error) {
+      console.error('Error inviting user:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
+  const companyOptions = companies.map(company => ({
+    value: company._id,
+    label: company.name,
+  }));
+  
   const availableRoles = [
-    { value: 'hr_manager', label: ROLE_LABELS.hr_manager },
-    { value: 'technical_interviewer', label: ROLE_LABELS.technical_interviewer },
+    USER_ROLES.HR_MANAGER,
+    USER_ROLES.TECHNICAL_INTERVIEWER,
   ];
 
   return (
@@ -61,85 +64,84 @@ export function InviteUserModal({ isOpen, onClose, onInvite }: InviteUserModalPr
         <DialogHeader>
           <DialogTitle className="flex items-center">
             <UserPlus className="w-5 h-5 mr-2" />
-            Kullanıcı Davet Et
+            {t('title')}
           </DialogTitle>
         </DialogHeader>
 
         <FormikForm
-          initialValues={formik.initialValues}
+          initialValues={initialValues}
           validationSchema={inviteUserSchema}
-          onSubmit={formik.handleSubmit}
+          onSubmit={handleSubmit}
         >
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="name">Ad Soyad</Label>
-              <Input
-                id="name"
+          {(formikProps) => (
+            <>
+              <FormikField
                 name="name"
-                value={formik.values.name}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                placeholder="Kullanıcının adı ve soyadı"
-                className={formik.errors.name && formik.touched.name ? 'border-red-500' : ''}
+                label={t('nameLabel')}
+                placeholder={t('namePlaceholder')}
+                error={formikProps.errors.name}
+                touched={formikProps.touched.name}
               />
-              {formik.errors.name && formik.touched.name && (
-                <p className="text-sm text-red-500 mt-1">{formik.errors.name}</p>
-              )}
-            </div>
-
-            <div>
-              <Label htmlFor="email">Email Adresi</Label>
-              <Input
-                id="email"
+              <FormikField
                 name="email"
                 type="email"
-                value={formik.values.email}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                placeholder="ornek@company.com"
-                className={formik.errors.email && formik.touched.email ? 'border-red-500' : ''}
+                label={t('emailLabel')}
+                placeholder={t('emailPlaceholder')}
+                error={formikProps.errors.email}
+                touched={formikProps.touched.email}
               />
-              {formik.errors.email && formik.touched.email && (
-                <p className="text-sm text-red-500 mt-1">{formik.errors.email}</p>
-              )}
-            </div>
+              <FormikSelect
+                name="companyId"
+                label={t('companyLabel')}
+                placeholder={t('companyPlaceholder')}
+                options={companyOptions}
+                error={formikProps.errors.companyId}
+                touched={formikProps.touched.companyId}
+              />
 
-            <div>
-              <Label>Roller</Label>
-              <div className="space-y-2 mt-2">
-                {availableRoles.map((role) => (
-                  <div key={role.value} className="flex items-center space-x-2">
-                    <Checkbox
-                      id={role.value}
-                      checked={formik.values.roles.includes(role.value)}
-                      onCheckedChange={(checked) => handleRoleChange(role.value, checked as boolean)}
-                    />
-                    <Label htmlFor={role.value} className="text-sm font-normal">
-                      {role.label}
-                    </Label>
-                  </div>
-                ))}
+              <div>
+                <Label>{t('rolesLabel')}</Label>
+                <div className="space-y-2 mt-2">
+                  {availableRoles.map((role) => (
+                    <div key={role} className="flex items-center space-x-2">
+                      <Checkbox
+                        id={role}
+                        checked={formikProps.values.roles.includes(role)}
+                        onCheckedChange={(checked) => {
+                          const currentRoles = formikProps.values.roles;
+                          const newRoles = checked
+                            ? [...currentRoles, role]
+                            : currentRoles.filter((r) => r !== role);
+                          formikProps.setFieldValue('roles', newRoles);
+                        }}
+                      />
+                      <Label htmlFor={role} className="text-sm font-normal">
+                        {ROLE_LABELS[role as keyof typeof ROLE_LABELS] || role}
+                      </Label>
+                    </div>
+                  ))}
+                </div>
+                {formikProps.errors.roles && formikProps.touched.roles && (
+                  <p className="text-sm text-red-500 mt-1">{formikProps.errors.roles as string}</p>
+                )}
               </div>
-              {formik.errors.roles && formik.touched.roles && (
-                <p className="text-sm text-red-500 mt-1">{formik.errors.roles}</p>
-              )}
-            </div>
 
-            <div className="bg-blue-50 dark:bg-blue-900/20 p-3 rounded-md">
-              <p className="text-sm text-blue-800 dark:text-blue-200">
-                <strong>Bilgi:</strong> Davet edilen kullanıcıya geçici bir şifre ile giriş bilgileri e-posta ile gönderilecektir.
-              </p>
-            </div>
+              <div className="bg-blue-50 dark:bg-blue-900/20 p-3 rounded-md">
+                <p className="text-sm text-blue-800 dark:text-blue-200">
+                  <strong>{t('infoTitle')}:</strong> {t('infoMessage')}
+                </p>
+              </div>
 
-            <div className="flex justify-end space-x-2 pt-4">
-              <Button type="button" variant="outline" onClick={onClose}>
-                İptal
-              </Button>
-              <Button type="submit" disabled={isLoading}>
-                {isLoading ? 'Davet Ediliyor...' : 'Davet Et'}
-              </Button>
-            </div>
-          </div>
+              <div className="flex justify-end space-x-2 pt-4">
+                <Button type="button" variant="outline" onClick={onClose}>
+                  {t('cancelButton')}
+                </Button>
+                <FormSubmitButton loading={isLoading}>
+                  {t('inviteButton')}
+                </FormSubmitButton>
+              </div>
+            </>
+          )}
         </FormikForm>
       </DialogContent>
     </Dialog>

@@ -40,6 +40,10 @@ export class CompanyService extends BaseService<ICompany> {
       return this.model.find({ isActive: true }).exec();
     });
   }
+
+  // findAll method is inherited from BaseService, so we don't need to re-declare it
+  // unless we want to add specific logic.
+  // For super-admin, we want all companies, so the default `findAll` is perfect.
 }
 
 export const companyService = new CompanyService(); 

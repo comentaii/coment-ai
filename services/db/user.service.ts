@@ -1,10 +1,19 @@
 import { BaseService } from './base.service';
 import { User, IUser } from '@/schemas/user.model';
 import bcrypt from 'bcryptjs';
+import { Company } from '@/schemas/company.model'; // Import Company model
 
 export class UserService extends BaseService<IUser> {
   constructor() {
     super(User);
+  }
+
+  async findAllWithCompany(): Promise<IUser[]> {
+    return this.executeWithErrorHandling(async () => {
+      // Ensure the Company model is registered before populating
+      Company;
+      return this.model.find({}).populate('companyId').exec();
+    });
   }
 
   async createUser(userData: Partial<IUser>): Promise<IUser> {

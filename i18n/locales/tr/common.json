@@ -25,6 +25,17 @@
         "googleLogin": "Google ile Giriş Yap",
         "googleSignup": "Google ile Kayıt Ol"
     },
+    "auth": {
+        "email": "E-posta",
+        "password": "Şifre",
+        "confirmPassword": "Şifre Tekrarı",
+        "name": "Ad Soyad",
+        "login": "Giriş Yap",
+        "register": "Kayıt Ol",
+        "forgotPassword": "Şifremi Unuttum",
+        "googleLogin": "Google ile Giriş Yap",
+        "googleSignup": "Google ile Kayıt Ol"
+    },
     "Roles": {
         "super_admin": "Süper Admin",
         "hr_manager": "İK Yetkilisi",
@@ -91,6 +102,162 @@
             "updatedError": "İlan güncellenirken bir hata oluştu."
         }
     },
+    "super-admin": {
+        "companies": {
+            "title": "Şirket Yönetimi",
+            "description": "Sisteme kayıtlı şirketleri ve aboneliklerini buradan yönetebilirsiniz.",
+            "addButton": "Yeni Şirket Ekle",
+            "editButton": "Düzenle",
+            "errorTitle": "Şirketler Yüklenemedi",
+            "errorMessage": "Şirket verilerini alırken bir hata oluştu. Lütfen daha sonra tekrar deneyin.",
+            "noResults": "Hiçbir şirket bulunamadı.",
+            "status": {
+                "active": "Aktif",
+                "inactive": "Pasif"
+            },
+            "modal": {
+                "addTitle": "Yeni Firma Ekle",
+                "editTitle": "Firma Bilgilerini Düzenle",
+                "statusLabel": "Firma Durumu",
+                "nameLabel": "Firma Adı",
+                "emailLabel": "Firma E-postası",
+                "planLabel": "Abonelik Planı",
+                "cvQuotaLabel": "CV Kotası",
+                "interviewQuotaLabel": "Mülakat Kotası",
+                "storageQuotaLabel": "Depolama (GB)",
+                "cancelButton": "İptal",
+                "addButton": "Firma Ekle",
+                "updateButton": "Güncelle",
+                "plans": {
+                    "basic": "Temel",
+                    "premium": "Premium",
+                    "enterprise": "Kurumsal"
+                }
+            },
+            "toast": {
+                "creating": "Firma oluşturuluyor...",
+                "updating": "Firma güncelleniyor...",
+                "pleaseWait": "Lütfen bekleyin...",
+                "createSuccessTitle": "Başarılı",
+                "createSuccess": "Firma başarıyla oluşturuldu.",
+                "createErrorTitle": "Hata",
+                "createError": "Firma oluşturulurken bir hata oluştu.",
+                "updateSuccessTitle": "Başarılı",
+                "updateSuccess": "Firma başarıyla güncellendi.",
+                "updateErrorTitle": "Hata",
+                "updateError": "Firma güncellenirken bir hata oluştu."
+            },
+            "table": {
+                "name": "Şirket Adı",
+                "email": "İletişim E-postası",
+                "plan": "Abonelik Planı",
+                "status": "Durum",
+                "actions": "İşlemler"
+            }
+        },
+        "users": {
+            "title": "Kullanıcı Yönetimi",
+            "description": "Burada sistemdeki tüm kullanıcıları yönetebilirsiniz. Roller atayabilir ve hesap durumlarını değiştirebilirsiniz.",
+            "addButton": "Kullanıcı Ekle",
+            "editButton": "Düzenle",
+            "errorTitle": "Kullanıcılar Yüklenemedi",
+            "errorMessage": "Kullanıcı verilerini alırken bir hata oluştu. Lütfen daha sonra tekrar deneyin.",
+            "noResults": "Hiçbir kullanıcı bulunamadı.",
+            "noCompany": "Atanmamış",
+            "status": {
+                "active": "Aktif",
+                "inactive": "Pasif"
+            },
+            "table": {
+                "name": "Ad Soyad",
+                "company": "Firma",
+                "roles": "Roller",
+                "status": "Durum",
+                "createdAt": "Kayıt Tarihi",
+                "actions": "İşlemler"
+            },
+            "editModal": {
+                "title": "Kullanıcı Rollerini Düzenle",
+                "rolesLabel": "Roller",
+                "warningTitle": "Uyarı",
+                "warningMessage": "Rol değişiklikleri anında etkili olacaktır. Kullanıcının erişim yetkileri değişecektir.",
+                "cancelButton": "İptal",
+                "updateButton": "Güncelle",
+                "updatingButton": "Güncelleniyor...",
+                "statusLabel": "Kullanıcı Durumu",
+                "statusDescription": "Kullanıcının platforma giriş yapıp yapamayacağını belirler.",
+                "companyLabel": "Şirket",
+                "companyPlaceholder": "Bir şirket seçin"
+            },
+            "inviteModal": {
+                "title": "Kullanıcı Davet Et",
+                "nameLabel": "Ad Soyad",
+                "namePlaceholder": "Kullanıcının adı ve soyadı",
+                "emailLabel": "Email Adresi",
+                "emailPlaceholder": "ornek@sirket.com",
+                "companyLabel": "Şirket",
+                "companyPlaceholder": "Bir şirket seçin",
+                "rolesLabel": "Roller",
+                "infoTitle": "Bilgi",
+                "infoMessage": "Davet edilen kullanıcıya geçici bir şifre ile giriş bilgileri e-posta ile gönderilecektir.",
+                "cancelButton": "İptal",
+                "inviteButton": "Davet Et"
+            },
+            "toast": {
+                "updateSuccessTitle": "Başarılı",
+                "updateSuccessMessage": "Kullanıcı rolleri başarıyla güncellendi.",
+                "updateErrorTitle": "Hata",
+                "updateErrorMessage": "Kullanıcı rolleri güncellenirken bir hata oluştu.",
+                "inviteSuccessTitle": "Başarılı",
+                "inviteSuccessMessage": "Kullanıcı başarıyla davet edildi.",
+                "inviteErrorTitle": "Hata",
+                "inviteErrorMessage": "Kullanıcı davet edilirken bir hata oluştu."
+            }
+        },
+        "dashboard": {
+            "title": "Süper Admin Paneli",
+            "totalCompanies": "Toplam Şirket",
+            "totalUsers": "Toplam Kullanıcı",
+            "activeInterviews": "Aktif Mülakatlar"
+        },
+        "settings": {
+            "title": "Platform Ayarları",
+            "description": "Sistemin genel yapılandırmasını ve entegrasyonlarını yönetin.",
+            "saveButton": "Değişiklikleri Kaydet",
+            "tabs": {
+                "general": {
+                    "title": "Genel",
+                    "description": "Uygulamanın temel ayarlarını düzenleyin.",
+                    "appNameLabel": "Uygulama Adı",
+                    "appNamePlaceholder": "Coment-AI",
+                    "logoLabel": "Uygulama Logosu"
+                },
+                "ai": {
+                    "title": "Yapay Zeka",
+                    "description": "Gemini AI gibi yapay zeka modellerinin ayarlarını yapılandırın.",
+                    "geminiApiKeyLabel": "Gemini API Anahtarı"
+                },
+                "plans": {
+                    "title": "Abonelik Planları",
+                    "description": "Kullanıcı abonelik planlarının kotalarını ve limitlerini yönetin.",
+                    "cvUploads": "CV Yükleme Limiti",
+                    "interviews": "Mülakat Limiti",
+                    "storage": "Depolama Limiti (GB)",
+                    "basic": {
+                        "title": "Temel Plan"
+                    },
+                    "premium": {
+                        "title": "Premium Plan"
+                    }
+                },
+                "integrations": {
+                    "title": "Entegrasyonlar",
+                    "description": "Üçüncü parti servisler için API anahtarlarını ve ayarları yönetin.",
+                    "resendLabel": "Resend API Anahtarı (E-posta için)"
+                }
+            }
+        }
+    },
     "JobPostingDetailPage": {
         "errorTitle": "İlan Yüklenemedi",
         "errorMessage": "İş ilanı detayları getirilirken bir hata oluştu. Lütfen daha sonra tekrar deneyin.",
@@ -152,5 +319,14 @@
                 "cancelErrorDescription": "Mülakat iptal edilirken bir hata oluştu."
             }
         }
+    },
+    "editUserRolesModal": {
+        "title": "Kullanıcı Rollerini Düzenle",
+        "rolesLabel": "Roller",
+        "warningTitle": "Uyarı",
+        "warningMessage": "Rol değişiklikleri anında etkili olacaktır. Kullanıcının erişim yetkileri değişecektir.",
+        "cancelButton": "İptal",
+        "updateButton": "Güncelle",
+        "updatingButton": "Güncelleniyor..."
     }
 }

@@ -180,7 +180,11 @@ export function Sidebar() {
         {/* Navigation Menu */}
         <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
           {navigationItems.map((item) => (
-            <MenuItemComponent key={item.href} item={item} t={t} currentPath={pathname} />
+            <MenuItemComponent 
+              key={item.href || item.path} 
+              item={item} 
+              isCollapsed={isCollapsed}
+            />
           ))}
         </nav>
 
@@ -230,7 +234,12 @@ export function Sidebar() {
           {/* Mobile Navigation */}
           <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
             {navigationItems.map((item) => (
-              <MenuItemComponent key={item.href} item={item} t={t} currentPath={pathname} />
+              <MenuItemComponent 
+                key={item.href || item.path} 
+                item={item} 
+                isCollapsed={false}
+                onClick={closeMobileSidebar}
+              />
             ))}
           </nav>
 

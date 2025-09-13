@@ -72,17 +72,36 @@ export const loginSchema = yup.object({
 });
 
 export const inviteUserSchema = yup.object({
-  email: yup.string().email('Geçerli email giriniz').required('Email gereklidir'),
   name: yup.string().required('İsim gereklidir').min(2, 'İsim en az 2 karakter olmalıdır'),
+  email: yup.string().email('Geçerli email giriniz').required('Email gereklidir'),
   roles: yup.array()
     .of(yup.string().oneOf(['hr_manager', 'technical_interviewer'], 'Geçersiz rol'))
     .min(1, 'En az bir rol seçilmelidir')
     .required('Rol seçimi gereklidir'),
+  companyId: yup.string().required('Şirket ID gereklidir'),
 });
 
-export const updateUserRolesSchema = yup.object({
-  roles: yup.array().of(yup.string().required()).min(1, 'En az bir rol seçilmelidir'),
+export const updateUserSchema = yup.object({
+  roles: yup.array().of(yup.string().required()).min(1, 'At least one role must be selected'),
+  companyId: yup.string().nullable(),
+  isActive: yup.boolean().required('Status is required'),
 });
+
+export type UpdateUserFormData = yup.InferType<typeof updateUserSchema>;
+
+export const companySchema = yup.object({
+  name: yup.string().required('Company name is required'),
+  email: yup.string().email('Please enter a valid email').required('Company email is required'),
+  subscriptionPlan: yup.string().oneOf(['basic', 'premium', 'enterprise']).required('Subscription plan is required'),
+  isActive: yup.boolean().required('Status is required'),
+  quotas: yup.object({
+    cvUploads: yup.number().min(0).integer().required('CV uploads quota is required'),
+    interviews: yup.number().min(0).integer().required('Interviews quota is required'),
+    storageGB: yup.number().min(0).required('Storage quota is required'),
+  })
+});
+
+export type CompanyFormData = yup.InferType<typeof companySchema>;
 
 // Interview session schemas (already defined above)
 
@@ -101,13 +120,12 @@ export type CreateInterviewDto = yup.InferType<typeof createInterviewSchema>;
 export type UpdateInterviewDto = yup.InferType<typeof updateInterviewSchema>;
 export type LoginFormData = yup.InferType<typeof loginSchema>;
 export type InviteUserDto = yup.InferType<typeof inviteUserSchema>;
-export type UpdateUserRolesDto = yup.InferType<typeof updateUserRolesSchema>;
+export type UpdateUserRolesDto = yup.InferType<typeof updateUserSchema>;
 export type CreateInterviewSessionDto = yup.InferType<typeof createInterviewSessionSchema>;
 export type UpdateInterviewSessionDto = yup.InferType<typeof updateInterviewSessionSchema>;
 
 // Additional type aliases for backward compatibility
-export type InviteUserFormData = InviteUserDto;
-export type UpdateUserRolesFormData = UpdateUserRolesDto;
+export type InviteUserFormData = yup.InferType<typeof inviteUserSchema>;
 
 export const cvAnalysisResultSchema = yup.object({
   fullName: yup.string().required(),

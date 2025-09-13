@@ -32,6 +32,8 @@ export const FormikField: React.FC<FormikFieldProps> = ({
   error,
   touched,
 }) => {
+  const { values } = useFormikContext<any>();
+  
   return (
     <div className="space-y-2">
       {label && (
@@ -39,17 +41,21 @@ export const FormikField: React.FC<FormikFieldProps> = ({
           {label}
         </Label>
       )}
-      <Input
-        id={name}
-        name={name}
-        type={type}
-        placeholder={placeholder}
-        className={cn(
-          "w-full",
-          error && touched && "border-red-500 focus:border-red-500",
-          className
+      <Field name={name}>
+        {({ field }: any) => (
+          <Input
+            id={name}
+            {...field}
+            type={type}
+            placeholder={placeholder}
+            className={cn(
+              "w-full",
+              error && touched && "border-red-500 focus:border-red-500",
+              className
+            )}
+          />
         )}
-      />
+      </Field>
       {error && touched && (
         <p className="text-sm text-red-500">{error}</p>
       )}
@@ -86,17 +92,21 @@ export const FormikTextarea: React.FC<FormikTextareaProps> = ({
           {label}
         </Label>
       )}
-      <Textarea
-        id={name}
-        name={name}
-        placeholder={placeholder}
-        rows={rows}
-        className={cn(
-          "w-full",
-          error && touched && "border-red-500 focus:border-red-500",
-          className
+      <Field name={name}>
+        {({ field }: any) => (
+          <Textarea
+            id={name}
+            {...field}
+            placeholder={placeholder}
+            rows={rows}
+            className={cn(
+              "w-full",
+              error && touched && "border-red-500 focus:border-red-500",
+              className
+            )}
+          />
         )}
-      />
+      </Field>
       {error && touched && (
         <p className="text-sm text-red-500">{error}</p>
       )}
