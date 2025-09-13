@@ -2,6 +2,47 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Font Definitions */
+@font-face {
+  font-family: 'DM Sans';
+  src: url('/fonts/DMSans-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('/fonts/Inter-Light.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('/fonts/Inter-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('/fonts/Inter-SemiBold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('/fonts/Inter-ExtraBold.woff2') format('woff2');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -55,65 +96,80 @@
   }
   
   body {
-    @apply bg-background text-foreground font-mono text-base leading-relaxed;
+    @apply bg-background text-foreground font-inter text-base leading-relaxed;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
   
-  /* Global Typography with consistent colors */
+  /* Global Typography with Font Strategy */
+  /* H1 - Ana başlıklar ve vurucu sloganlar için DM Sans Bold */
   h1 {
-    @apply text-4xl font-bold text-brand-green dark:text-green-400 mb-6;
+    @apply text-4xl font-dm-sans font-bold text-brand-green dark:text-green-400 mb-6;
   }
   
+  /* H2, H3 - Bölüm başlıkları için Inter ExtraBold/SemiBold */
   h2 {
-    @apply text-3xl font-semibold text-brand-green dark:text-green-400 mb-4;
+    @apply text-3xl font-inter font-extrabold text-brand-green dark:text-green-400 mb-4;
   }
   
   h3 {
-    @apply text-2xl font-medium text-brand-green dark:text-green-400 mb-3;
+    @apply text-2xl font-inter font-semibold text-brand-green dark:text-green-400 mb-3;
   }
   
   h4 {
-    @apply text-xl font-medium text-brand-green dark:text-green-400 mb-2;
+    @apply text-xl font-inter font-semibold text-brand-green dark:text-green-400 mb-2;
   }
   
   h5 {
-    @apply text-lg font-medium text-brand-green dark:text-green-400 mb-2;
+    @apply text-lg font-inter font-semibold text-brand-green dark:text-green-400 mb-2;
   }
   
   h6 {
-    @apply text-base font-medium text-brand-green dark:text-green-400 mb-2;
+    @apply text-base font-inter font-semibold text-brand-green dark:text-green-400 mb-2;
   }
   
+  /* Paragraf ve açıklama metinleri için Inter Regular */
   p {
-    @apply text-base leading-relaxed text-brand-dark dark:text-gray-200 mb-4;
+    @apply text-base font-inter font-normal leading-relaxed text-brand-dark dark:text-gray-200 mb-4;
+  }
+  
+  /* Yardımcı metinler için Inter Light */
+  .text-helper {
+    @apply text-sm font-inter font-light text-gray-500 dark:text-gray-400;
+  }
+  
+  /* Placeholder metinleri için Inter Light */
+  input::placeholder, textarea::placeholder {
+    @apply font-inter font-light;
   }
 }
 
 @layer components {
-  /* Global Button Styles with consistent hover effects */
+  /* Global Button Styles with Font Strategy */
+  /* Butonlar için Inter SemiBold - eyleme çağrı butonları */
   .btn-primary {
-    @apply bg-primary text-primary-foreground hover:bg-primary/90;
+    @apply bg-primary text-primary-foreground hover:bg-primary/90 font-inter font-semibold;
   }
   
   .btn-secondary {
-    @apply bg-secondary text-secondary-foreground hover:bg-secondary/80;
+    @apply bg-secondary text-secondary-foreground hover:bg-secondary/80 font-inter font-semibold;
   }
   
   .btn-destructive {
-    @apply bg-destructive text-destructive-foreground hover:bg-destructive/90;
+    @apply bg-destructive text-destructive-foreground hover:bg-destructive/90 font-inter font-semibold;
   }
   
   .btn-ghost {
-    @apply hover:bg-accent hover:text-accent-foreground;
+    @apply hover:bg-accent hover:text-accent-foreground font-inter font-semibold;
   }
   
   .btn-outline {
-    @apply border border-input bg-transparent hover:bg-accent hover:text-accent-foreground;
+    @apply border border-input bg-transparent hover:bg-accent hover:text-accent-foreground font-inter font-semibold;
   }
   
-  /* Global Input Styles with consistent focus states */
+  /* Global Input Styles with Font Strategy */
+  /* Form elementleri için Inter Regular */
   input, textarea, select {
-    @apply text-base py-3 px-4 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-brand-green focus:border-brand-green dark:focus:ring-green-400 dark:focus:border-green-400 transition-all duration-200 bg-white dark:bg-gray-800 text-brand-dark dark:text-gray-200 placeholder-gray-500 dark:placeholder-gray-400;
+    @apply text-base py-3 px-4 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-brand-green focus:border-brand-green dark:focus:ring-green-400 dark:focus:border-green-400 transition-all duration-200 bg-white dark:bg-gray-800 text-brand-dark dark:text-gray-200 placeholder-gray-500 dark:placeholder-gray-400 font-inter font-normal;
   }
   
   /* Global Card Styles with consistent shadows */
@@ -134,18 +190,18 @@
     @apply underline decoration-2 underline-offset-4 hover:decoration-brand-green dark:hover:decoration-green-400;
   }
   
-  /* Global Navigation Styles */
+  /* Global Navigation Styles with Font Strategy */
   .nav-link {
-    @apply text-brand-dark dark:text-gray-300 hover:text-brand-green dark:hover:text-green-400 font-medium transition-all duration-200 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800;
+    @apply text-brand-dark dark:text-gray-300 hover:text-brand-green dark:hover:text-green-400 font-inter font-medium transition-all duration-200 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800;
   }
   
   .nav-link-active {
-    @apply text-brand-green dark:text-green-400 font-semibold bg-green-50 dark:bg-green-900/20;
+    @apply text-brand-green dark:text-green-400 font-inter font-semibold bg-green-50 dark:bg-green-900/20;
   }
   
-  /* Global Badge Styles */
+  /* Global Badge Styles with Font Strategy */
   .badge {
-    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium transition-all duration-200;
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-inter font-medium transition-all duration-200;
   }
   
   .badge-primary {
@@ -175,32 +231,32 @@
   }
   
   .table th {
-    @apply bg-gray-50 dark:bg-gray-800 text-brand-dark dark:text-gray-200 font-semibold text-left p-3 border-b border-gray-200 dark:border-gray-700;
+    @apply bg-gray-50 dark:bg-gray-800 text-brand-dark dark:text-gray-200 font-inter font-semibold text-left p-3 border-b border-gray-200 dark:border-gray-700;
   }
   
   .table td {
-    @apply p-3 border-b border-gray-200 dark:border-gray-700 text-brand-dark dark:text-gray-200;
+    @apply p-3 border-b border-gray-200 dark:border-gray-700 text-brand-dark dark:text-gray-200 font-inter font-normal;
   }
   
   .table tr:hover {
     @apply bg-gray-50 dark:bg-gray-800 transition-all duration-200;
   }
   
-  /* Global Form Styles */
+  /* Global Form Styles with Font Strategy */
   .form-group {
     @apply mb-4;
   }
   
   .form-label {
-    @apply block text-sm font-medium text-brand-dark dark:text-gray-200 mb-2;
+    @apply block text-sm font-inter font-medium text-brand-dark dark:text-gray-200 mb-2;
   }
   
   .form-error {
-    @apply text-custom-red dark:text-red-400 text-sm mt-1;
+    @apply text-custom-red dark:text-red-400 text-sm mt-1 font-inter font-normal;
   }
   
   .form-success {
-    @apply text-brand-green dark:text-green-400 text-sm mt-1;
+    @apply text-brand-green dark:text-green-400 text-sm mt-1 font-inter font-normal;
   }
   
   /* Global Modal Styles */

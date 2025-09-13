@@ -19,8 +19,13 @@ const config: Config = {
     },
     extend: {
       fontFamily: {
-        mono: ['var(--font-ibm-plex-mono)', 'IBM Plex Mono', 'monospace'],
-        sans: ['var(--font-ibm-plex-mono)', 'IBM Plex Mono', 'monospace'],
+        // DM Sans - Sadece ana başlıklar (H1) ve vurucu sloganlar için
+        'dm-sans': ['DM Sans', 'sans-serif'],
+        // Inter - Tüm diğer metinler için (body, buttons, alt başlıklar)
+        'inter': ['Inter', 'sans-serif'],
+        // Fallback fonts
+        sans: ['Inter', 'sans-serif'],
+        mono: ['Inter', 'monospace'],
       },
       fontSize: {
         'xs': ['0.75rem', { lineHeight: '1.2rem' }],

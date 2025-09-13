@@ -1,12 +1,5 @@
 import "./globals.css";
-import { Poppins } from 'next/font/google';
 import { cn } from '@/lib/utils';
-
-const poppins = Poppins({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700', '800', '900'],
-  variable: '--font-poppins',
-});
 
 export default function RootLayout({children}: {children: React.ReactNode}) {
   return (
@@ -20,8 +13,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
       </head>
       <body
         className={cn(
-          'min-h-screen bg-background font-sans antialiased',
-          poppins.variable
+          'min-h-screen bg-background font-inter antialiased'
         )}
       >
         {children}

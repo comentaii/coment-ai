@@ -14,7 +14,7 @@
 }
 
 .heroTitle {
-  @apply text-4xl lg:text-6xl font-bold text-gray-900 mb-6;
+  @apply text-4xl lg:text-6xl font-dm-sans font-bold text-gray-900 mb-6;
 }
 
 .heroTitleAccent {
@@ -22,7 +22,7 @@
 }
 
 .heroDescription {
-  @apply text-xl text-gray-600 mb-8 leading-relaxed;
+  @apply text-xl font-inter font-normal text-gray-600 mb-8 leading-relaxed;
 }
 
 .heroButtons {
@@ -30,11 +30,11 @@
 }
 
 .heroButtonPrimary {
-  @apply bg-blue-600 text-white px-8 py-4 rounded-lg font-semibold hover:bg-blue-700 transition-colors;
+  @apply bg-blue-600 text-white px-8 py-4 rounded-lg font-inter font-semibold hover:bg-blue-700 transition-colors;
 }
 
 .heroButtonSecondary {
-  @apply border border-blue-600 text-blue-600 px-8 py-4 rounded-lg font-semibold hover:bg-blue-50 transition-colors;
+  @apply border border-blue-600 text-blue-600 px-8 py-4 rounded-lg font-inter font-semibold hover:bg-blue-50 transition-colors;
 }
 
 /* Demo Area */
@@ -90,7 +90,7 @@
 }
 
 .dashboardTitle {
-  @apply text-2xl font-bold text-gray-900;
+  @apply text-2xl font-inter font-extrabold text-gray-900;
 }
 
 .dashboardTitleText {
@@ -145,7 +145,7 @@
 }
 
 .statCardLabel {
-  @apply text-sm font-medium;
+  @apply text-sm font-inter font-medium;
 }
 
 .statCardLabelBlue {
@@ -161,7 +161,7 @@
 }
 
 .statCardValue {
-  @apply text-3xl font-bold text-gray-900;
+  @apply text-3xl font-inter font-bold text-gray-900;
 }
 
 .statCardValueText {
@@ -212,7 +212,7 @@
 }
 
 .progressTitle {
-  @apply text-lg font-semibold text-gray-900 mb-4;
+  @apply text-lg font-inter font-semibold text-gray-900 mb-4;
 }
 
 .progressBars {
@@ -240,7 +240,7 @@
 }
 
 .progressLabels {
-  @apply flex justify-between text-sm text-gray-600;
+  @apply flex justify-between text-sm font-inter font-normal text-gray-600;
 }
 
 .progressLabelText {
@@ -257,7 +257,7 @@
 }
 
 .liveCodingTitle {
-  @apply text-lg font-semibold text-gray-900;
+  @apply text-lg font-inter font-semibold text-gray-900;
 }
 
 .liveCodingStatus {
@@ -269,7 +269,7 @@
 }
 
 .liveCodingStatusText {
-  @apply text-sm text-gray-600 animate-pulse;
+  @apply text-sm font-inter font-normal text-gray-600 animate-pulse;
 }
 
 .liveCodingCode {
@@ -330,11 +330,11 @@
 }
 
 .aiInsightsTitle {
-  @apply text-sm font-medium text-gray-900 animate-pulse;
+  @apply text-sm font-inter font-medium text-gray-900 animate-pulse;
 }
 
 .aiInsightsSubtitle {
-  @apply text-xs text-gray-600 animate-pulse;
+  @apply text-xs font-inter font-normal text-gray-600 animate-pulse;
 }
 
 /* Play Button Overlay */
@@ -360,11 +360,11 @@
 }
 
 .demoDescriptionText {
-  @apply text-gray-600 text-lg animate-pulse;
+  @apply text-gray-600 text-lg font-inter font-normal animate-pulse;
 }
 
 .demoDescriptionButton {
-  @apply mt-4 text-blue-600 font-semibold hover:text-blue-700 transition-colors animate-bounce;
+  @apply mt-4 text-blue-600 font-inter font-semibold hover:text-blue-700 transition-colors animate-bounce;
 }
 
 /* Features Section */
@@ -381,11 +381,11 @@
 }
 
 .featuresTitle {
-  @apply text-3xl lg:text-4xl font-bold text-gray-900 mb-4;
+  @apply text-3xl lg:text-4xl font-inter font-extrabold text-gray-900 mb-4;
 }
 
 .featuresDescription {
-  @apply text-xl text-gray-600 max-w-2xl mx-auto;
+  @apply text-xl font-inter font-normal text-gray-600 max-w-2xl mx-auto;
 }
 
 .featuresGrid {
