@@ -29,14 +29,14 @@ class EmailService {
     const mailOptions = {
       from: process.env.SMTP_FROM || process.env.SMTP_USER,
       to: data.to,
-      subject: 'Coment-AI Platform Davetiyesi',
+      subject: 'CodileAI Platform Davetiyesi',
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2 style="color: #21C55D;">Coment-AI Platform'a Hoş Geldiniz!</h2>
+          <h2 style="color: #21C55D;">CodileAI Platform'a Hoş Geldiniz!</h2>
           
           <p>Merhaba ${data.name},</p>
           
-          <p>Sizi Coment-AI platformuna davet etmekten mutluluk duyuyoruz. Hesabınız oluşturuldu ve aşağıdaki bilgilerle giriş yapabilirsiniz:</p>
+          <p>Sizi CodileAI platformuna davet etmekten mutluluk duyuyoruz. Hesabınız oluşturuldu ve aşağıdaki bilgilerle giriş yapabilirsiniz:</p>
           
           <div style="background-color: #f5f5f5; padding: 20px; border-radius: 8px; margin: 20px 0;">
             <p><strong>Email:</strong> ${data.to}</p>
@@ -55,7 +55,7 @@ class EmailService {
           
           <p>Herhangi bir sorunuz olursa, lütfen bizimle iletişime geçin.</p>
           
-          <p>İyi çalışmalar,<br>Coment-AI Ekibi</p>
+          <p>İyi çalışmalar,<br>CodileAI Ekibi</p>
         </div>
       `,
     };
@@ -67,7 +67,7 @@ class EmailService {
     const mailOptions = {
       from: process.env.SMTP_FROM || process.env.SMTP_USER,
       to: data.to,
-      subject: 'Coment-AI Şifre Sıfırlama',
+      subject: 'CodileAI Şifre Sıfırlama',
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <h2 style="color: #21C55D;">Şifre Sıfırlama</h2>
@@ -87,7 +87,7 @@ class EmailService {
           
           <p>Eğer bu talebi siz yapmadıysanız, bu e-postayı görmezden gelebilirsiniz.</p>
           
-          <p>İyi çalışmalar,<br>Coment-AI Ekibi</p>
+          <p>İyi çalışmalar,<br>CodileAI Ekibi</p>
         </div>
       `,
     };

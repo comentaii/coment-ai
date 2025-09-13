@@ -1,6 +1,6 @@
 # Error Sayfaları Kılavuzu
 
-Bu dokümantasyon, Coment-AI projesinde kullanılan error sayfalarının nasıl çalıştığını ve nasıl kullanılacağını açıklar.
+Bu dokümantasyon, CodileAI projesinde kullanılan error sayfalarının nasıl çalıştığını ve nasıl kullanılacağını açıklar.
 
 ## Error Sayfaları
 

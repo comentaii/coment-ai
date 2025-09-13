@@ -1,6 +1,6 @@
 # Toast Kullanım Kılavuzu
 
-Bu dokümantasyon, Coment-AI projesinde global toast sisteminin nasıl kullanılacağını açıklar.
+Bu dokümantasyon, CodileAI projesinde global toast sisteminin nasıl kullanılacağını açıklar.
 
 ## Kurulum
 

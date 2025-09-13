@@ -1,0 +1,744 @@
+/* Landing Page Özel Stilleri */
+
+/* Hero Section */
+.heroSection {
+  @apply relative bg-gradient-to-br from-blue-50 to-indigo-100 py-20 lg:py-32;
+}
+
+.heroContainer {
+  @apply container mx-auto px-4;
+}
+
+.heroContent {
+  @apply max-w-4xl mx-auto text-center mb-16;
+}
+
+.heroTitle {
+  @apply text-4xl lg:text-6xl font-bold text-gray-900 mb-6;
+}
+
+.heroTitleAccent {
+  @apply text-blue-600;
+}
+
+.heroDescription {
+  @apply text-xl text-gray-600 mb-8 leading-relaxed;
+}
+
+.heroButtons {
+  @apply flex flex-col sm:flex-row gap-4 justify-center;
+}
+
+.heroButtonPrimary {
+  @apply bg-blue-600 text-white px-8 py-4 rounded-lg font-semibold hover:bg-blue-700 transition-colors;
+}
+
+.heroButtonSecondary {
+  @apply border border-blue-600 text-blue-600 px-8 py-4 rounded-lg font-semibold hover:bg-blue-50 transition-colors;
+}
+
+/* Demo Area */
+.demoArea {
+  @apply max-w-6xl mx-auto;
+}
+
+.demoInterface {
+  @apply relative bg-white rounded-2xl shadow-2xl overflow-hidden;
+}
+
+.demoHeader {
+  @apply bg-gray-900 p-4;
+}
+
+.demoControls {
+  @apply flex items-center space-x-2 mb-4;
+}
+
+.demoControlDot {
+  @apply w-3 h-3 rounded-full animate-pulse;
+}
+
+.demoControlDotRed {
+  @apply bg-red-500;
+}
+
+.demoControlDotYellow {
+  @apply bg-yellow-500;
+  animation-delay: 0.5s;
+}
+
+.demoControlDotGreen {
+  @apply bg-green-500;
+  animation-delay: 1s;
+}
+
+.demoTitle {
+  @apply ml-4 text-gray-400 text-sm;
+}
+
+.demoTitleText {
+  @apply animate-pulse;
+}
+
+/* Dashboard Mock */
+.dashboardMock {
+  @apply bg-white rounded-lg p-6;
+}
+
+.dashboardHeader {
+  @apply flex items-center justify-between mb-6;
+}
+
+.dashboardTitle {
+  @apply text-2xl font-bold text-gray-900;
+}
+
+.dashboardTitleText {
+  @apply animate-pulse;
+}
+
+.dashboardActions {
+  @apply flex items-center space-x-4;
+}
+
+.dashboardActionButton {
+  @apply w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center animate-bounce;
+}
+
+.dashboardActionIcon {
+  @apply w-4 h-4 text-blue-600;
+}
+
+.dashboardActionPlaceholder {
+  @apply w-8 h-8 bg-gray-200 rounded-full animate-pulse;
+}
+
+/* Stats Cards */
+.statsGrid {
+  @apply grid grid-cols-1 md:grid-cols-3 gap-6 mb-8;
+}
+
+.statCard {
+  @apply p-6 rounded-xl animate-pulse;
+}
+
+.statCardBlue {
+  @apply bg-blue-50;
+}
+
+.statCardGreen {
+  @apply bg-green-50;
+  animation-delay: 0.5s;
+}
+
+.statCardPurple {
+  @apply bg-purple-50;
+  animation-delay: 1s;
+}
+
+.statCardContent {
+  @apply flex items-center justify-between;
+}
+
+.statCardInfo {
+  @apply flex-1;
+}
+
+.statCardLabel {
+  @apply text-sm font-medium;
+}
+
+.statCardLabelBlue {
+  @apply text-blue-600;
+}
+
+.statCardLabelGreen {
+  @apply text-green-600;
+}
+
+.statCardLabelPurple {
+  @apply text-purple-600;
+}
+
+.statCardValue {
+  @apply text-3xl font-bold text-gray-900;
+}
+
+.statCardValueText {
+  @apply animate-pulse;
+}
+
+.statCardTrend {
+  @apply text-green-500 ml-2 animate-bounce;
+}
+
+.statCardIcon {
+  @apply w-12 h-12 rounded-lg flex items-center justify-center;
+}
+
+.statCardIconBlue {
+  @apply bg-blue-100 animate-spin;
+}
+
+.statCardIconGreen {
+  @apply bg-green-100 animate-spin;
+  animation-delay: 0.5s;
+}
+
+.statCardIconPurple {
+  @apply bg-purple-100 animate-spin;
+  animation-delay: 1s;
+}
+
+.statCardIconSvg {
+  @apply w-6 h-6;
+}
+
+.statCardIconSvgBlue {
+  @apply text-blue-600;
+}
+
+.statCardIconSvgGreen {
+  @apply text-green-600;
+}
+
+.statCardIconSvgPurple {
+  @apply text-purple-600;
+}
+
+/* Progress Section */
+.progressSection {
+  @apply mb-8;
+}
+
+.progressTitle {
+  @apply text-lg font-semibold text-gray-900 mb-4;
+}
+
+.progressBars {
+  @apply space-y-4;
+}
+
+.progressBarContainer {
+  @apply bg-gray-200 rounded-full h-3 overflow-hidden;
+}
+
+.progressBar {
+  @apply h-full rounded-full animate-pulse;
+}
+
+.progressBarBlue {
+  @apply bg-blue-500;
+  width: 85%;
+  animation: progressBar 3s ease-in-out infinite;
+}
+
+.progressBarGreen {
+  @apply bg-green-500;
+  width: 92%;
+  animation: progressBar 3s ease-in-out infinite 0.5s;
+}
+
+.progressLabels {
+  @apply flex justify-between text-sm text-gray-600;
+}
+
+.progressLabelText {
+  @apply animate-pulse;
+}
+
+/* Live Coding Session */
+.liveCodingSection {
+  @apply bg-gray-50 rounded-xl p-6;
+}
+
+.liveCodingHeader {
+  @apply flex items-center justify-between mb-4;
+}
+
+.liveCodingTitle {
+  @apply text-lg font-semibold text-gray-900;
+}
+
+.liveCodingStatus {
+  @apply flex items-center space-x-2;
+}
+
+.liveCodingIndicator {
+  @apply w-2 h-2 bg-green-500 rounded-full animate-pulse;
+}
+
+.liveCodingStatusText {
+  @apply text-sm text-gray-600 animate-pulse;
+}
+
+.liveCodingCode {
+  @apply bg-gray-900 rounded-lg p-4 font-mono text-sm;
+}
+
+.codeLine {
+  @apply mb-2 animate-pulse;
+}
+
+.codeLineComment {
+  @apply text-green-400;
+}
+
+.codeLineKeyword {
+  @apply text-blue-400;
+}
+
+.codeLineCode {
+  @apply text-white;
+}
+
+.codeLineIndent1 {
+  @apply ml-4;
+}
+
+.codeLineIndent2 {
+  @apply ml-8;
+}
+
+.codeLineIndent3 {
+  @apply ml-12;
+}
+
+.codeLineAnalysis {
+  @apply text-gray-400 mt-2;
+}
+
+/* AI Insights */
+.aiInsightsSection {
+  @apply mt-6 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-4;
+}
+
+.aiInsightsContent {
+  @apply flex items-center space-x-3;
+}
+
+.aiInsightsIcon {
+  @apply w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center animate-spin;
+}
+
+.aiInsightsIconSvg {
+  @apply w-4 h-4 text-white;
+}
+
+.aiInsightsText {
+  @apply flex-1;
+}
+
+.aiInsightsTitle {
+  @apply text-sm font-medium text-gray-900 animate-pulse;
+}
+
+.aiInsightsSubtitle {
+  @apply text-xs text-gray-600 animate-pulse;
+}
+
+/* Play Button Overlay */
+.playButtonOverlay {
+  @apply absolute inset-0 flex items-center justify-center bg-black bg-opacity-20 hover:bg-opacity-30 transition-all duration-300 cursor-pointer;
+}
+
+.playButton {
+  @apply w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-lg transition-transform duration-300 animate-pulse;
+}
+
+.playButtonOverlay:hover .playButton {
+  @apply scale-110;
+}
+
+.playButtonIcon {
+  @apply w-8 h-8 text-blue-600 ml-1 animate-bounce;
+}
+
+/* Demo Description */
+.demoDescription {
+  @apply text-center mt-8;
+}
+
+.demoDescriptionText {
+  @apply text-gray-600 text-lg animate-pulse;
+}
+
+.demoDescriptionButton {
+  @apply mt-4 text-blue-600 font-semibold hover:text-blue-700 transition-colors animate-bounce;
+}
+
+/* Features Section */
+.featuresSection {
+  @apply py-20 bg-white;
+}
+
+.featuresContainer {
+  @apply container mx-auto px-4;
+}
+
+.featuresHeader {
+  @apply text-center mb-16;
+}
+
+.featuresTitle {
+  @apply text-3xl lg:text-4xl font-bold text-gray-900 mb-4;
+}
+
+.featuresDescription {
+  @apply text-xl text-gray-600 max-w-2xl mx-auto;
+}
+
+.featuresGrid {
+  @apply grid md:grid-cols-2 lg:grid-cols-3 gap-8;
+}
+
+.featureCard {
+  @apply bg-gray-50 p-8 rounded-xl;
+}
+
+.featureIcon {
+  @apply w-12 h-12 rounded-lg flex items-center justify-center mb-6;
+}
+
+.featureIconBlue {
+  @apply bg-blue-100;
+}
+
+.featureIconGreen {
+  @apply bg-green-100;
+}
+
+.featureIconPurple {
+  @apply bg-purple-100;
+}
+
+.featureIconOrange {
+  @apply bg-orange-100;
+}
+
+.featureIconRed {
+  @apply bg-red-100;
+}
+
+.featureIconIndigo {
+  @apply bg-indigo-100;
+}
+
+.featureIconSvg {
+  @apply w-6 h-6;
+}
+
+.featureIconSvgBlue {
+  @apply text-blue-600;
+}
+
+.featureIconSvgGreen {
+  @apply text-green-600;
+}
+
+.featureIconSvgPurple {
+  @apply text-purple-600;
+}
+
+.featureIconSvgOrange {
+  @apply text-orange-600;
+}
+
+.featureIconSvgRed {
+  @apply text-red-600;
+}
+
+.featureIconSvgIndigo {
+  @apply text-indigo-600;
+}
+
+.featureTitle {
+  @apply text-xl font-semibold text-gray-900 mb-4;
+}
+
+.featureDescription {
+  @apply text-gray-600;
+}
+
+/* How It Works Section */
+.howItWorksSection {
+  @apply py-20 bg-gray-50;
+}
+
+.howItWorksContainer {
+  @apply container mx-auto px-4;
+}
+
+.howItWorksHeader {
+  @apply text-center mb-16;
+}
+
+.howItWorksTitle {
+  @apply text-3xl lg:text-4xl font-bold text-gray-900 mb-4;
+}
+
+.howItWorksDescription {
+  @apply text-xl text-gray-600 max-w-2xl mx-auto;
+}
+
+.howItWorksGrid {
+  @apply grid md:grid-cols-3 gap-8;
+}
+
+.stepCard {
+  @apply text-center;
+}
+
+.stepNumber {
+  @apply w-16 h-16 bg-blue-600 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6;
+}
+
+.stepTitle {
+  @apply text-xl font-semibold text-gray-900 mb-4;
+}
+
+.stepDescription {
+  @apply text-gray-600;
+}
+
+/* Pricing Section */
+.pricingSection {
+  @apply py-20 bg-white;
+}
+
+.pricingContainer {
+  @apply container mx-auto px-4;
+}
+
+.pricingHeader {
+  @apply text-center mb-16;
+}
+
+.pricingTitle {
+  @apply text-3xl lg:text-4xl font-bold text-gray-900 mb-4;
+}
+
+.pricingDescription {
+  @apply text-xl text-gray-600 max-w-2xl mx-auto;
+}
+
+.pricingGrid {
+  @apply grid md:grid-cols-3 gap-8 max-w-5xl mx-auto;
+}
+
+.pricingCard {
+  @apply bg-white border border-gray-200 rounded-xl p-8;
+}
+
+.pricingCardFeatured {
+  @apply bg-blue-600 text-white rounded-xl p-8 relative;
+}
+
+.pricingCardFeaturedBadge {
+  @apply absolute -top-4 left-1/2 transform -translate-x-1/2;
+}
+
+.pricingCardFeaturedBadgeText {
+  @apply bg-yellow-400 text-gray-900 px-4 py-1 rounded-full text-sm font-semibold;
+}
+
+.pricingCardTitle {
+  @apply text-2xl font-bold mb-4;
+}
+
+.pricingCardTitleWhite {
+  @apply text-white;
+}
+
+.pricingCardTitleGray {
+  @apply text-gray-900;
+}
+
+.pricingCardPrice {
+  @apply mb-6;
+}
+
+.pricingCardPriceAmount {
+  @apply text-4xl font-bold;
+}
+
+.pricingCardPriceAmountWhite {
+  @apply text-white;
+}
+
+.pricingCardPriceAmountGray {
+  @apply text-gray-900;
+}
+
+.pricingCardPricePeriod {
+  @apply text-gray-600;
+}
+
+.pricingCardPricePeriodWhite {
+  @apply text-blue-100;
+}
+
+.pricingCardPricePeriodGray {
+  @apply text-gray-600;
+}
+
+.pricingCardFeatures {
+  @apply space-y-4 mb-8;
+}
+
+.pricingCardFeature {
+  @apply flex items-center;
+}
+
+.pricingCardFeatureIcon {
+  @apply w-5 h-5 mr-3;
+}
+
+.pricingCardFeatureIconGreen {
+  @apply text-green-500;
+}
+
+.pricingCardFeatureIconGreenLight {
+  @apply text-green-400;
+}
+
+.pricingCardFeatureText {
+  @apply text-gray-600;
+}
+
+.pricingCardFeatureTextWhite {
+  @apply text-white;
+}
+
+.pricingCardButton {
+  @apply w-full py-3 rounded-lg font-semibold transition-colors;
+}
+
+.pricingCardButtonWhite {
+  @apply bg-white text-blue-600 hover:bg-gray-100;
+}
+
+.pricingCardButtonGray {
+  @apply bg-gray-900 text-white hover:bg-gray-800;
+}
+
+/* Testimonials Section */
+.testimonialsSection {
+  @apply py-20 bg-gray-50;
+}
+
+.testimonialsContainer {
+  @apply container mx-auto px-4;
+}
+
+.testimonialsHeader {
+  @apply text-center mb-16;
+}
+
+.testimonialsTitle {
+  @apply text-3xl lg:text-4xl font-bold text-gray-900 mb-4;
+}
+
+.testimonialsDescription {
+  @apply text-xl text-gray-600 max-w-2xl mx-auto;
+}
+
+.testimonialsGrid {
+  @apply grid md:grid-cols-3 gap-8;
+}
+
+.testimonialCard {
+  @apply bg-white p-8 rounded-xl shadow-sm;
+}
+
+.testimonialHeader {
+  @apply flex items-center mb-6;
+}
+
+.testimonialAvatar {
+  @apply w-12 h-12 rounded-full flex items-center justify-center mr-4;
+}
+
+.testimonialAvatarBlue {
+  @apply bg-blue-100;
+}
+
+.testimonialAvatarGreen {
+  @apply bg-green-100;
+}
+
+.testimonialAvatarPurple {
+  @apply bg-purple-100;
+}
+
+.testimonialAvatarText {
+  @apply font-semibold;
+}
+
+.testimonialAvatarTextBlue {
+  @apply text-blue-600;
+}
+
+.testimonialAvatarTextGreen {
+  @apply text-green-600;
+}
+
+.testimonialAvatarTextPurple {
+  @apply text-purple-600;
+}
+
+.testimonialInfo {
+  @apply flex-1;
+}
+
+.testimonialName {
+  @apply font-semibold text-gray-900;
+}
+
+.testimonialRole {
+  @apply text-gray-600 text-sm;
+}
+
+.testimonialText {
+  @apply text-gray-600 italic;
+}
+
+/* CTA Section */
+.ctaSection {
+  @apply py-20 bg-blue-600;
+}
+
+.ctaContainer {
+  @apply container mx-auto px-4 text-center;
+}
+
+.ctaTitle {
+  @apply text-3xl lg:text-4xl font-bold text-white mb-6;
+}
+
+.ctaDescription {
+  @apply text-xl text-blue-100 mb-8 max-w-2xl mx-auto;
+}
+
+.ctaButtons {
+  @apply flex flex-col sm:flex-row gap-4 justify-center;
+}
+
+.ctaButtonPrimary {
+  @apply bg-white text-blue-600 px-8 py-4 rounded-lg font-semibold hover:bg-gray-100 transition-colors;
+}
+
+.ctaButtonSecondary {
+  @apply border border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-blue-700 transition-colors;
+}
+
+.ctaNote {
+  @apply text-blue-100 text-sm mt-4;
+}
+
+/* Animations */
+@keyframes progressBar {
+  0% { width: 0%; }
+  50% { width: 100%; }
+  100% { width: 0%; }
+}

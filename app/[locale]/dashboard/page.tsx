@@ -32,7 +32,7 @@ export default function DashboardPage() {
             Hoş geldiniz, {session.user?.name}!
           </h1>
           <p className="text-lg text-gray-600 dark:text-gray-400">
-            Coment-AI platformuna hoş geldiniz. Aşağıdaki seçeneklerden birini seçerek başlayın.
+            CodileAI platformuna hoş geldiniz. Aşağıdaki seçeneklerden birini seçerek başlayın.
           </p>
         </div>
 

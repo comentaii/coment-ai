@@ -62,7 +62,7 @@ export default function ForbiddenPage() {
             <p className="text-xs text-gray-500 dark:text-gray-500">
               Erişim izni almak için{' '}
               <Link 
-                href="mailto:support@coment-ai.com" 
+                href="mailto:support@codileai.com" 
                 className="text-blue-600 dark:text-blue-400 hover:underline"
               >
                 destek ekibimizle
@@ -70,7 +70,7 @@ export default function ForbiddenPage() {
               {' '}iletişime geçin.
             </p>
             <Button asChild variant="outline" size="sm" className="w-full">
-              <Link href="mailto:support@coment-ai.com?subject=Erişim İzni Talebi">
+              <Link href="mailto:support@codileai.com?subject=Erişim İzni Talebi">
                 <Mail className="w-4 h-4 mr-2" />
                 Destek Ekibi ile İletişim
               </Link>

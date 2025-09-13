@@ -48,7 +48,7 @@ export default function NotFound() {
             <p className="text-xs text-gray-500 dark:text-gray-500">
               Eğer bu hatayı sürekli alıyorsanız, lütfen{' '}
               <Link 
-                href="mailto:support@coment-ai.com" 
+                href="mailto:support@codileai.com" 
                 className="text-blue-600 dark:text-blue-400 hover:underline"
               >
                 destek ekibimizle

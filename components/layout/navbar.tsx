@@ -34,7 +34,7 @@ export function Navbar() {
             href="/"
             className="text-2xl font-bold text-brand-green dark:text-green-400"
           >
-            Coment-AI
+            CodileAI
           </Link>
         </div>
 

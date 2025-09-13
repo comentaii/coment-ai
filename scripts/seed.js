@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
-const MONGODB_URI = "mongodb+srv://mentorcodeai:RTDmJJixL1EIlu0l@cluster0.88ntzbp.mongodb.net/coment-ai-project";
+const MONGODB_URI = "mongodb+srv://mentorcodeai:RTDmJJixL1EIlu0l@cluster0.88ntzbp.mongodb.net/codile-ai-project";
 const { Schema } = mongoose;
 
 // --- Şema Tanımlamaları ---

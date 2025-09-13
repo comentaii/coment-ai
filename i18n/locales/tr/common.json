@@ -1,6 +1,6 @@
 {
     "Home": {
-        "title": "Coment-AI'ya Hoş Geldiniz",
+        "title": "CodileAI'ya Hoş Geldiniz",
         "description": "Yapay Zeka Destekli Aday Değerlendirme ve Mülakat Platformu"
     },
     "Navigation": {
@@ -229,7 +229,7 @@
                     "title": "Genel",
                     "description": "Uygulamanın temel ayarlarını düzenleyin.",
                     "appNameLabel": "Uygulama Adı",
-                    "appNamePlaceholder": "Coment-AI",
+                    "appNamePlaceholder": "CodileAI",
                     "logoLabel": "Uygulama Logosu"
                 },
                 "ai": {

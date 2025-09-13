@@ -12,7 +12,7 @@ export default function SignUpPage() {
     <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-brand-dark py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
-          <h1 className="text-4xl font-bold text-brand-green dark:text-green-400">Coment-AI</h1>
+          <h1 className="text-4xl font-bold text-brand-green dark:text-green-400">CodileAI</h1>
           <p className="mt-4 text-lg text-gray-600 dark:text-gray-400">
             Yeni hesap oluşturun
           </p>

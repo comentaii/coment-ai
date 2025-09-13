@@ -164,7 +164,7 @@ export function Sidebar() {
               isCollapsed && "text-center block"
             )}
           >
-            {isCollapsed ? "CA" : "Coment-AI"}
+            {isCollapsed ? "CA" : "CodileAI"}
           </Link>
           
           <Button
@@ -219,7 +219,7 @@ export function Sidebar() {
           {/* Mobile Header */}
           <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-800">
             <Link href={getLocalizedPath('/dashboard')} className="text-xl font-bold text-brand-green dark:text-green-400">
-              Coment-AI
+              CodileAI
             </Link>
             <Button
               variant="ghost"

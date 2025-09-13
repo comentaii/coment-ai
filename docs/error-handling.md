@@ -1,6 +1,6 @@
 # Error Handling Kılavuzu
 
-Bu dokümantasyon, Coment-AI projesinde global error handling sisteminin nasıl kullanılacağını açıklar.
+Bu dokümantasyon, CodileAI projesinde global error handling sisteminin nasıl kullanılacağını açıklar.
 
 ## Kurulum
 

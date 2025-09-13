@@ -1,6 +1,6 @@
 {
     "Home": {
-        "title": "Welcome to Coment-AI",
+        "title": "Welcome to CodileAI",
         "description": "AI-Powered Candidate Assessment and Interview Platform"
     },
     "Navigation": {
@@ -200,7 +200,7 @@
                     "title": "General",
                     "description": "Edit the basic settings of the application.",
                     "appNameLabel": "Application Name",
-                    "appNamePlaceholder": "Coment-AI",
+                    "appNamePlaceholder": "CodileAI",
                     "logoLabel": "Application Logo"
                 },
                 "ai": {

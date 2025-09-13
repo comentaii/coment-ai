@@ -1,4 +1,4 @@
-# Coment-AI - Clean Project Structure
+# CodileAI - Clean Project Structure
   
 ## Overview
 This project has been cleaned up and restructured according to the `.cursor` rules. All page content has been removed while keeping the core infrastructure and configurations intact.
@@ -6,7 +6,7 @@ This project has been cleaned up and restructured according to the `.cursor` rul
 ## Project Structure
 
 ```
-coment-ai/
+codile-ai/
 ├── app/                    # Next.js App Router
 │   ├── [locale]/          # Internationalized routes
 │   │   ├── layout.tsx     # Locale layout
@@ -153,4 +153,4 @@ The project is now ready for development with a clean, scalable architecture. Yo
 2. Set up environment variables
 3. Start development server: `npm run dev`
 
-The project structure follows the `.cursor` rules and is ready for the Coment-AI platform development. 
+The project structure follows the `.cursor` rules and is ready for the CodileAI platform development. 
