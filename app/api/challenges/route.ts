@@ -4,7 +4,7 @@ import { responseHandler } from '@/utils/response-handler';
 import { challengeService } from '@/services/db';
 import { USER_ROLES } from '@/lib/constants';
 import { getTranslations } from 'next-intl/server';
-import { createChallengeSchema } from '@/lib/validation/challenge';
+import { createChallengeSchema } from '@/lib/validation-schemas';
 
 export async function POST(req: NextRequest) {
   const t = await getTranslations('api');

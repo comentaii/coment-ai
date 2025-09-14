@@ -138,4 +138,45 @@ export const cvAnalysisResultSchema = yup.object({
   experienceLevel: yup.string().oneOf(['Junior', 'Mid-level', 'Senior', 'Lead', 'Unknown']).required(),
 });
 
-export type CVAnalysisResultDto = yup.InferType<typeof cvAnalysisResultSchema>; 
+export type CVAnalysisResultDto = yup.InferType<typeof cvAnalysisResultSchema>;
+
+// Challenge schemas
+export const createChallengeSchema = yup.object({
+  title: yup.string().required('Başlık gereklidir').min(5, 'Başlık en az 5 karakter olmalıdır'),
+  description: yup.string().required('Açıklama gereklidir').min(20, 'Açıklama en az 20 karakter olmalıdır'),
+  difficulty: yup.string().oneOf(['junior', 'mid', 'senior'], 'Geçersiz zorluk seviyesi').required('Zorluk seviyesi gereklidir'),
+  skills: yup.array().of(yup.string().required()).min(1, 'En az bir yetenek gereklidir').required('Yetenekler gereklidir'),
+  timeLimit: yup.number().min(5, 'En az 5 dakika').max(180, 'En fazla 180 dakika').required('Süre limiti gereklidir'),
+  testCases: yup.array().of(
+    yup.object({
+      input: yup.string().required('Test case input gereklidir'),
+      expectedOutput: yup.string().required('Beklenen çıktı gereklidir'),
+      isHidden: yup.boolean().default(false)
+    })
+  ).min(1, 'En az bir test case gereklidir').required('Test case\'ler gereklidir'),
+  starterCode: yup.string().optional(),
+  solution: yup.string().optional(),
+  hints: yup.array().of(yup.string()).optional(),
+});
+
+export const updateChallengeSchema = yup.object({
+  title: yup.string().min(5, 'Başlık en az 5 karakter olmalıdır').optional(),
+  description: yup.string().min(20, 'Açıklama en az 20 karakter olmalıdır').optional(),
+  difficulty: yup.string().oneOf(['junior', 'mid', 'senior'], 'Geçersiz zorluk seviyesi').optional(),
+  skills: yup.array().of(yup.string().required()).min(1, 'En az bir yetenek gereklidir').optional(),
+  timeLimit: yup.number().min(5, 'En az 5 dakika').max(180, 'En fazla 180 dakika').optional(),
+  testCases: yup.array().of(
+    yup.object({
+      input: yup.string().required('Test case input gereklidir'),
+      expectedOutput: yup.string().required('Beklenen çıktı gereklidir'),
+      isHidden: yup.boolean().default(false)
+    })
+  ).min(1, 'En az bir test case gereklidir').optional(),
+  starterCode: yup.string().optional(),
+  solution: yup.string().optional(),
+  hints: yup.array().of(yup.string()).optional(),
+  isActive: yup.boolean().optional(),
+});
+
+export type CreateChallengeDto = yup.InferType<typeof createChallengeSchema>;
+export type UpdateChallengeDto = yup.InferType<typeof updateChallengeSchema>; 
