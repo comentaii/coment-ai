@@ -4,12 +4,16 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Lock, Shield, Home, ArrowLeft, Mail } from 'lucide-react';
+import { Logo } from '@/components/ui/logo';
 
 export default function ForbiddenPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 p-4">
       <Card className="w-full max-w-md text-center">
         <CardHeader>
+          <div className="flex justify-center mb-6">
+            <Logo size="lg" />
+          </div>
           <div className="mx-auto w-20 h-20 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center mb-6">
             <Lock className="w-10 h-10 text-red-600 dark:text-red-400" />
           </div>
@@ -62,7 +66,7 @@ export default function ForbiddenPage() {
             <p className="text-xs text-gray-500 dark:text-gray-500">
               Erişim izni almak için{' '}
               <Link 
-                href="mailto:support@coment-ai.com" 
+                href="mailto:support@codileai.com" 
                 className="text-blue-600 dark:text-blue-400 hover:underline"
               >
                 destek ekibimizle
@@ -70,7 +74,7 @@ export default function ForbiddenPage() {
               {' '}iletişime geçin.
             </p>
             <Button asChild variant="outline" size="sm" className="w-full">
-              <Link href="mailto:support@coment-ai.com?subject=Erişim İzni Talebi">
+              <Link href="mailto:support@codileai.com?subject=Erişim İzni Talebi">
                 <Mail className="w-4 h-4 mr-2" />
                 Destek Ekibi ile İletişim
               </Link>

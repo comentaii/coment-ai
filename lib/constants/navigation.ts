@@ -8,7 +8,9 @@ import {
   BarChart3, 
   Code, 
   UserCheck,
-  Briefcase
+  Briefcase,
+  Terminal,
+  ShieldCheck
 } from 'lucide-react';
 import { USER_ROLES, type UserRole } from './roles';
 
@@ -36,16 +38,16 @@ export const NAVIGATION_ITEMS: NavigationItem[] = [
     description: 'Aday yönetimi ve listesi',
     path: '/candidates',
     icon: Users,
-    roles: [USER_ROLES.SUPER_ADMIN, USER_ROLES.HR_MANAGER],
+    roles: [USER_ROLES.HR_MANAGER], // SUPER_ADMIN will see it via its own section
   },
-  {
-    id: 'companies',
-    label: 'Firmalar',
-    description: 'Firma yönetimi',
-    path: '/companies',
-    icon: Building,
-    roles: [USER_ROLES.SUPER_ADMIN],
-  },
+  // {
+  //   id: 'companies',
+  //   label: 'Firmalar',
+  //   description: 'Firma yönetimi',
+  //   path: '/companies',
+  //   icon: Building,
+  //   roles: [USER_ROLES.SUPER_ADMIN],
+  // },
   {
     id: 'interviews',
     label: 'Mülakatlar',
@@ -79,6 +81,14 @@ export const NAVIGATION_ITEMS: NavigationItem[] = [
     roles: [USER_ROLES.CANDIDATE],
   },
   {
+    id: 'interview-screen',
+    label: 'Kodlama Mülakat',
+    description: 'AI destekli kodlama mülakat ekranı',
+    path: '/interview-screen',
+    icon: Terminal,
+    roles: [USER_ROLES.SUPER_ADMIN, USER_ROLES.HR_MANAGER, USER_ROLES.TECHNICAL_INTERVIEWER, USER_ROLES.CANDIDATE],
+  },
+  {
     id: 'analytics',
     label: 'Analitik',
     description: 'İstatistikler ve raporlar',
@@ -92,7 +102,40 @@ export const NAVIGATION_ITEMS: NavigationItem[] = [
     description: 'Hesap ve sistem ayarları',
     path: '/settings',
     icon: Settings,
-    roles: [USER_ROLES.SUPER_ADMIN, USER_ROLES.HR_MANAGER, USER_ROLES.TECHNICAL_INTERVIEWER, USER_ROLES.CANDIDATE],
+    roles: [USER_ROLES.HR_MANAGER, USER_ROLES.TECHNICAL_INTERVIEWER, USER_ROLES.CANDIDATE],
+  },
+  // Super Admin Section
+  {
+    id: 'super-admin-dashboard',
+    label: 'Süper Admin',
+    description: 'Platform yönetimi paneli',
+    path: '/super-admin',
+    icon: ShieldCheck,
+    roles: [USER_ROLES.SUPER_ADMIN],
+  },
+  {
+    id: 'super-admin-companies',
+    label: 'Şirket Yönetimi',
+    description: 'Şirketleri ve abonelikleri yönet',
+    path: '/super-admin/companies',
+    icon: Building,
+    roles: [USER_ROLES.SUPER_ADMIN],
+  },
+  {
+    id: 'super-admin-users',
+    label: 'Kullanıcı Yönetimi',
+    description: 'Tüm kullanıcıları yönet',
+    path: '/super-admin/users',
+    icon: Users,
+    roles: [USER_ROLES.SUPER_ADMIN],
+  },
+  {
+    id: 'super-admin-settings',
+    label: 'Platform Ayarları',
+    description: 'Genel sistem ayarları',
+    path: '/super-admin/settings',
+    icon: Settings,
+    roles: [USER_ROLES.SUPER_ADMIN],
   },
 ];
 

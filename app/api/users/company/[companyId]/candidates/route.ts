@@ -1,26 +1,37 @@
 import { NextRequest } from 'next/server';
 import { getToken } from 'next-auth/jwt';
 import { responseHandler } from '@/utils/response-handler';
-import { userService } from '@/services/db';
 import { getTranslations } from 'next-intl/server';
+import { candidateProfileService } from '@/services/db';
 
-export async function GET(req: NextRequest, { params }: { params: { companyId: string } }) {
+export async function GET(
+  req: NextRequest,
+  context: { params: { companyId: string } }
+) {
+  const { params } = context;
   const t = await getTranslations('api');
   try {
     const token = await getToken({ req });
     if (!token) {
-      return responseHandler.unauthorized(t('error.unauthorized'));
+      return responseHandler.error(t('error.unauthorized'), 401);
     }
 
-    const companyId = params.companyId;
-    if (token.role !== 'super_admin' && (token.company as { _id: string })?._id !== companyId) {
+    if (!(token.roles as string[])?.includes('super_admin') && token.companyId !== params.companyId) {
         return responseHandler.forbidden(t('error.forbidden'));
     }
 
-    const candidates = await userService.findCandidatesByCompany(companyId);
-    return responseHandler.success({ candidates });
-    
+    const candidates = await candidateProfileService.findAll({
+      companyId: params.companyId,
+    });
+    return responseHandler.success(
+      { candidates },
+      t('success.fetched', { entity: t('entity.candidates') })
+    );
   } catch (error) {
-    return responseHandler.error(error as Error);
+    return responseHandler.error(
+      error instanceof Error
+        ? error.message
+        : t('error.failedToFetch', { entity: t('entity.candidates') })
+    );
   }
 }

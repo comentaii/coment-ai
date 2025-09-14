@@ -1,29 +1,42 @@
 import { baseApi } from './base-api';
-import { IUser } from '@/schemas';
+import { IUser } from '@/schemas/user.model';
+import { UpdateUserFormData, InviteUserFormData } from '@/lib/validation-schemas';
 
 export const userApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getCandidatesByCompany: builder.query<IUser[], string>({
-      query: (companyId) => `users/company/${companyId}/candidates`,
-      providesTags: (result) =>
-        result
+    getAllUsers: builder.query<IUser[], void>({
+      query: () => 'users',
+      transformResponse: (response: { data: IUser[] }) => response.data,
+      providesTags: (result) => {
+        const users = result || [];
+        return users
           ? [
-              ...result.map(({ _id }) => ({ type: 'User' as const, id: _id })),
-              { type: 'User', id: 'CANDIDATE_LIST' },
+              ...users.map(({ _id }) => ({ type: 'Users' as const, id: _id })),
+              { type: 'Users', id: 'LIST' },
             ]
-          : [{ type: 'User', id: 'CANDIDATE_LIST' }],
+          : [{ type: 'Users', id: 'LIST' }];
+      },
     }),
-    getInterviewersByCompany: builder.query<IUser[], string>({
-        query: (companyId) => `users/company/${companyId}/interviewers`,
-        providesTags: (result) =>
-            result
-            ? [
-                ...result.map(({ _id }) => ({ type: 'User' as const, id: _id })),
-                { type: 'User', id: 'INTERVIEWER_LIST' },
-                ]
-            : [{ type: 'User', id: 'INTERVIEWER_LIST' }],
+    updateUser: builder.mutation<
+      IUser,
+      { id: string; data: UpdateUserFormData }
+    >({
+      query: ({ id, data }) => ({
+        url: `users/${id}`,
+        method: 'PATCH',
+        body: data,
+      }),
+      invalidatesTags: (result, error, { id }) => [{ type: 'Users', id }, { type: 'Users', id: 'LIST' }],
+    }),
+    createUser: builder.mutation<IUser, InviteUserFormData>({
+      query: (body) => ({
+        url: 'users',
+        method: 'POST',
+        body,
+      }),
+      invalidatesTags: [{ type: 'Users', id: 'LIST' }],
     }),
   }),
 });
 
-export const { useGetCandidatesByCompanyQuery, useGetInterviewersByCompanyQuery } = userApi;
+export const { useGetAllUsersQuery, useUpdateUserMutation, useCreateUserMutation } = userApi;

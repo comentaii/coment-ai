@@ -65,4 +65,4 @@ InterviewSlotSchema.index({ sessionId: 1, status: 1 });
 InterviewSlotSchema.index({ candidateId: 1, status: 1 });
 InterviewSlotSchema.index({ sessionId: 1, candidateId: 1 }, { unique: true });
 
-export const InterviewSlot = mongoose.model<IInterviewSlot>('InterviewSlot', InterviewSlotSchema);
+export const InterviewSlot = mongoose.models.InterviewSlot || mongoose.model<IInterviewSlot>('InterviewSlot', InterviewSlotSchema);

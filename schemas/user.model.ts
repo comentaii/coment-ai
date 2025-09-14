@@ -1,4 +1,5 @@
 import mongoose, { Document, Schema } from 'mongoose';
+import { ICompany } from './company.model';
 
 export interface IUser extends Document {
   name: string;
@@ -44,7 +45,12 @@ const userSchema = new Schema<IUser>({
   companyId: {
     type: Schema.Types.ObjectId,
     ref: 'Company',
-    required: false // Company ID is optional for all users
+    required: function() {
+      // `this` refers to the document being validated
+      const user = this as IUser;
+      // Company is required if the user has a role that is tied to a company
+      return user.roles.includes('hr_manager') || user.roles.includes('technical_interviewer');
+    }
   },
   image: {
     type: String,

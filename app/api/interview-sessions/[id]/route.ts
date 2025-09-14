@@ -15,23 +15,21 @@ export async function GET(
   try {
     const session = await getServerSession(authOptions);
     if (!session?.user?.companyId) {
-      return responseHandler.error('Unauthorized', 401);
+      return responseHandler.error(t('error.unauthorized'), 401);
     }
 
-    const result = await interviewSessionService.getSessionWithSlots(params.id);
-    
-    if (!result) {
-      return responseHandler.error('Interview session not found', 404);
+    const interviewSession = await interviewSessionService.findById(params.id);
+    if (!interviewSession) {
+      return responseHandler.error(t('error.notFound', { entity: t('entity.interviewSession') }), 404);
     }
 
     return responseHandler.success(
-      result,
-      t('success.fetched', { entity: 'Interview Session' })
+      { session: interviewSession },
+      t('success.fetched', { entity: t('entity.interviewSession') })
     );
   } catch (error) {
-    console.error('Error fetching interview session:', error);
     return responseHandler.error(
-      error instanceof Error ? error.message : 'Failed to fetch interview session'
+      error instanceof Error ? error.message : t('error.failedToFetch', { entity: t('entity.interviewSession') })
     );
   }
 }
@@ -45,7 +43,7 @@ export async function PUT(
   try {
     const session = await getServerSession(authOptions);
     if (!session?.user?.companyId) {
-      return responseHandler.error('Unauthorized', 401);
+      return responseHandler.error(t('error.unauthorized'), 401);
     }
 
     const body = await request.json();
@@ -57,23 +55,22 @@ export async function PUT(
     );
 
     if (!updatedSession) {
-      return responseHandler.error('Interview session not found', 404);
+      return responseHandler.error(t('error.notFound', { entity: t('entity.interviewSession') }), 404);
     }
 
     return responseHandler.success(
       { session: updatedSession },
-      t('success.updated', { entity: 'Interview Session' })
+      t('success.updated', { entity: t('entity.interviewSession') })
     );
   } catch (error) {
-    console.error('Error updating interview session:', error);
     return responseHandler.error(
-      error instanceof Error ? error.message : 'Failed to update interview session'
+      error instanceof Error ? error.message : t('error.failedToUpdate', { entity: t('entity.interviewSession') })
     );
   }
 }
 
 export async function DELETE(
-  request: NextRequest,
+  req: NextRequest,
   { params }: { params: { id: string } }
 ) {
   const t = await getTranslations('api');
@@ -81,27 +78,21 @@ export async function DELETE(
   try {
     const session = await getServerSession(authOptions);
     if (!session?.user?.companyId) {
-      return responseHandler.error('Unauthorized', 401);
+      return responseHandler.error(t('error.unauthorized'), 401);
     }
 
-    // Soft delete by updating status to cancelled
-    const updatedSession = await interviewSessionService.updateInterviewSession(
-      params.id,
-      { status: 'cancelled' }
-    );
-
-    if (!updatedSession) {
-      return responseHandler.error('Interview session not found', 404);
+    const deleted = await interviewSessionService.delete(params.id);
+    if (!deleted) {
+      return responseHandler.error(t('error.notFound', { entity: t('entity.interviewSession') }), 404);
     }
 
     return responseHandler.success(
-      { session: updatedSession },
-      t('success.cancelled', { entity: 'Interview Session' })
+      { success: true },
+      t('success.deleted', { entity: t('entity.interviewSession') })
     );
   } catch (error) {
-    console.error('Error cancelling interview session:', error);
     return responseHandler.error(
-      error instanceof Error ? error.message : 'Failed to cancel interview session'
+      error instanceof Error ? error.message : t('error.failedToDelete', { entity: t('entity.interviewSession') })
     );
   }
 }

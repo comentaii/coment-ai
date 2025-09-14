@@ -58,12 +58,22 @@ export function ScheduleInterviewModal({
 
   const formik = useFormik({
     initialValues: {
+      jobPostingId: jobPostingId,
       interviewerId: '',
+      scheduledDate: '',
+      candidateIds: [],
       notes: '',
     },
     validationSchema: createInterviewSessionSchema,
     onSubmit: async (values) => {
+      console.log('Form submit başladı');
+      console.log('values:', values);
+      console.log('selectedCandidates:', selectedCandidates);
+      console.log('selectedDate:', selectedDate);
+      console.log('selectedTime:', selectedTime);
+      
       if (selectedCandidates.length === 0) {
+        console.log('Aday seçimi hatası');
         promise(Promise.reject(new Error('En az bir aday seçmelisiniz')), {
           loading: 'Kontrol ediliyor...',
           success: 'Başarılı',
@@ -73,6 +83,7 @@ export function ScheduleInterviewModal({
       }
 
       if (!selectedDate || !selectedTime) {
+        console.log('Tarih/saat seçimi hatası');
         promise(Promise.reject(new Error('Tarih ve saat seçimi zorunludur')), {
           loading: 'Kontrol ediliyor...',
           success: 'Başarılı',
@@ -81,6 +92,7 @@ export function ScheduleInterviewModal({
         return;
       }
 
+      console.log('Form validasyonu geçti, API çağrısı yapılıyor');
       const scheduledDate = new Date(`${selectedDate}T${selectedTime}`);
       
       await promise(
@@ -108,15 +120,31 @@ export function ScheduleInterviewModal({
   useEffect(() => {
     if (isOpen) {
       fetchInterviewers();
+      // Reset formik with correct initial values
+      formik.setValues({
+        jobPostingId: jobPostingId,
+        interviewerId: '',
+        scheduledDate: '',
+        candidateIds: [],
+        notes: '',
+      });
     }
   }, [isOpen]);
 
   const fetchInterviewers = async () => {
     try {
+      console.log('Fetching interviewers...');
       const response = await fetch('/api/personnel/interviewers');
+      console.log('Response status:', response.status);
+      
       if (response.ok) {
         const data = await response.json();
-        setInterviewers(data.data?.interviewers || []);
+        console.log('Interviewers response data:', data);
+        const interviewers = data.data?.interviewers || [];
+        console.log('Setting interviewers:', interviewers);
+        setInterviewers(interviewers);
+      } else {
+        console.error('Failed to fetch interviewers:', response.status, response.statusText);
       }
     } catch (error) {
       console.error('Error fetching interviewers:', error);
@@ -131,11 +159,12 @@ export function ScheduleInterviewModal({
   };
 
   const handleCandidateToggle = (candidateId: string) => {
-    setSelectedCandidates(prev => 
-      prev.includes(candidateId)
-        ? prev.filter(id => id !== candidateId)
-        : [...prev, candidateId]
-    );
+    const newSelectedCandidates = selectedCandidates.includes(candidateId)
+      ? selectedCandidates.filter(id => id !== candidateId)
+      : [...selectedCandidates, candidateId];
+    
+    setSelectedCandidates(newSelectedCandidates);
+    formik.setFieldValue('candidateIds', newSelectedCandidates);
   };
 
   const getMinDateTime = () => {
@@ -193,7 +222,12 @@ export function ScheduleInterviewModal({
                 id="date"
                 type="date"
                 value={selectedDate}
-                onChange={(e) => setSelectedDate(e.target.value)}
+                onChange={(e) => {
+                  setSelectedDate(e.target.value);
+                  if (e.target.value && selectedTime) {
+                    formik.setFieldValue('scheduledDate', `${e.target.value}T${selectedTime}`);
+                  }
+                }}
                 min={getMinDateTime()}
                 className="w-full"
               />
@@ -207,7 +241,12 @@ export function ScheduleInterviewModal({
                 id="time"
                 type="time"
                 value={selectedTime}
-                onChange={(e) => setSelectedTime(e.target.value)}
+                onChange={(e) => {
+                  setSelectedTime(e.target.value);
+                  if (selectedDate && e.target.value) {
+                    formik.setFieldValue('scheduledDate', `${selectedDate}T${e.target.value}`);
+                  }
+                }}
                 min={getMinTime()}
                 className="w-full"
               />
@@ -334,7 +373,17 @@ export function ScheduleInterviewModal({
             </Button>
             <Button
               type="button"
-              onClick={() => formik.handleSubmit()}
+              onClick={() => {
+                console.log('Modal içindeki Mülakat Planla butonuna tıklandı');
+                console.log('isLoading:', isLoading);
+                console.log('selectedCandidates.length:', selectedCandidates.length);
+                console.log('selectedCandidates:', selectedCandidates);
+                console.log('formik.isValid:', formik.isValid);
+                console.log('formik.errors:', formik.errors);
+                console.log('formik.values:', formik.values);
+                console.log('formik.handleSubmit çağrılıyor...');
+                formik.handleSubmit();
+              }}
               disabled={isLoading || selectedCandidates.length === 0}
               className="bg-brand-green hover:bg-brand-green/90"
             >

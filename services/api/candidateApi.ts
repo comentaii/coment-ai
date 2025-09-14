@@ -2,6 +2,13 @@ import { baseApi } from './base-api';
 import { ICandidateProfile } from '@/schemas/candidate-profile.model';
 import { IUser } from '@/schemas/user.model';
 
+// The type for the raw API response
+interface ApiResponse<T> {
+  success: boolean;
+  message: string;
+  data: T;
+}
+
 // The combined type for a candidate profile with populated user data
 export type PopulatedCandidateProfile = Omit<ICandidateProfile, 'userId'> & {
   userId: Pick<IUser, 'name' | 'email' | 'image'>;
@@ -11,8 +18,9 @@ export const candidateApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getCompanyCandidates: builder.query<PopulatedCandidateProfile[], void>({
       query: () => 'candidates',
+      transformResponse: (response: ApiResponse<PopulatedCandidateProfile[]>) => response.data,
       providesTags: (result) =>
-        result
+        result && Array.isArray(result)
           ? [
               ...result.map(({ _id }) => ({ type: 'Candidates' as const, id: _id })),
               { type: 'Candidates', id: 'LIST' },

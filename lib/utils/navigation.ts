@@ -14,6 +14,12 @@ export const useNavigation = () => {
     return NAVIGATION_ITEMS.filter(item => item.roles.includes(role));
   };
 
+  const getNavigationItemsByRoles = (roles: UserRole[]): NavigationItem[] => {
+    return NAVIGATION_ITEMS.filter(item => 
+      item.roles.some(role => roles.includes(role))
+    );
+  };
+
   const getCurrentPath = (): string => {
     if (typeof window !== 'undefined') {
       return window.location.pathname;
@@ -31,6 +37,7 @@ export const useNavigation = () => {
     locale,
     getLocalizedPath,
     getNavigationItemsByRole,
+    getNavigationItemsByRoles,
     getCurrentPath,
     isActivePath,
   };

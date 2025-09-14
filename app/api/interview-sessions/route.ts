@@ -5,14 +5,28 @@ import { responseHandler } from '@/utils/response-handler';
 import { createInterviewSessionSchema } from '@/lib/validation-schemas';
 import { interviewSessionService } from '@/services/db';
 import { getTranslations } from 'next-intl/server';
+import { USER_ROLES } from '@/lib/constants';
 
 export async function POST(request: NextRequest) {
-  const t = await getTranslations('api');
-  
   try {
     const session = await getServerSession(authOptions);
     if (!session?.user?.companyId) {
-      return responseHandler.error('Unauthorized', 401);
+      return responseHandler.error('Unauthorized access. Please login.', 401);
+    }
+    
+    // Safely get translations with fallback
+    let t: any;
+    try {
+      t = await getTranslations('api');
+    } catch (translationError) {
+      console.warn('Translation loading failed, using fallbacks:', translationError);
+      t = (key: string, params?: any) => {
+        // Fallback translations
+        if (key === 'success.created') return `${params?.entity || 'Item'} created successfully.`;
+        if (key === 'error.failedToCreate') return `Failed to create ${params?.entity || 'item'}.`;
+        if (key === 'entity.interviewSession') return 'Interview Session';
+        return key; // Return key if no translation found
+      };
     }
 
     const body = await request.json();
@@ -29,12 +43,12 @@ export async function POST(request: NextRequest) {
         slots: result.slots,
         message: 'Interview session created successfully'
       },
-      t('success.created', { entity: 'Interview Session' })
+      t('success.created', { entity: t('entity.interviewSession') })
     );
   } catch (error) {
     console.error('Error creating interview session:', error);
     return responseHandler.error(
-      error instanceof Error ? error.message : 'Failed to create interview session'
+      error instanceof Error ? error.message : 'Failed to create interview session. Please try again.'
     );
   }
 }
@@ -44,36 +58,44 @@ export async function GET(request: NextRequest) {
   
   try {
     const session = await getServerSession(authOptions);
-    if (!session?.user?.companyId) {
-      return responseHandler.error('Unauthorized', 401);
+    if (!session?.user) {
+      return responseHandler.error(t('error.unauthorized'), 401);
     }
 
     const { searchParams } = new URL(request.url);
-    const status = searchParams.get('status');
-    const interviewerId = searchParams.get('interviewerId');
-    const jobPostingId = searchParams.get('jobPostingId');
-    const limit = parseInt(searchParams.get('limit') || '50');
-    const skip = parseInt(searchParams.get('skip') || '0');
+    const options = {
+      status: searchParams.get('status') || undefined,
+      interviewerId: searchParams.get('interviewerId') || undefined,
+      jobPostingId: searchParams.get('jobPostingId') || undefined,
+      limit: parseInt(searchParams.get('limit') || '50'),
+      skip: parseInt(searchParams.get('skip') || '0'),
+    };
 
-    const sessions = await interviewSessionService.getSessionsByCompany(
-      session.user.companyId,
-      {
-        status: status || undefined,
-        interviewerId: interviewerId || undefined,
-        jobPostingId: jobPostingId || undefined,
-        limit,
-        skip
-      }
-    );
+    const userRoles = session.user.roles || [];
+    const isSuperAdmin = userRoles.includes(USER_ROLES.SUPER_ADMIN);
+    const companyId = session.user.companyId;
+
+    let sessions;
+    if (isSuperAdmin) {
+      sessions = await interviewSessionService.getAllSessions(options);
+    } else if (companyId) {
+      sessions = await interviewSessionService.getSessionsByCompany(
+        companyId,
+        options
+      );
+    } else {
+      // Not a super admin and no companyId, unauthorized
+      return responseHandler.error(t('error.unauthorized'), 401);
+    }
 
     return responseHandler.success(
       { sessions },
-      t('success.fetched', { entity: 'Interview Sessions' })
+      t('success.fetched', { entity: t('entity.interviewSessions') })
     );
   } catch (error) {
     console.error('Error fetching interview sessions:', error);
     return responseHandler.error(
-      error instanceof Error ? error.message : 'Failed to fetch interview sessions'
+      error instanceof Error ? error.message : t('error.failedToFetch', { entity: t('entity.interviewSessions') })
     );
   }
 }

@@ -134,3 +134,6 @@ temp/
 
 /public/uploads/*
 !/public/uploads/
+
+# Scripts
+/scripts/

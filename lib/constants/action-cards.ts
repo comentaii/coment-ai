@@ -16,7 +16,7 @@ export interface ActionCard {
   description: string;
   icon: React.ComponentType<{ className?: string }>;
   path: string; // locale olmadan path
-  color: string;
+  colorClasses: string;
   roles: UserRole[];
 }
 
@@ -26,7 +26,7 @@ export const ACTION_CARDS: ActionCard[] = [
     description: 'Hesap bilgilerinizi yönetin',
     icon: User,
     path: '/profile',
-    color: 'bg-blue-500',
+    colorClasses: 'bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-300',
     roles: [USER_ROLES.SUPER_ADMIN, USER_ROLES.HR_MANAGER, USER_ROLES.TECHNICAL_INTERVIEWER, USER_ROLES.CANDIDATE],
   },
   {
@@ -34,7 +34,7 @@ export const ACTION_CARDS: ActionCard[] = [
     description: 'Sistem ayarlarınızı düzenleyin',
     icon: Settings,
     path: '/settings',
-    color: 'bg-gray-500',
+    colorClasses: 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300',
     roles: [USER_ROLES.SUPER_ADMIN, USER_ROLES.HR_MANAGER, USER_ROLES.TECHNICAL_INTERVIEWER, USER_ROLES.CANDIDATE],
   },
   {
@@ -42,7 +42,7 @@ export const ACTION_CARDS: ActionCard[] = [
     description: 'Mülakat geçmişinizi görüntüleyin',
     icon: Calendar,
     path: '/my-interviews',
-    color: 'bg-green-500',
+    colorClasses: 'bg-green-100 dark:bg-green-900/50 text-green-600 dark:text-green-300',
     roles: [USER_ROLES.CANDIDATE],
   },
   {
@@ -50,7 +50,7 @@ export const ACTION_CARDS: ActionCard[] = [
     description: 'Aday yönetimi ve listesi',
     icon: Users,
     path: '/candidates',
-    color: 'bg-purple-500',
+    colorClasses: 'bg-purple-100 dark:bg-purple-900/50 text-purple-600 dark:text-purple-300',
     roles: [USER_ROLES.SUPER_ADMIN, USER_ROLES.HR_MANAGER],
   },
   {
@@ -58,7 +58,7 @@ export const ACTION_CARDS: ActionCard[] = [
     description: 'Mülakat planlama ve yönetimi',
     icon: Calendar,
     path: '/interviews',
-    color: 'bg-orange-500',
+    colorClasses: 'bg-orange-100 dark:bg-orange-900/50 text-orange-600 dark:text-orange-300',
     roles: [USER_ROLES.SUPER_ADMIN, USER_ROLES.HR_MANAGER, USER_ROLES.TECHNICAL_INTERVIEWER],
   },
   {
@@ -66,7 +66,7 @@ export const ACTION_CARDS: ActionCard[] = [
     description: 'İlan oluşturun ve adayları yönetin',
     icon: Briefcase,
     path: '/job-postings',
-    color: 'bg-indigo-500',
+    colorClasses: 'bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-300',
     roles: [USER_ROLES.SUPER_ADMIN, USER_ROLES.HR_MANAGER],
   },
   {
@@ -74,7 +74,7 @@ export const ACTION_CARDS: ActionCard[] = [
     description: 'Kod analizi ve puanlama',
     icon: Code,
     path: '/code-review',
-    color: 'bg-red-500',
+    colorClasses: 'bg-red-100 dark:bg-red-900/50 text-red-600 dark:text-red-300',
     roles: [USER_ROLES.SUPER_ADMIN, USER_ROLES.TECHNICAL_INTERVIEWER],
   },
   {
@@ -82,7 +82,7 @@ export const ACTION_CARDS: ActionCard[] = [
     description: 'Firma yönetimi',
     icon: Building,
     path: '/companies',
-    color: 'bg-yellow-500',
+    colorClasses: 'bg-yellow-100 dark:bg-yellow-900/50 text-yellow-600 dark:text-yellow-300',
     roles: [USER_ROLES.SUPER_ADMIN],
   },
   {
@@ -90,7 +90,7 @@ export const ACTION_CARDS: ActionCard[] = [
     description: 'İstatistikler ve raporlar',
     icon: BarChart3,
     path: '/analytics',
-    color: 'bg-teal-500',
+    colorClasses: 'bg-teal-100 dark:bg-teal-900/50 text-teal-600 dark:text-teal-300',
     roles: [USER_ROLES.SUPER_ADMIN, USER_ROLES.HR_MANAGER, USER_ROLES.TECHNICAL_INTERVIEWER],
   },
 ];

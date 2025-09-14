@@ -1,7 +1,7 @@
-import { Challenge, IChallenge } from '@/schemas';
 import { BaseService } from './base.service';
+import { Challenge, IChallenge } from '@/schemas';
 
-class ChallengeService extends BaseService<IChallenge> {
+export class ChallengeService extends BaseService<IChallenge> {
   constructor() {
     super(Challenge);
   }
@@ -14,5 +14,4 @@ class ChallengeService extends BaseService<IChallenge> {
   }
 }
 
-const challengeService = new ChallengeService();
-export default challengeService;
+export const challengeService = new ChallengeService();

@@ -1,4 +1,4 @@
 export const metadata = {
-    title: 'COMENT AI',
-    description: 'HR AI Assistant',
+    title: 'CodileAI',
+    description: 'AI-Powered Candidate Assessment and Interview Platform',
   }

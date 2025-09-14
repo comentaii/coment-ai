@@ -4,12 +4,16 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Shield, LogIn, Home, ArrowLeft } from 'lucide-react';
+import { Logo } from '@/components/ui/logo';
 
 export default function UnauthorizedPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 p-4">
       <Card className="w-full max-w-md text-center">
         <CardHeader>
+          <div className="flex justify-center mb-6">
+            <Logo size="lg" />
+          </div>
           <div className="mx-auto w-20 h-20 bg-yellow-100 dark:bg-yellow-900/20 rounded-full flex items-center justify-center mb-6">
             <Shield className="w-10 h-10 text-yellow-600 dark:text-yellow-400" />
           </div>

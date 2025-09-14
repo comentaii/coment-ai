@@ -1,6 +1,5 @@
 'use client';
 
-import { signOut } from 'next-auth/react';
 import { useAuth } from '@/hooks/use-auth';
 import { Button } from '@/components/ui/button';
 import { UserRoleBadge } from '@/components/user-role-badge';
@@ -17,15 +16,15 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Link } from '@/navigation';
 import { USER_ROLES, type UserRole } from '@/lib/constants/roles';
+import { useTranslations } from 'next-intl';
+import { LogOut } from 'lucide-react';
 
 export function DashboardNavbar() {
-  const { session } = useAuth();
+  const { session, logout } = useAuth();
+  const t = useTranslations('Navigation');
+  const user = session?.user;
 
-  const handleLogout = () => {
-    signOut({ callbackUrl: '/' });
-  };
-  
-  if (!session) {
+  if (!user) {
     return null;
   }
 
@@ -60,11 +59,11 @@ export function DashboardNavbar() {
               >
                 <Avatar className="h-8 w-8">
                   <AvatarImage
-                    src={session.user?.image || ""}
-                    alt={session.user?.name || ""}
+                    src={user?.image || ""}
+                    alt={user?.name || ""}
                   />
                   <AvatarFallback className="bg-brand-green text-white dark:bg-green-500 dark:text-white text-sm font-medium">
-                    {session.user?.name?.charAt(0).toUpperCase() || 'U'}
+                    {user?.name?.charAt(0).toUpperCase() || 'U'}
                   </AvatarFallback>
                 </Avatar>
               </Button>
@@ -73,13 +72,13 @@ export function DashboardNavbar() {
               <DropdownMenuLabel className="font-normal">
                 <div className="flex flex-col space-y-1">
                   <p className="text-base font-medium leading-none text-gray-900 dark:text-gray-100">
-                    {session.user?.name || 'Kullanıcı'}
+                    {user?.name || 'Kullanıcı'}
                   </p>
                   <p className="text-sm leading-none text-gray-600 dark:text-gray-400">
-                    {session.user?.email}
+                    {user?.email}
                   </p>
                   <div className="mt-2">
-                    <UserRoleBadge role={session.user?.role as UserRole || USER_ROLES.CANDIDATE} />
+                    <UserRoleBadge role={user?.roles?.[0] as UserRole || USER_ROLES.CANDIDATE} />
                   </div>
                 </div>
               </DropdownMenuLabel>
@@ -103,14 +102,12 @@ export function DashboardNavbar() {
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem asChild className="p-0">
-                <button
-                  onClick={handleLogout}
-                  className="w-full h-full text-left text-sm cursor-pointer text-red-600 dark:text-red-400 flex items-center gap-2 px-2 py-1.5 rounded-sm focus:bg-red-50 dark:focus:bg-red-900/20 outline-none"
-                >
-                  <span>🚪</span>
-                  Çıkış Yap
-                </button>
+              <DropdownMenuItem
+                onClick={() => logout()}
+                className="cursor-pointer text-red-500 focus:text-red-500 focus:bg-red-50"
+              >
+                <LogOut className="mr-2 h-4 w-4" />
+                <span>{t('logout')}</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

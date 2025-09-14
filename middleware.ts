@@ -11,30 +11,85 @@ const intlMiddleware = createMiddleware({
 });
 
 export async function middleware(req: NextRequest) {
+  const secret = process.env.NEXTAUTH_SECRET;
+  if (!secret) {
+    console.error('NEXTAUTH_SECRET is not set. Authentication will not work.');
+    return new NextResponse(JSON.stringify({ message: 'Server configuration error' }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+
   const { pathname } = req.nextUrl;
 
-  // Skip middleware for API routes and static files
-  if (pathname.startsWith('/api') || pathname.startsWith('/_next') || pathname.startsWith('/favicon.ico')) {
+  // Check if the path is an API route, ignoring any potential locale prefix
+  const pathWithoutLocale = pathname.replace(/^\/(tr|en)/, '');
+
+  if (pathWithoutLocale.startsWith('/api/')) {
+    // This is an API route. It should not be processed for i18n redirects.
+    // 1. Handle public auth endpoints
+    if (pathWithoutLocale.startsWith('/api/auth')) {
+      // For auth endpoints, always use the path without locale
+      if (pathname !== pathWithoutLocale) {
+        return NextResponse.rewrite(new URL(pathWithoutLocale, req.url));
+      }
+      return NextResponse.next();
+    }
+
+    // 2. Secure all other API endpoints
+    try {
+      const token = await getToken({ req, secret });
+      if (!token) {
+        return new NextResponse(JSON.stringify({ 
+          message: 'Authentication required',
+          error: 'UNAUTHORIZED' 
+        }), {
+          status: 401,
+          headers: { 'Content-Type': 'application/json' },
+        });
+      }
+    } catch (authError) {
+      console.error('Auth token verification failed:', authError);
+      return new NextResponse(JSON.stringify({ 
+        message: 'Authentication verification failed',
+        error: 'AUTH_ERROR' 
+      }), {
+        status: 401,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+
+    // 3. If the original path had a locale, rewrite it to remove the locale prefix
+    // so Next.js can find the correct API route file in `app/api/...`.
+    if (pathname !== pathWithoutLocale) {
+      const rewriteUrl = new URL(pathWithoutLocale, req.url);
+      // Copy all search params to the rewritten URL
+      req.nextUrl.searchParams.forEach((value, key) => {
+        rewriteUrl.searchParams.set(key, value);
+      });
+      return NextResponse.rewrite(rewriteUrl);
+    }
+
+    // If no locale was present (e.g., a direct call to /api/...), just continue.
     return NextResponse.next();
   }
 
-  // Handle internationalization first
+  // If it's not an API route, it's a page. Let next-intl handle it first.
   const intlResponse = intlMiddleware(req);
-  if (intlResponse) {
-    return intlResponse;
-  }
 
-  // Extract locale and path without locale
-  const locale = pathname.startsWith('/en/') ? 'en' : 'tr';
-  const pathWithoutLocale = pathname.replace(/^\/(tr|en)/, '');
+  // Then, apply page-level authentication and authorization.
+  // Note: pathWithoutLocale is already calculated above.
+
+  const isPublicPage = pathWithoutLocale === '' || pathWithoutLocale === '/';
 
   // Handle auth pages - redirect logged in users to dashboard
   if (pathWithoutLocale.startsWith('/auth/')) {
     try {
-      const token = await getToken({ req, secret: process.env['NEXTAUTH_SECRET'] });
+      const token = await getToken({ req, secret });
       
       if (token) {
         // User is logged in, redirect to dashboard
+        const locale = pathname.startsWith('/en/') ? 'en' : 'tr';
         return NextResponse.redirect(new URL(`/${locale}/dashboard`, req.url));
       }
     } catch (error) {
@@ -42,25 +97,40 @@ export async function middleware(req: NextRequest) {
     }
   }
 
-  // Handle protected routes - redirect non-authenticated users to unauthorized page
-  if (pathWithoutLocale.startsWith('/dashboard/') || 
-      pathWithoutLocale.startsWith('/admin/') || 
-      pathWithoutLocale.startsWith('/candidates/') || 
-      pathWithoutLocale.startsWith('/interviews/') || 
-      pathWithoutLocale.startsWith('/proctoring/')) {
+  // Allow logged-in users to visit the landing page
+  if (isPublicPage) {
+    return intlResponse;
+  }
+
+  // Handle protected routes
+  const protectedRoutes = [
+    '/dashboard', 
+    '/admin', 
+    '/super-admin',
+    '/candidates', 
+    '/interviews', 
+    '/proctoring'
+  ];
+
+  if (protectedRoutes.some(route => pathWithoutLocale.startsWith(route))) {
     try {
-      const token = await getToken({ req, secret: process.env['NEXTAUTH_SECRET'] });
+      const token = await getToken({ req, secret });
+      const locale = pathname.startsWith('/en/') ? 'en' : 'tr';
       
       if (!token) {
-        // User not authenticated, redirect to unauthorized page
-        return NextResponse.redirect(new URL(`/${locale}/unauthorized`, req.url));
+        // User not authenticated, redirect to the sign-in page
+        const signInUrl = new URL(`/${locale}/auth/signin`, req.url);
+        // Add a callbackUrl so the user is redirected back to the page they
+        // were trying to access after they successfully log in.
+        signInUrl.searchParams.set('callbackUrl', req.url);
+        return NextResponse.redirect(signInUrl);
       }
 
       // Role-based access control
       const userRoles = token.roles as string[] || [];
       
       // Super admin routes
-      if (pathWithoutLocale.startsWith('/admin/')) {
+      if (pathWithoutLocale.startsWith('/admin') || pathWithoutLocale.startsWith('/super-admin')) {
         if (!userRoles.includes(USER_ROLES.SUPER_ADMIN)) {
           // Forbidden access, redirect to forbidden page
           return NextResponse.redirect(new URL(`/${locale}/forbidden`, req.url));
@@ -68,8 +138,8 @@ export async function middleware(req: NextRequest) {
       }
       
       // HR Manager routes
-      if (pathWithoutLocale.startsWith('/candidates/') || 
-          pathWithoutLocale.startsWith('/interviews/')) {
+      if (pathWithoutLocale.startsWith('/candidates') || 
+          pathWithoutLocale.startsWith('/interviews')) {
         if (!userRoles.includes(USER_ROLES.HR_MANAGER) && !userRoles.includes(USER_ROLES.SUPER_ADMIN)) {
           // Forbidden access, redirect to forbidden page
           return NextResponse.redirect(new URL(`/${locale}/forbidden`, req.url));
@@ -77,7 +147,7 @@ export async function middleware(req: NextRequest) {
       }
       
       // Technical Interviewer routes
-      if (pathWithoutLocale.startsWith('/proctoring/')) {
+      if (pathWithoutLocale.startsWith('/proctoring')) {
         if (!userRoles.includes(USER_ROLES.TECHNICAL_INTERVIEWER) && 
             !userRoles.includes(USER_ROLES.HR_MANAGER) && 
             !userRoles.includes(USER_ROLES.SUPER_ADMIN)) {
@@ -86,36 +156,24 @@ export async function middleware(req: NextRequest) {
         }
       }
     } catch (error) {
-      console.error('Authentication check error:', error);
-      // On error, redirect to unauthorized page
-      return NextResponse.redirect(new URL(`/${locale}/unauthorized`, req.url));
+      const locale = pathname.startsWith('/en/') ? 'en' : 'tr';
+      // On error, redirect to sign-in page as a fallback
+      const signInUrl = new URL(`/${locale}/auth/signin`, req.url);
+      signInUrl.searchParams.set('callbackUrl', req.url);
+      return NextResponse.redirect(signInUrl);
     }
   }
 
-  // Continue for other routes
-  return NextResponse.next();
+  // For all other page routes, return the response from the intl middleware.
+  return intlResponse;
 }
 
 // Configure which paths the middleware should run on
 export const config = {
   matcher: [
-    // Root path
-    '/',
-    // Auth pages
-    '/en/auth/:path*',
-    '/tr/auth/:path*',
-    // Protected routes
-    '/en/admin/:path*',
-    '/tr/admin/:path*',
-    '/en/dashboard/:path*',
-    '/tr/dashboard/:path*',
-    '/en/candidates/:path*',
-    '/tr/candidates/:path*',
-    '/en/interviews/:path*',
-    '/tr/interviews/:path*',
-    '/en/proctoring/:path*',
-    '/tr/proctoring/:path*',
-    // Other paths (excluding static files)
-    '/((?!_next|.*\\..*).*)'
+    // Match all routes except static files and _next internal files
+    '/((?!_next|.*\\..*).*)',
+    // Re-include API routes for manual handling, but next-auth is already excluded above.
+    '/api/:path*'
   ],
 };

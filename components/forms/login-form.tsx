@@ -2,13 +2,13 @@
 
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
+import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
-import { loginSchema, LoginDto } from '@/lib/validation-schemas';
+import { loginSchema, LoginFormData } from '@/lib/validation-schemas';
 import { FormikForm } from '@/components/ui/formik-form';
 import { FormikField } from '@/components/forms/formik-field';
 import { Button } from '@/components/ui/button';
-import { FormSubmitButton } from '@/components/ui/button';
-import { FormError, FormSuccess } from '@/components/ui/form';
+import { FormikProps } from 'formik';
 
 interface LoginFormProps {
   onSuccess?: () => void;
@@ -16,15 +16,16 @@ interface LoginFormProps {
 
 export function LoginForm({ onSuccess }: LoginFormProps) {
   const t = useTranslations('Auth');
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
 
-  const initialValues: LoginDto = {
+  const initialValues: LoginFormData = {
     email: '',
     password: '',
   };
 
-  const handleSubmit = async (values: LoginDto) => {
+  const handleSubmit = async (values: LoginFormData) => {
     setIsLoading(true);
     try {
       const result = await signIn('credentials', {
@@ -37,7 +38,11 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
         throw new Error(result.error);
       }
 
-      onSuccess?.();
+      if (result?.ok) {
+        // Login successful, redirect to dashboard
+        router.push('/tr/dashboard');
+        onSuccess?.();
+      }
     } catch (error: any) {
       console.error('Login error:', error);
       alert(error.message);
@@ -64,7 +69,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
         onSubmit={handleSubmit}
         className="space-y-4"
       >
-        {(formikProps: FormikProps<UserLoginFormData>) => (
+        {(formikProps: FormikProps<LoginFormData>) => (
           <>
             <FormikField
               name="email"

@@ -10,22 +10,13 @@ import {
   ChevronRight,
   Menu,
   X,
-  Home,
-  Users,
-  Building,
-  Calendar,
-  FileText,
-  Code,
-  UserCheck,
-  BarChart3,
-  Settings,
 } from 'lucide-react';
 import { useNavigation } from '@/lib/utils/navigation';
-import { USER_ROLES, type UserRole } from '@/lib/constants/roles';
+import { USER_ROLES } from '@/lib/constants/roles';
 import { usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { ThemeToggle } from '@/components/theme-toggle';
-import { getNavigationItemsByRoles } from '@/lib/constants/navigation';
+import { ThemeToggle } from '@/components/ui/theme-toggle';
+import { SidebarLogo } from '@/components/ui/logo';
 
 interface MenuItem {
   id: string;
@@ -46,7 +37,7 @@ export function Sidebar() {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const { session } = useAuth();
-  const { locale, getLocalizedPath, getNavigationItemsByRole, isActivePath } = useNavigation();
+  const { locale, getLocalizedPath, getNavigationItemsByRole, getNavigationItemsByRoles, isActivePath } = useNavigation();
   const pathname = usePathname();
   const t = useTranslations('Navigation');
   const [isMounted, setIsMounted] = useState(false);
@@ -55,10 +46,8 @@ export function Sidebar() {
     setIsMounted(true);
   }, []);
 
-  const userRole = (session?.user?.role as UserRole) || USER_ROLES.CANDIDATE;
-  const filteredMenuItems = getNavigationItemsByRole(userRole);
-
-  const userRoles = session?.user?.roles || [];
+  const userRoles = session?.user?.roles || [USER_ROLES.CANDIDATE];
+  const primaryRole = userRoles[0] || USER_ROLES.CANDIDATE;
   const navigationItems = getNavigationItemsByRoles(userRoles);
 
   const toggleSidebar = () => {
@@ -172,11 +161,14 @@ export function Sidebar() {
           <Link
             href={getLocalizedPath('/dashboard')}
             className={cn(
-              "text-xl font-bold text-brand-green dark:text-green-400 transition-all duration-200",
-              isCollapsed && "text-center block"
+              "transition-all duration-200",
+              isCollapsed && "flex justify-center w-full"
             )}
           >
-            {isCollapsed ? "CA" : "Coment-AI"}
+            <SidebarLogo 
+              isCollapsed={isCollapsed}
+              onClick={() => window.location.href = getLocalizedPath('/dashboard')}
+            />
           </Link>
           
           <Button
@@ -192,7 +184,11 @@ export function Sidebar() {
         {/* Navigation Menu */}
         <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
           {navigationItems.map((item) => (
-            <MenuItemComponent key={item.href} item={item} t={t} currentPath={pathname} />
+            <MenuItemComponent 
+              key={item.href || item.path} 
+              item={item} 
+              isCollapsed={isCollapsed}
+            />
           ))}
         </nav>
 
@@ -210,7 +206,7 @@ export function Sidebar() {
                   {session.user.name || 'Kullanıcı'}
                 </p>
                 <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
-                  {session.user.role || 'candidate'}
+                  {primaryRole}
                 </p>
               </div>
             </div>
@@ -226,8 +222,14 @@ export function Sidebar() {
         <div className="flex flex-col h-full">
           {/* Mobile Header */}
           <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-800">
-            <Link href={getLocalizedPath('/dashboard')} className="text-xl font-bold text-brand-green dark:text-green-400">
-              Coment-AI
+            <Link 
+              href={getLocalizedPath('/dashboard')}
+              onClick={() => window.location.href = getLocalizedPath('/dashboard')}
+            >
+              <SidebarLogo 
+                isCollapsed={false}
+                onClick={() => window.location.href = getLocalizedPath('/dashboard')}
+              />
             </Link>
             <Button
               variant="ghost"
@@ -242,7 +244,12 @@ export function Sidebar() {
           {/* Mobile Navigation */}
           <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
             {navigationItems.map((item) => (
-              <MenuItemComponent key={item.href} item={item} t={t} currentPath={pathname} />
+              <MenuItemComponent 
+                key={item.href || item.path} 
+                item={item} 
+                isCollapsed={false}
+                onClick={closeMobileSidebar}
+              />
             ))}
           </nav>
 
@@ -260,7 +267,7 @@ export function Sidebar() {
                     {session.user.name || 'Kullanıcı'}
                   </p>
                   <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
-                    {session.user.role || 'candidate'}
+                    {primaryRole}
                   </p>
                 </div>
               </div>

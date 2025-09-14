@@ -1,6 +1,6 @@
 {
     "Home": {
-        "title": "Welcome to Coment-AI",
+        "title": "Welcome to CodileAI",
         "description": "AI-Powered Candidate Assessment and Interview Platform"
     },
     "Navigation": {
@@ -15,6 +15,17 @@
         "rights": "All rights reserved."
     },
     "Auth": {
+        "email": "Email",
+        "password": "Password",
+        "confirmPassword": "Confirm Password",
+        "name": "Full Name",
+        "login": "Sign In",
+        "register": "Sign Up",
+        "forgotPassword": "Forgot Password",
+        "googleLogin": "Sign in with Google",
+        "googleSignup": "Sign up with Google"
+    },
+    "auth": {
         "email": "Email",
         "password": "Password",
         "confirmPassword": "Confirm Password",
@@ -59,7 +70,164 @@
         "noPostingsTitle": "No Job Postings Yet",
         "noPostingsDescription": "Start attracting candidates by creating your first job posting.",
         "errorTitle": "Error",
-        "errorMessage": "An error occurred while loading the job postings. Please try again later."
+        "errorMessage": "An error occurred while loading job postings. Please try again later."
+    },
+    "super-admin": {
+        "companies": {
+            "title": "Company Management",
+            "description": "Manage all companies in the system. You can add new companies, edit existing ones, and delete them.",
+            "addButton": "Add New Company",
+            "editButton": "Edit",
+            "modal": {
+                "addTitle": "Add New Company",
+                "editTitle": "Edit Company Information",
+                "statusLabel": "Company Status",
+                "nameLabel": "Company Name",
+                "emailLabel": "Company Email",
+                "planLabel": "Subscription Plan",
+                "cvQuotaLabel": "CV Quota",
+                "interviewQuotaLabel": "Interview Quota",
+                "storageQuotaLabel": "Storage (GB)",
+                "cancelButton": "Cancel",
+                "addButton": "Add Company",
+                "updateButton": "Update",
+                "plans": {
+                    "basic": "Basic",
+                    "premium": "Premium",
+                    "enterprise": "Enterprise"
+                }
+            },
+            "toast": {
+                "creating": "Creating company...",
+                "updating": "Updating company...",
+                "pleaseWait": "Please wait...",
+                "createSuccessTitle": "Success",
+                "createSuccess": "Company created successfully.",
+                "createErrorTitle": "Error",
+                "createError": "An error occurred while creating the company.",
+                "updateSuccessTitle": "Success",
+                "updateSuccess": "Company updated successfully.",
+                "updateErrorTitle": "Error",
+                "updateError": "An error occurred while updating the company."
+            },
+            "errorTitle": "Could Not Load Companies",
+            "errorMessage": "An error occurred while fetching company data. Please try again later.",
+            "noResults": "No companies found.",
+            "status": {
+                "active": "Active",
+                "inactive": "Inactive"
+            },
+            "table": {
+                "name": "Company Name",
+                "email": "Contact Email",
+                "plan": "Subscription Plan",
+                "status": "Status",
+                "actions": "Actions"
+            }
+        },
+        "users": {
+            "title": "User Management",
+            "description": "Here you can manage all users in the system. You can assign roles and change account statuses.",
+            "addButton": "Add User",
+            "editButton": "Edit",
+            "errorTitle": "Could Not Load Users",
+            "errorMessage": "An error occurred while fetching user data. Please try again later.",
+            "noResults": "No users found.",
+            "noCompany": "Unassigned",
+            "companyNotPopulated": "Company (ID)",
+            "status": {
+                "active": "Active",
+                "inactive": "Inactive"
+            },
+            "table": {
+                "name": "Name",
+                "company": "Company",
+                "roles": "Roles",
+                "status": "Status",
+                "createdAt": "Registration Date",
+                "actions": "Actions"
+            },
+            "editModal": {
+                "title": "Edit User Roles",
+                "rolesLabel": "Roles",
+                "warningTitle": "Warning",
+                "warningMessage": "Role changes will take effect immediately. The user's access permissions will change.",
+                "cancelButton": "Cancel",
+                "updateButton": "Update",
+                "updatingButton": "Updating...",
+                "statusLabel": "User Status",
+                "statusDescription": "Determines whether the user can log in to the platform.",
+                "companyLabel": "Company",
+                "companyPlaceholder": "Select a company"
+            },
+            "inviteModal": {
+                "title": "Invite User",
+                "nameLabel": "Full Name",
+                "namePlaceholder": "User's first and last name",
+                "emailLabel": "Email Address",
+                "emailPlaceholder": "example@company.com",
+                "companyLabel": "Company",
+                "companyPlaceholder": "Select a company",
+                "rolesLabel": "Roles",
+                "infoTitle": "Information",
+                "infoMessage": "The invited user will receive an email with their login credentials and a temporary password.",
+                "cancelButton": "Cancel",
+                "inviteButton": "Invite User"
+            },
+            "toast": {
+                "updateSuccessTitle": "Success",
+                "updateSuccessMessage": "User roles updated successfully.",
+                "updateErrorTitle": "Error",
+                "updateErrorMessage": "An error occurred while updating user roles.",
+                "inviteSuccessTitle": "Success",
+                "inviteSuccessMessage": "User invited successfully.",
+                "inviteErrorTitle": "Error",
+                "inviteErrorMessage": "An error occurred while inviting the user."
+            }
+        },
+        "dashboard": {
+            "title": "Super Admin Dashboard",
+            "totalCompanies": "Total Companies",
+            "totalUsers": "Total Users",
+            "activeInterviews": "Active Interviews"
+        },
+        "settings": {
+            "title": "Platform Settings",
+            "description": "Manage the system's global configuration and integrations.",
+            "saveButton": "Save Changes",
+            "tabs": {
+                "general": {
+                    "title": "General",
+                    "description": "Edit the basic settings of the application.",
+                    "appNameLabel": "Application Name",
+                    "appNamePlaceholder": "CodileAI",
+                    "logoLabel": "Application Logo"
+                },
+                "ai": {
+                    "title": "Artificial Intelligence",
+                    "description": "Configure settings for AI models like Gemini AI.",
+                    "geminiApiKeyLabel": "Gemini API Key"
+                },
+                "plans": {
+                    "title": "Subscription Plans",
+                    "description": "Manage quotas and limits for user subscription plans.",
+                    "cvUploads": "CV Upload Limit",
+                    "interviews": "Interview Limit",
+                    "storage": "Storage Limit (GB)",
+                    "basic": {
+                        "title": "Basic Plan"
+                    },
+                    "premium": {
+                        "title": "Premium Plan"
+                    }
+                },
+                "integrations": {
+                    "title": "Integrations",
+                    "description": "Manage API keys and settings for third-party services.",
+                    "resendLabel": "Resend API Key (for Email)"
+                }
+            }
+        }
     },
     "JobPostingCard": {
         "status": {
@@ -89,7 +257,11 @@
             "updating": "Updating posting status...",
             "updatedSuccess": "Posting \"{title}\" updated successfully.",
             "updatedError": "An error occurred while updating the posting."
-        }
+        },
+        "viewCandidates": "View Candidates",
+        "editJobPosting": "Edit Job Posting",
+        "applications": "Application",
+        "noApplications": "No Applications"
     },
     "JobPostingDetailPage": {
         "errorTitle": "Could Not Load Posting",
@@ -107,19 +279,57 @@
         "skillsPlaceholder": "Press enter to add a skill...",
         "submitButton": "Save Job Posting"
     },
-    "api": {
-        "job-postings": {
-            "success": {
-                "updated": "Job posting updated successfully",
-                "deleted": "Job posting deleted successfully",
-                "created": "Job posting created successfully"
+    "InterviewsPage": {
+        "title": "Interviews",
+        "description": "View your scheduled and completed interview sessions.",
+        "errorTitle": "Error Loading Interviews",
+        "errorMessage": "Please refresh the page or try again later.",
+        "noSessionsTitle": "No interviews scheduled yet",
+        "noSessionsDescription": "You can schedule interviews from the job postings page.",
+        "status": {
+            "scheduled": "Scheduled",
+            "active": "Active",
+            "completed": "Completed",
+            "cancelled": "Cancelled",
+            "unknown": "Unknown"
+        },
+        "card": {
+            "jobTitlePlaceholder": "Job Posting",
+            "interviewer": "Interviewer: {name}",
+            "interviewer_unassigned": "Interviewer: Unassigned",
+            "candidates": "{count} candidate",
+            "candidates_plural": "{count} candidates",
+            "notes": "Notes:",
+            "interviewerLinkTitle": "Interviewer Link",
+            "interviewerLinkDescription": "Send this link to the interviewer",
+            "copyButton": "Copy",
+            "viewButton": "View",
+            "editButton": "Edit",
+            "cancelButton": "Cancel",
+            "cancelConfirm": {
+                "title": "Cancel Interview",
+                "description": "Are you sure you want to cancel the interview for the posting \"{title}\"? This action cannot be undone.",
+                "confirmText": "Yes, Cancel",
+                "cancelText": "Go Back"
             },
-            "error": {
-                "notFound": "Job posting not found",
-                "forbidden": "You don't have permission to perform this action",
-                "unauthorized": "Unauthorized access",
-                "generic": "An error occurred"
+            "toast": {
+                "copySuccess": "Interviewer link copied to clipboard!",
+                "cancelSuccessTitle": "Success",
+                "cancelSuccessDescription": "The interview has been successfully cancelled.",
+                "cancelErrorTitle": "Error",
+                "cancelErrorDescription": "An error occurred while cancelling the interview."
             }
+        }
+    },
+    "LandingPage": {
+        "hero": {
+            "title": "Revolutionize Your Hiring Process with AI-Powered Interview Platform",
+            "subtitle": "AI-powered CV analysis, automated interview scheduling, and real-time coding assessment. Find the best talent faster and more accurately.",
+            "cta": {
+                "primary": "Get Started Free",
+                "secondary": "Learn More"
+            },
+            "trustText": "Companies of all sizes trust us to find AI SaaS critical to their growth and innovation"
         }
     }
 }

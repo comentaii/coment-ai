@@ -11,15 +11,36 @@ interface DashboardLayoutProps {
 }
 
 export function DashboardLayout({ children }: DashboardLayoutProps) {
-  const { session } = useAuth();
+  const { session, isLoading } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
-    if (!session) {
+    // Only redirect if we're sure the session is not loading and there's no session
+    if (!isLoading && !session) {
       router.push('/tr/auth/signin');
     }
-  }, [session, router]);
+  }, [session, isLoading, router]);
 
+  // Show loading while session is being checked
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
+        <div className="text-center p-8">
+          <div className="w-16 h-16 bg-brand-green rounded-full flex items-center justify-center mx-auto mb-4">
+            <span className="text-white text-2xl font-bold">CA</span>
+          </div>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+            Yükleniyor...
+          </h1>
+          <p className="text-gray-600 dark:text-gray-400">
+            Lütfen bekleyin
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show login prompt only if session is definitely not available
   if (!session) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">

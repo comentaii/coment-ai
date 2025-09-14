@@ -1,51 +1,95 @@
+@import url(./pre-custom-style.css);
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* Font Definitions */
+@font-face {
+  font-family: 'DM Sans';
+  src: url('/fonts/DMSans-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('/fonts/Inter-Light.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('/fonts/Inter-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('/fonts/Inter-SemiBold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('/fonts/Inter-ExtraBold.woff2') format('woff2');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
-    --primary: 142 76% 36%;
-    --primary-foreground: 355 7% 97%;
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
-    --accent: 240 4.8% 95.9%;
-    --accent-foreground: 240 5.9% 10%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --ring: 142 76% 36%;
+    /* Light Tema - Yeni Renk Paleti */
+    --background: 0 0% 96%;           /* #F5F5F5 - Ana Arka Plan */
+    --foreground: 0 0% 20%;           /* #333333 - Birincil Metin */
+    --card: 0 0% 100%;                /* #FFFFFF - Kartlar */
+    --card-foreground: 0 0% 20%;      /* #333333 - Kart Metni */
+    --popover: 0 0% 100%;             /* #FFFFFF - Popover Arka Plan */
+    --popover-foreground: 0 0% 20%;   /* #333333 - Popover Metin */
+    --primary: 107 59% 35%;           /* #3A8C24 - Ana Vurgu Rengi (Koyu Yeşil) */
+    --primary-foreground: 0 0% 100%;  /* Beyaz - Primary üzerindeki metin */
+    --secondary: 0 0% 88%;            /* #E0E0E0 - İkincil Arka Plan */
+    --secondary-foreground: 0 0% 20%; /* #333333 - İkincil Metin */
+    --muted: 0 0% 88%;                /* #E0E0E0 - Sessiz Arka Plan */
+    --muted-foreground: 0 0% 40%;     /* #666666 - Sessiz Metin */
+    --accent: 0 0% 96%;               /* #F5F5F5 - Vurgu Arka Plan */
+    --accent-foreground: 0 0% 20%;    /* #333333 - Vurgu Metin */
+    --destructive: 354 70% 54%;       /* #DC3545 - Hata Rengi */
+    --destructive-foreground: 0 0% 100%; /* Beyaz - Hata üzerindeki metin */
+    --border: 0 0% 88%;               /* #E0E0E0 - Kenarlık */
+    --input: 0 0% 88%;                /* #E0E0E0 - Input Kenarlık */
+    --ring: 107 59% 35%;              /* #3A8C24 - Focus Ring */
     --radius: 0.5rem;
   }
 
   .dark {
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 142 76% 36%;
-    --primary-foreground: 240 5.9% 10%;
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 142 76% 36%;
+    /* Dark Tema - Yeni Renk Paleti */
+    --background: 0 0% 12%;           /* #1E1E1E - Ana Arka Plan */
+    --foreground: 0 0% 88%;           /* #E0E0E0 - Birincil Metin */
+    --card: 0 0% 17%;                 /* #2C2C2C - Kartlar */
+    --card-foreground: 0 0% 88%;      /* #E0E0E0 - Kart Metni */
+    --popover: 0 0% 17%;              /* #2C2C2C - Popover Arka Plan */
+    --popover-foreground: 0 0% 88%;   /* #E0E0E0 - Popover Metin */
+    --primary: 107 59% 35%;           /* #3A8C24 - Ana Vurgu Rengi (Koyu Yeşil) */
+    --primary-foreground: 0 0% 100%;  /* Beyaz - Primary üzerindeki metin (kontrast için) */
+    --secondary: 0 0% 25%;            /* #404040 - İkincil Arka Plan */
+    --secondary-foreground: 0 0% 88%; /* #E0E0E0 - İkincil Metin */
+    --muted: 0 0% 25%;                /* #404040 - Sessiz Arka Plan */
+    --muted-foreground: 0 0% 63%;     /* #A0A0A0 - Sessiz Metin */
+    --accent: 0 0% 17%;               /* #2C2C2C - Vurgu Arka Plan */
+    --accent-foreground: 0 0% 88%;    /* #E0E0E0 - Vurgu Metin */
+    --destructive: 354 70% 54%;       /* #DC3545 - Hata Rengi */
+    --destructive-foreground: 0 0% 88%; /* Açık - Hata üzerindeki metin */
+    --border: 0 0% 25%;               /* #404040 - Kenarlık */
+    --input: 0 0% 25%;                /* #404040 - Input Kenarlık */
+    --ring: 107 59% 35%;              /* #3A8C24 - Focus Ring */
   }
 }
 
@@ -55,118 +99,252 @@
   }
   
   body {
-    @apply bg-background text-foreground font-mono text-base leading-relaxed;
+    min-height: 100vh;
+    font-family: var(--font-inter), sans-serif;
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+    line-height: 1.66;
+    @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
   
-  /* Global Typography with consistent colors */
+  /* Global Typography - Orijinal Template Uyumlu */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-dm-sans), sans-serif;
+    letter-spacing: -0.25px;
+  }
+
+  /* H1 - Hero başlıkları için */
   h1 {
-    @apply text-4xl font-bold text-brand-green dark:text-green-400 mb-6;
+    font-size: 3rem;
+    line-height: 1;
+    @apply font-bold text-brand-primary dark:text-foreground mb-6;
   }
-  
+
+  @media (min-width: 768px) {
+    h1 {
+      font-size: 3.75rem;
+      line-height: 1;
+    }
+  }
+
+  @media (min-width: 992px) {
+    h1 {
+      font-size: 4.5rem;
+      line-height: 1;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    h1 {
+      font-size: 100px;
+    }
+  }
+
+  @media (min-width: 1400px) {
+    h1 {
+      font-size: 120px;
+    }
+  }
+
+  /* H2 - Section başlıkları için */
   h2 {
-    @apply text-3xl font-semibold text-brand-green dark:text-green-400 mb-4;
+    font-size: 2.25rem;
+    line-height: 2.5rem;
+    @apply font-bold text-brand-primary dark:text-foreground mb-4;
   }
-  
+
+  @media (min-width: 992px) {
+    h2 {
+      font-size: 3.75rem;
+      line-height: 1;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    h2 {
+      font-size: 4.5rem;
+      line-height: 1;
+    }
+  }
+
+  @media (min-width: 1400px) {
+    h2 {
+      font-size: 80px;
+    }
+  }
+
+  /* H3 - Alt başlıklar için */
   h3 {
-    @apply text-2xl font-medium text-brand-green dark:text-green-400 mb-3;
+    @apply text-2xl font-bold text-brand-primary dark:text-foreground mb-3;
   }
-  
+
+  /* H4 - Kart başlıkları için */
   h4 {
-    @apply text-xl font-medium text-brand-green dark:text-green-400 mb-2;
+    font-size: 1.875rem;
+    line-height: 2.25rem;
+    line-height: 1.33;
+    letter-spacing: 0em;
+    @apply font-bold text-brand-primary dark:text-foreground mb-2;
   }
-  
+
+  /* H5 - Küçük başlıklar için */
   h5 {
-    @apply text-lg font-medium text-brand-green dark:text-green-400 mb-2;
+    font-size: 1.5rem;
+    line-height: 2rem;
+    line-height: 1.28;
+    @apply font-bold text-brand-primary dark:text-foreground mb-2;
   }
-  
+
+  @media (min-width: 992px) {
+    h5 {
+      font-size: 28px;
+    }
+  }
+
+  /* H6 - En küçük başlıklar için */
   h6 {
-    @apply text-base font-medium text-brand-green dark:text-green-400 mb-2;
+    @apply text-base font-semibold text-brand-primary dark:text-foreground mb-2;
   }
   
+  /* Paragraf ve açıklama metinleri için */
   p {
-    @apply text-base leading-relaxed text-brand-dark dark:text-gray-200 mb-4;
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+    line-height: 1.66;
+    @apply text-brand-primary dark:text-foreground mb-4;
+  }
+  
+  /* Yardımcı metinler için Inter Light */
+  .text-helper {
+    @apply text-sm font-inter font-light text-brand-secondary dark:text-muted-foreground;
+  }
+  
+  /* Placeholder metinleri için Inter Light */
+  input::placeholder, textarea::placeholder {
+    @apply font-inter font-light;
   }
 }
 
 @layer components {
-  /* Global Button Styles with consistent hover effects */
+  /* Button Styles - Orijinal Template Uyumlu */
+  .button {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    overflow: hidden;
+    border-width: 1px;
+    padding-left: 25px;
+    padding-right: 25px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-align: center;
+    font-size: 1rem;
+    line-height: 1.5rem;
+    font-weight: 700;
+    line-height: 1.5;
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 300ms;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+  }
+
+  .button::after {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+  }
+
+  .button:hover::after {
+    left: 100%;
+  }
+
+  /* Shadcn UI Button Compatibility - Buton metinleri için beyaz garanti */
   .btn-primary {
-    @apply bg-primary text-primary-foreground hover:bg-primary/90;
+    @apply bg-primary text-white hover:bg-brand-green-hover hover:text-white dark:bg-primary dark:text-white dark:hover:bg-brand-green-hover dark:hover:text-white font-inter font-semibold;
   }
   
   .btn-secondary {
-    @apply bg-secondary text-secondary-foreground hover:bg-secondary/80;
+    @apply bg-secondary text-secondary-foreground hover:bg-secondary/80 font-inter font-semibold;
   }
   
   .btn-destructive {
-    @apply bg-destructive text-destructive-foreground hover:bg-destructive/90;
+    @apply bg-destructive text-destructive-foreground hover:bg-destructive/90 font-inter font-semibold;
   }
   
   .btn-ghost {
-    @apply hover:bg-accent hover:text-accent-foreground;
+    @apply hover:bg-accent hover:text-accent-foreground font-inter font-semibold;
   }
   
   .btn-outline {
-    @apply border border-input bg-transparent hover:bg-accent hover:text-accent-foreground;
+    @apply border border-input bg-transparent hover:bg-accent hover:text-accent-foreground font-inter font-semibold;
   }
   
-  /* Global Input Styles with consistent focus states */
+  /* Global Input Styles with Font Strategy */
+  /* Form elementleri için Inter Regular */
   input, textarea, select {
-    @apply text-base py-3 px-4 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-brand-green focus:border-brand-green dark:focus:ring-green-400 dark:focus:border-green-400 transition-all duration-200 bg-white dark:bg-gray-800 text-brand-dark dark:text-gray-200 placeholder-gray-500 dark:placeholder-gray-400;
+    @apply text-base py-3 px-4 border border-border rounded-lg focus:ring-2 focus:ring-brand-green focus:border-brand-green dark:focus:ring-brand-green dark:focus:border-brand-green transition-all duration-200 bg-brand-card dark:bg-brand-card-dark text-brand-primary dark:text-foreground placeholder:text-brand-secondary dark:placeholder:text-muted-foreground font-inter font-normal;
   }
   
   /* Global Card Styles with consistent shadows */
   .card {
-    @apply bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg dark:shadow-gray-900/50 p-6 transition-all duration-200;
+    @apply bg-brand-card dark:bg-brand-card-dark border border-border rounded-xl shadow-lg dark:shadow-black/50 p-6 transition-all duration-200;
   }
   
   .card-hover {
-    @apply hover:shadow-xl dark:hover:shadow-gray-900/70 hover:scale-[1.02] transition-all duration-200;
+    @apply hover:shadow-xl dark:hover:shadow-black/70 hover:scale-[1.02] transition-all duration-200;
   }
   
   /* Global Link Styles with consistent hover effects */
   a {
-    @apply text-brand-green hover:text-green-600 dark:text-green-400 dark:hover:text-green-300 transition-all duration-200;
+    @apply text-brand-green hover:text-brand-green-hover dark:text-brand-green-light dark:hover:text-brand-green-hover transition-all duration-200;
   }
   
   .link-underline {
-    @apply underline decoration-2 underline-offset-4 hover:decoration-brand-green dark:hover:decoration-green-400;
+    @apply underline decoration-2 underline-offset-4 hover:decoration-brand-green dark:hover:decoration-brand-green;
   }
   
-  /* Global Navigation Styles */
+  /* Global Navigation Styles with Font Strategy */
   .nav-link {
-    @apply text-brand-dark dark:text-gray-300 hover:text-brand-green dark:hover:text-green-400 font-medium transition-all duration-200 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800;
+    @apply text-brand-primary dark:text-foreground hover:text-brand-green dark:hover:text-brand-green font-inter font-medium transition-all duration-200 px-3 py-2 rounded-lg hover:bg-brand-background dark:hover:bg-brand-card-dark;
   }
   
   .nav-link-active {
-    @apply text-brand-green dark:text-green-400 font-semibold bg-green-50 dark:bg-green-900/20;
+    @apply text-brand-green dark:text-brand-green font-inter font-semibold bg-brand-green/10 dark:bg-brand-green/20;
   }
   
-  /* Global Badge Styles */
+  /* Global Badge Styles with Font Strategy */
   .badge {
-    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium transition-all duration-200;
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-inter font-medium transition-all duration-200;
   }
   
   .badge-primary {
-    @apply bg-brand-green text-white dark:bg-green-500;
+    @apply bg-brand-green text-white dark:bg-brand-green dark:text-white;
   }
   
   .badge-secondary {
-    @apply bg-gray-200 text-brand-dark dark:bg-gray-700 dark:text-gray-200;
+    @apply bg-secondary text-secondary-foreground dark:bg-secondary dark:text-secondary-foreground;
   }
   
   .badge-destructive {
-    @apply bg-custom-red text-white dark:bg-red-500;
+    @apply bg-brand-error text-white dark:bg-brand-error;
   }
   
   /* Global Dropdown Styles */
   .dropdown-content {
-    @apply bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg dark:shadow-gray-900/50;
+    @apply bg-brand-card dark:bg-brand-card-dark border border-border rounded-lg shadow-lg dark:shadow-black/50;
   }
   
   .dropdown-item {
-    @apply text-brand-dark dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200;
+    @apply text-brand-primary dark:text-foreground hover:bg-brand-background dark:hover:bg-brand-background-dark transition-all duration-200;
   }
   
   /* Global Table Styles */
@@ -175,32 +353,32 @@
   }
   
   .table th {
-    @apply bg-gray-50 dark:bg-gray-800 text-brand-dark dark:text-gray-200 font-semibold text-left p-3 border-b border-gray-200 dark:border-gray-700;
+    @apply bg-brand-background dark:bg-brand-card-dark text-brand-primary dark:text-foreground font-inter font-semibold text-left p-3 border-b border-border;
   }
   
   .table td {
-    @apply p-3 border-b border-gray-200 dark:border-gray-700 text-brand-dark dark:text-gray-200;
+    @apply p-3 border-b border-border text-brand-primary dark:text-foreground font-inter font-normal;
   }
   
   .table tr:hover {
-    @apply bg-gray-50 dark:bg-gray-800 transition-all duration-200;
+    @apply bg-brand-background dark:bg-brand-card-dark transition-all duration-200;
   }
   
-  /* Global Form Styles */
+  /* Global Form Styles with Font Strategy */
   .form-group {
     @apply mb-4;
   }
   
   .form-label {
-    @apply block text-sm font-medium text-brand-dark dark:text-gray-200 mb-2;
+    @apply block text-sm font-inter font-medium text-brand-primary dark:text-foreground mb-2;
   }
   
   .form-error {
-    @apply text-custom-red dark:text-red-400 text-sm mt-1;
+    @apply text-brand-error dark:text-brand-error text-sm mt-1 font-inter font-normal;
   }
   
   .form-success {
-    @apply text-brand-green dark:text-green-400 text-sm mt-1;
+    @apply text-brand-success dark:text-brand-success text-sm mt-1 font-inter font-normal;
   }
   
   /* Global Modal Styles */
@@ -209,21 +387,21 @@
   }
   
   .modal-content {
-    @apply bg-white dark:bg-gray-900 rounded-xl shadow-2xl dark:shadow-gray-900/70 border border-gray-200 dark:border-gray-700;
+    @apply bg-brand-card dark:bg-brand-card-dark rounded-xl shadow-2xl dark:shadow-black/70 border border-border;
   }
   
   /* Global Loading States */
   .loading {
-    @apply animate-pulse bg-gray-200 dark:bg-gray-700 rounded;
+    @apply animate-pulse bg-muted rounded;
   }
   
   .loading-text {
-    @apply animate-pulse bg-gray-200 dark:bg-gray-700 rounded h-4;
+    @apply animate-pulse bg-muted rounded h-4;
   }
   
   /* Global Focus States */
   .focus-ring {
-    @apply focus:outline-none focus:ring-2 focus:ring-brand-green dark:focus:ring-green-400 focus:ring-offset-2 dark:focus:ring-offset-gray-900;
+    @apply focus:outline-none focus:ring-2 focus:ring-brand-green dark:focus:ring-brand-green focus:ring-offset-2 dark:focus:ring-offset-brand-background-dark;
   }
   
   /* Global Transitions */
@@ -241,53 +419,274 @@
 }
 
 @layer utilities {
-  /* Custom color utilities with consistent naming */
+  /* Yeni Renk Paleti - Custom Color Utilities */
+  
+  /* Text Colors */
   .text-brand-green {
-    color: #21C55D;
+    color: #3A8C24; /* Ana Vurgu Rengi (Koyu Yeşil) */
   }
   
-  .text-brand-dark {
-    color: #1A202C;
+  .text-brand-green-light {
+    color: #6AD93F; /* İkincil Vurgu Rengi (Açık Yeşil) */
   }
   
-  .text-custom-red {
-    color: #DD3333;
+  .text-brand-green-hover {
+    color: #4CAF31; /* Hover Durumu */
   }
   
+  .text-brand-primary {
+    color: #333333; /* Light Birincil Metin */
+  }
+  
+  .text-brand-secondary {
+    color: #666666; /* Light İkincil Metin */
+  }
+  
+  .text-brand-error {
+    color: #DC3545; /* Hata Rengi */
+  }
+  
+  .text-brand-success {
+    color: #28A745; /* Başarı Rengi */
+  }
+  
+  .text-brand-warning {
+    color: #FFC107; /* Uyarı Rengi */
+  }
+  
+  /* Background Colors */
   .bg-brand-green {
-    background-color: #21C55D;
+    background-color: #3A8C24; /* Ana Vurgu Rengi (Koyu Yeşil) */
   }
   
-  .bg-brand-dark {
-    background-color: #1A202C;
+  .bg-brand-green-light {
+    background-color: #6AD93F; /* İkincil Vurgu Rengi (Açık Yeşil) */
   }
   
-  .bg-custom-red {
-    background-color: #DD3333;
+  .bg-brand-green-hover {
+    background-color: #4CAF31; /* Hover Durumu */
   }
   
+  .bg-brand-background {
+    background-color: #F5F5F5; /* Light Ana Arka Plan */
+  }
+  
+  .bg-brand-background-dark {
+    background-color: #1E1E1E; /* Dark Ana Arka Plan */
+  }
+  
+  .bg-brand-card {
+    background-color: #FFFFFF; /* Light Kartlar */
+  }
+  
+  .bg-brand-card-dark {
+    background-color: #2C2C2C; /* Dark Kartlar */
+  }
+  
+  .bg-brand-error {
+    background-color: #DC3545;
+  }
+  
+  .bg-brand-success {
+    background-color: #28A745;
+  }
+  
+  .bg-brand-warning {
+    background-color: #FFC107;
+  }
+  
+  /* Border Colors */
   .border-brand-green {
-    border-color: #21C55D;
+    border-color: #3A8C24; /* Ana Vurgu Rengi (Koyu Yeşil) */
   }
   
-  .border-brand-dark {
-    border-color: #1A202C;
+  .border-brand-green-light {
+    border-color: #6AD93F; /* İkincil Vurgu Rengi (Açık Yeşil) */
   }
   
-  .border-custom-red {
-    border-color: #DD3333;
+  .border-brand-green-hover {
+    border-color: #4CAF31; /* Hover Durumu */
   }
   
-  /* Hover utilities for consistent hover effects */
+  
+  .border-brand-error {
+    border-color: #DC3545;
+  }
+  
+  /* Enhanced Hover Effects */
   .hover-lift {
-    @apply hover:scale-105 hover:shadow-lg dark:hover:shadow-gray-900/50 transition-all duration-200;
+    @apply hover:scale-105 hover:shadow-lg dark:hover:shadow-black/50 transition-all duration-200;
   }
   
   .hover-glow {
-    @apply hover:shadow-lg hover:shadow-brand-green/20 dark:hover:shadow-green-400/20 transition-all duration-200;
+    @apply hover:shadow-lg hover:shadow-brand-green/20 dark:hover:shadow-brand-green/30 transition-all duration-200;
   }
   
   .hover-border {
-    @apply hover:border-brand-green dark:hover:border-green-400 transition-all duration-200;
+    @apply hover:border-brand-green dark:hover:border-brand-green transition-all duration-200;
   }
+  
+  .hover-glow-light {
+    @apply hover:shadow-lg hover:shadow-brand-green-light/20 dark:hover:shadow-brand-green-light/30 transition-all duration-200;
+  }
+  
+  .hover-green {
+    @apply hover:bg-brand-green-hover hover:border-brand-green-hover transition-all duration-200;
+  }
+}
+
+/* Scroll Animasyonları */
+[data-animate] {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.6s ease-out;
+}
+
+[data-animate].animate-fade-up {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Fade in animasyonu */
+.fade-in {
+  animation: fadeIn 0.6s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Stagger animasyonları */
+[data-animate="stagger"] > * {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.6s ease-out;
+}
+
+[data-animate="stagger"].animate-fade-up > *:nth-child(1) { transition-delay: 0.1s; }
+[data-animate="stagger"].animate-fade-up > *:nth-child(2) { transition-delay: 0.2s; }
+[data-animate="stagger"].animate-fade-up > *:nth-child(3) { transition-delay: 0.3s; }
+[data-animate="stagger"].animate-fade-up > *:nth-child(4) { transition-delay: 0.4s; }
+[data-animate="stagger"].animate-fade-up > *:nth-child(5) { transition-delay: 0.5s; }
+[data-animate="stagger"].animate-fade-up > *:nth-child(6) { transition-delay: 0.6s; }
+
+[data-animate="stagger"].animate-fade-up > * {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Footer Text Slider Animation */
+.footer-text-slider {
+  animation: slide-right 30s linear infinite;
+  width: calc(100% * 3); /* 3 kez tekrar etmesi için */
+}
+
+@keyframes slide-right {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-33.333%);
+  }
+}
+
+/* Navbar Mobile Menu Styles */
+.mobile-menu-trigger {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  position: relative;
+}
+
+.mobile-menu-trigger span {
+  display: block;
+  height: 3px;
+  width: 25px;
+  background: #000;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.mobile-menu-trigger span::before,
+.mobile-menu-trigger span::after {
+  content: '';
+  display: block;
+  height: 3px;
+  width: 25px;
+  background: #000;
+  transition: all 0.3s ease;
+  position: absolute;
+  left: 0;
+}
+
+.mobile-menu-trigger span::before {
+  transform: translateY(-8px);
+}
+
+.mobile-menu-trigger span::after {
+  transform: translateY(8px);
+}
+
+.menu-block-wrapper {
+  @apply hidden lg:block;
+}
+
+.menu-block-wrapper.active {
+  @apply fixed inset-0 z-50 block lg:relative lg:inset-auto;
+}
+
+.menu-overlay {
+  @apply absolute inset-0 bg-black bg-opacity-50 lg:hidden;
+}
+
+.menu-block {
+  @apply relative z-10 lg:static;
+}
+
+.menu-block-wrapper.active .menu-block {
+  @apply fixed right-0 top-0 h-full w-80 bg-white p-6 shadow-xl lg:relative lg:h-auto lg:w-auto lg:bg-transparent lg:p-0 lg:shadow-none;
+}
+
+.mobile-menu-head {
+  @apply flex items-center justify-between pb-4 lg:hidden;
+}
+
+.mobile-menu-close {
+  @apply cursor-pointer text-2xl font-bold;
+}
+
+.site-menu-main {
+  @apply flex flex-col gap-4 lg:flex-row lg:items-center lg:gap-8;
+}
+
+.nav-item {
+  @apply block;
+}
+
+.nav-link-item {
+  @apply block py-2 text-base font-medium text-black transition-colors hover:text-colorOrangyRed lg:py-0 lg:text-lg;
+}
+
+/* Site Header Styles */
+.site-header {
+  @apply relative z-50;
+}
+
+.site-header--absolute {
+  @apply absolute left-0 top-0 w-full;
+}
+
+.site-header.is--white {
+  @apply bg-transparent;
 }

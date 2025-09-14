@@ -83,6 +83,21 @@ export class CandidateProfileService extends BaseService<ICandidateProfile> {
   }
 
   /**
+   * Finds all candidate profiles, and populates the user data.
+   * @returns A list of all candidate profiles with their associated user details.
+   */
+  async findAllPopulated(): Promise<(ICandidateProfile & { userId: { name: string, email: string, image?: string } })[]> {
+    return this.executeWithErrorHandling(async () => {
+      const profiles = await this.model
+        .find({})
+        .populate<{ userId: { name: string, email: string, image?: string } }>('userId', 'name email image')
+        .sort({ createdAt: -1 })
+        .exec();
+      return profiles as (ICandidateProfile & { userId: { name: string, email: string, image?: string } })[];
+    });
+  }
+
+  /**
    * Finds and scores candidates against a given set of skills using a database aggregation pipeline.
    * This is a highly efficient way to match candidates for a job posting.
    * @param companyId The ID of the company to search within.

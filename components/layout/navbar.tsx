@@ -1,133 +1,109 @@
-"use client";
+'use client';
 
-import { signOut } from 'next-auth/react';
-import { useAuth } from '@/hooks/use-auth';
-import { Button } from '@/components/ui/button';
-import { UserRoleBadge } from '@/components/user-role-badge';
+import { useState } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
-import { LanguageSelector } from '@/components/ui/language-selector';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Link } from '@/navigation';
-
+import { LanguageSwitcher } from '@/components/ui/language-switcher';
 
 export function Navbar() {
-  const { session } = useAuth();
-
-  const handleLogout = () => {
-    console.log("Çıkış yapma fonksiyonu tetiklendi!");
-    signOut({ callbackUrl: '/' });
-  };
+  const [mobileMenu, setMobileMenu] = useState(false);
 
   return (
-    <nav className="bg-white dark:bg-brand-dark border-b border-gray-200 dark:border-gray-700 px-4 py-4">
-      <div className="max-w-7xl mx-auto flex items-center justify-between">
-        <div className="flex items-center space-x-4">
-          <Link
-            href="/"
-            className="text-2xl font-bold text-brand-green dark:text-green-400"
-          >
-            Coment-AI
+    <header
+      className='site-header site-header--absolute is--white py-4 lg:py-6'
+      id='sticky-menu'
+    >
+      <div className='global-container'>
+        <div className='flex items-center justify-between gap-x-8'>
+          {/* Header Logo */}
+          <Link href='/' className='inline-block'>
+            <Image
+              src='/logo-light.png'
+              alt='CodileAI Logo'
+              width={150}
+              height={50}
+              className='h-10 w-auto lg:h-12'
+            />
           </Link>
-        </div>
-
-        <div className="flex items-center space-x-4">
-          {/* Language Selector */}
-          <LanguageSelector />
+          {/* Header Logo */}
           
-          {/* Theme Toggle */}
-          <ThemeToggle />
+          {/* Header Navigation */}
+          <nav className={`menu-block-wrapper ${mobileMenu ? 'active' : ''}`}>
+            <div className='menu-overlay' onClick={() => setMobileMenu(false)}></div>
+            <nav className='menu-block' id='append-menu-header'>
+              <div className='mobile-menu-head'>
+                <div className='go-back'>
+                  <i className='fa-solid fa-angle-left'></i>
+                </div>
+                <div className='current-menu-title'></div>
+                <div className='mobile-menu-close' onClick={() => setMobileMenu(false)}>
+                  &times;
+                </div>
+              </div>
+              <ul className='site-menu-main'>
+                <li className='nav-item'>
+                  <Link href='/' className='nav-link-item'>
+                    Ana Sayfa
+                  </Link>
+                </li>
+                <li className='nav-item'>
+                  <Link href='/#features' className='nav-link-item'>
+                    Özellikler
+                  </Link>
+                </li>
+                <li className='nav-item'>
+                  <Link href='/#how-it-works' className='nav-link-item'>
+                    Nasıl Çalışır
+                  </Link>
+                </li>
+                <li className='nav-item'>
+                  <Link href='/#pricing' className='nav-link-item'>
+                    Fiyatlandırma
+                  </Link>
+                </li>
+                <li className='nav-item'>
+                  <Link href='/#contact' className='nav-link-item'>
+                    İletişim
+                  </Link>
+                </li>
+              </ul>
+            </nav>
+          </nav>
+          {/* Header Navigation */}
           
-          {session ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  className="relative h-12 w-12 rounded-full"
-                >
-                  <Avatar className="h-10 w-10">
-                    <AvatarImage
-                      src={session.user?.image || ""}
-                      alt={session.user?.name || ""}
-                    />
-                    <AvatarFallback className="bg-brand-green text-white dark:bg-brand-green dark:text-white">
-                      {session.user?.name?.charAt(0).toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-64" align="end" forceMount>
-                <DropdownMenuLabel className="font-normal">
-                  <div className="flex flex-col space-y-1">
-                    <p className="text-base font-medium leading-none text-brand-green dark:text-green-400">
-                      {session.user?.name}
-                    </p>
-                    <p className="text-sm leading-none text-gray-600 dark:text-gray-400">
-                      {session.user?.email}
-                    </p>
-                    <div className="mt-2">
-                      <UserRoleBadge role={session.user?.role || "candidate"} />
-                    </div>
-                  </div>
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                  <Link
-                    href="/dashboard"
-                    className="text-base cursor-pointer"
-                  >
-                    Dashboard
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link
-                    href="/profile"
-                    className="text-base cursor-pointer"
-                  >
-                    Profil
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link
-                    href="/settings"
-                    className="text-base cursor-pointer"
-                  >
-                    Ayarlar
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  asChild
-                  className="p-0"
-                >
-                  <button
-                    onClick={handleLogout}
-                    className="w-full h-full text-left text-base cursor-pointer text-red-500 dark:text-red-400 px-2 py-1.5 rounded-sm focus:bg-red-50 focus:text-red-600 dark:focus:bg-red-900/50 dark:focus:text-red-400 outline-none"
-                  >
-                    Çıkış Yap
-                  </button>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          ) : (
-            <div className="flex items-center space-x-4">
-              <Button variant="outline" asChild>
-                <Link href="/auth/signin">Giriş Yap</Link>
-              </Button>
-              <Button asChild>
-                <Link href="/auth/signup">Kayıt Ol</Link>
-              </Button>
+          {/* Header User Event */}
+          <div className='flex items-center gap-2 lg:gap-4'>
+            <div className="hidden sm:flex items-center gap-2">
+              <ThemeToggle />
+              <LanguageSwitcher />
             </div>
-          )}
+            
+            <Link
+              href='/tr/auth/signin'
+              className='button hidden rounded-[50px] border-[#7F8995] bg-transparent px-6 py-3 text-sm font-medium text-black dark:text-white after:bg-colorOrangyRed hover:border-colorOrangyRed hover:text-white lg:inline-block'
+            >
+              Giriş Yap
+            </Link>
+            <Link
+              href='/tr/auth/signup'
+              className='button hidden rounded-[50px] border-black bg-black px-6 py-3 text-sm font-medium text-white after:bg-colorOrangyRed hover:border-colorOrangyRed hover:text-white lg:inline-block'
+            >
+              Ücretsiz Başla
+            </Link>
+            {/* Responsive Off-canvas Menu Button */}
+            <div className='block lg:hidden'>
+              <button
+                onClick={() => setMobileMenu(true)}
+                className='mobile-menu-trigger is-black'
+              >
+                <span />
+              </button>
+            </div>
+          </div>
+          {/* Header User Event */}
         </div>
       </div>
-    </nav>
+    </header>
   );
 }
