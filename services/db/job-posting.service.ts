@@ -21,6 +21,12 @@ export class JobPostingService extends BaseService<IJobPosting> {
     });
   }
 
+  async findAllPopulated(): Promise<IJobPosting[]> {
+    return this.executeWithErrorHandling(async () => {
+      return this.model.find({}).populate('createdBy', 'name email').exec();
+    });
+  }
+
   async create(data: Partial<IJobPosting>): Promise<IJobPosting> {
     return this.executeWithErrorHandling(async () => {
       const entity = new this.model(data);

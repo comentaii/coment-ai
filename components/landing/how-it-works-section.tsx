@@ -1,58 +1,146 @@
 'use client';
 
-import styles from '@/styles/landing.module.css';
+import Image from 'next/image';
 
 export function HowItWorksSection() {
+
   return (
-    <section className={styles['howItWorksSection']}>
-      <div className={styles['howItWorksContainer']}>
-        <div className={styles['howItWorksHeader']}>
-          <h2 className={styles['howItWorksTitle']}>
-            How It Works
-          </h2>
-          <p className={styles['howItWorksDescription']}>
-            Get started in minutes with our simple 3-step process
+    <>
+      {/*...::: Content Section Start_1 :::... */}
+      <section id='how-it-works'>
+        {/* Section Spacer */}
+        <div className='pb-20 xl:pb-[150px]'>
+          {/* Section Container */}
+          <div className='global-container'>
+            <div className='grid grid-cols-1 items-center gap-12 md:grid-cols-2 lg:gap-20 xl:gap-28 xxl:gap-32' data-animate="stagger">
+              {/* Content Left Block */}
+              <div
+                className='order-2 overflow-hidden rounded-md md:order-1'
+              >
+                <Image
+                  src='/assets/img_placeholder/th-1/content-image-1.jpg'
+                  alt='content-image-1'
+                  width='526'
+                  height='450'
+                  className='h-auto w-full'
+                />
+              </div>
+              {/* Content Left Block */}
+              {/* Content Right Block */}
+              <div
+                className='jos order-1 md:order-2'
+                data-jos_animation='fade-right'
+              >
+                {/* Section Content Block */}
+                <div className='mb-6'>
+                  <h2>Accessible to a wider audience</h2>
+                </div>
+                {/* Section Content Block */}
+                <div className='text-lg leading-[1.4] lg:text-[21px]'>
+                  <p className='mb-7 last:mb-0'>
+                    Advanced AI capabilities accessible to a broader audience,
+                    including small & medium-sized businesses and individuals
+                    who may not have the resources or expertise to develop.
+                  </p>
+                  <p className='mb-7 last:mb-0'>
+                    Our platform democratizes AI-powered hiring tools, making
+                    enterprise-level assessment capabilities available to
+                    companies of all sizes.
           </p>
         </div>
-
-        <div className={styles['howItWorksGrid']}>
-          {/* Step 1 */}
-          <div className={styles['stepCard']}>
-            <div className={styles['stepNumber']}>
-              1
+              </div>
+              {/* Content Right Block */}
             </div>
-            <h3 className={styles['stepTitle']}>Upload CVs</h3>
-            <p className={styles['stepDescription']}>
-              Bulk upload candidate CVs in PDF format. Our AI automatically analyzes 
-              and extracts key information, skills, and experience levels.
-            </p>
           </div>
-
-          {/* Step 2 */}
-          <div className={styles['stepCard']}>
-            <div className={styles['stepNumber']}>
-              2
-            </div>
-            <h3 className={styles['stepTitle']}>Schedule Interviews</h3>
-            <p className={styles['stepDescription']}>
-              Select qualified candidates and schedule interviews. Generate unique 
-              interview links and set up coding challenges tailored to the position.
-            </p>
-          </div>
-
-          {/* Step 3 */}
-          <div className={styles['stepCard']}>
-            <div className={styles['stepNumber']}>
-              3
-            </div>
-            <h3 className={styles['stepTitle']}>Evaluate & Hire</h3>
-            <p className={styles['stepDescription']}>
-              Monitor live coding sessions, get AI-powered insights, and make 
-              data-driven hiring decisions with comprehensive candidate reports.
-            </p>
-          </div>
+          {/* Section Container */}
         </div>
-      </div>
+        {/* Section Spacer */}
+      </section>
+      {/*...::: Content Section End_1 :::... */}
+
+      {/*...::: Content Section Start_2 :::... */}
+      <section id='content-section-2'>
+        {/* Section Spacer */}
+        <div className='pb-20 xl:pb-[150px]'>
+          {/* Section Container */}
+          <div className='global-container'>
+            <div className='grid grid-cols-1 items-center gap-12 md:grid-cols-2 lg:gap-20 xl:grid-cols-[minmax(0,_1.2fr)_1fr] xl:gap-28 xxl:gap-32'>
+              {/* Content Left Block */}
+              <div
+                className='jos order-2 overflow-hidden rounded-md'
+                data-jos_animation='fade-left'
+              >
+                <Image
+                  src='/assets/img_placeholder/th-1/content-image-2.jpg'
+                  alt='content-image-2'
+                  width='526'
+                  height='450'
+                  className='h-auto w-full'
+                />
+              </div>
+              {/* Content Left Block */}
+              {/* Content Right Block */}
+              <div className='jos order-1' data-jos_animation='fade-right'>
+                {/* Section Content Block */}
+                <div className='mb-6'>
+                  <h2>Providing quick deploy solutions</h2>
+            </div>
+                {/* Section Content Block */}
+                <div className='text-lg leading-[1.4] lg:text-[21px]'>
+                  <p className='mb-7 last:mb-0'>
+                    Our AI SaaS solutions can be quickly deployed, enabling
+                    users to start benefiting from AI capabilities without
+                    lengthy setup and development times in fast-paced
+                    industries.
+                  </p>
+                  <ul className='flex flex-col gap-y-5 font-dmSans text-xl leading-tight tracking-tighter text-black lg:mt-12 lg:text-[28px]'>
+                    <li className='flex items-start gap-x-3'>
+                      <div className='mt-[2.5px] h-[30px] w-[30px]'>
+                        <Image
+                          src='/assets/img_placeholder/th-1/check-circle.svg'
+                          alt='check-circle'
+                          width='30'
+                          height='30'
+                          className='h-full w-full'
+                        />
+                      </div>
+                      Ready-to-use AI capabilities system
+                    </li>
+                    <li className='flex items-start gap-x-3'>
+                      <div className='mt-[2.5px] h-[30px] w-[30px]'>
+                        <Image
+                          src='/assets/img_placeholder/th-1/check-circle.svg'
+                          alt='check-circle'
+                          width='30'
+                          height='30'
+                          className='h-full w-full'
+                        />
+                      </div>
+                      Users can quickly integrate AI features
+                    </li>
+                    <li className='flex items-start gap-x-3'>
+                      <div className='mt-[2.5px] h-[30px] w-[30px]'>
+                        <Image
+                          src='/assets/img_placeholder/th-1/check-circle.svg'
+                          alt='check-circle'
+                          width='30'
+                          height='30'
+                          className='h-full w-full'
+                        />
+                      </div>
+                      Time savings translate to cost savings
+                    </li>
+                  </ul>
+                </div>
+          </div>
+              {/* Content Right Block */}
+            </div>
+          </div>
+          {/* Section Container */}
+        </div>
+        {/* Section Spacer */}
     </section>
+      {/*...::: Content Section End :::... */}
+    </>
   );
 }

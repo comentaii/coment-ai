@@ -22,21 +22,29 @@ export default function InterviewsPage() {
   const [editingSession, setEditingSession] = useState<any | null>(null);
 
   if (isLoading) {
-    return <InterviewsSkeleton />;
+    return (
+      <DashboardLayout>
+        <InterviewsSkeleton />
+      </DashboardLayout>
+    );
   }
 
   if (error) {
     return (
-      <div className="container mx-auto p-8 flex items-center justify-center">
-        <div className="text-center bg-red-50 dark:bg-red-900/10 p-8 rounded-lg">
-          <h2 className="mt-4 text-xl font-semibold text-red-700 dark:text-red-300">
-            {t('errorTitle')}
-          </h2>
-          <p className="mt-2 text-gray-600 dark:text-gray-400">
-            {t('errorMessage')}
-          </p>
+      <DashboardLayout>
+        <div className="container mx-auto p-4 md:p-6 lg:p-8">
+          <div className="flex items-center justify-center">
+            <div className="text-center bg-red-50 dark:bg-red-900/10 p-8 rounded-lg">
+              <h2 className="mt-4 text-xl font-semibold text-red-700 dark:text-red-300">
+                {t('errorTitle')}
+              </h2>
+              <p className="mt-2 text-gray-600 dark:text-gray-400">
+                {t('errorMessage')}
+              </p>
+            </div>
+          </div>
         </div>
-      </div>
+      </DashboardLayout>
     );
   }
 
@@ -235,7 +243,7 @@ function InterviewSessionCard({ session, onEdit }: { session: any, onEdit: () =>
 
 function InterviewsSkeleton() {
   return (
-    <div className="container mx-auto p-8">
+    <div className="p-4 md:p-6 lg:p-8">
       <Skeleton className="h-10 w-1/3 mb-4" />
       <Skeleton className="h-5 w-2/3 mb-8" />
       <div className="space-y-6">

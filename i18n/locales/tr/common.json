@@ -328,5 +328,16 @@
         "cancelButton": "İptal",
         "updateButton": "Güncelle",
         "updatingButton": "Güncelleniyor..."
+    },
+    "LandingPage": {
+        "hero": {
+            "title": "AI Destekli Mülakat Platformu ile İşe Alım Sürecinizi Devrimleştirin",
+            "subtitle": "Yapay zeka teknolojisi ile CV analizi, otomatik mülakat planlama ve gerçek zamanlı kod değerlendirmesi. En iyi yetenekleri daha hızlı ve doğru şekilde bulun.",
+            "cta": {
+                "primary": "Ücretsiz Başlayın",
+                "secondary": "Daha Fazla Bilgi"
+            },
+            "trustText": "Tüm büyüklükteki şirketler büyümeleri ve inovasyonları için kritik olan AI SaaS çözümlerini bulmak için bize güveniyor"
+        }
     }
 }

@@ -83,6 +83,36 @@ export class InterviewSessionService extends BaseService<IInterviewSession> {
   }
 
   /**
+   * Gets all interview sessions for super admin
+   */
+  async getAllSessions(
+    options: {
+      status?: string;
+      interviewerId?: string;
+      jobPostingId?: string;
+      limit?: number;
+      skip?: number;
+    } = {}
+  ): Promise<IInterviewSession[]> {
+    return this.executeWithErrorHandling(async () => {
+      const query: any = {};
+      
+      if (options.status) query.status = options.status;
+      if (options.interviewerId) query.interviewerId = new mongoose.Types.ObjectId(options.interviewerId);
+      if (options.jobPostingId) query.jobPostingId = new mongoose.Types.ObjectId(options.jobPostingId);
+
+      return this.model.find(query)
+        .populate('jobPostingId', 'title')
+        .populate('interviewerId', 'name email')
+        .populate('slots')
+        .sort({ scheduledDate: -1 })
+        .limit(options.limit || 50)
+        .skip(options.skip || 0)
+        .exec();
+    });
+  }
+
+  /**
    * Gets interview session with all slots
    */
   async getSessionWithSlots(sessionId: string): Promise<{

@@ -37,6 +37,17 @@ export class InterviewService extends BaseService<IInterview> {
         .exec();
     });
   }
+
+  async getAllInterviews(): Promise<IInterview[]> {
+    return this.executeWithErrorHandling(async () => {
+      return this.model
+        .find({})
+        .populate('jobPostingId', 'title')
+        .populate('interviewerId', 'name email')
+        .sort({ scheduledDate: -1 })
+        .exec();
+    });
+  }
 }
 
 export const interviewService = new InterviewService();

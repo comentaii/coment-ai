@@ -84,11 +84,11 @@ export default function DashboardPage() {
               return (
                 <Card 
                   key={index} 
-                  className="group hover:shadow-lg transition-all duration-200 cursor-pointer bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 hover:scale-[1.02]"
+                  className="group hover:shadow-lg transition-all duration-200 cursor-pointer bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 hover:scale-[1.02] flex flex-col"
                 >
                   <CardHeader className="pb-3">
                     <div className="flex items-center gap-3">
-                      <div className={`p-2 rounded-lg ${card.color} text-white group-hover:scale-110 transition-transform duration-200`}>
+                      <div className={`p-2 rounded-lg ${card.colorClasses} group-hover:scale-110 transition-transform duration-200`}>
                         <Icon className="h-5 w-5" />
                       </div>
                       <CardTitle className="text-base font-medium text-gray-900 dark:text-gray-100 group-hover:text-brand-green dark:group-hover:text-green-400 transition-colors duration-200">
@@ -96,12 +96,12 @@ export default function DashboardPage() {
                       </CardTitle>
                     </div>
                   </CardHeader>
-                  <CardContent className="pt-0">
-                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 group-hover:text-gray-700 dark:group-hover:text-gray-300 transition-colors duration-200">
+                  <CardContent className="pt-0 flex flex-col flex-grow">
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 group-hover:text-gray-700 dark:group-hover:text-gray-300 transition-colors duration-200 flex-grow">
                       {card.description}
                     </p>
                     <Button 
-                      className="w-full bg-brand-green hover:bg-brand-green/90 text-white transition-colors duration-200"
+                      className="w-full mt-auto bg-brand-green hover:bg-brand-green/90 text-white transition-colors duration-200"
                       asChild
                     >
                       <a href={getLocalizedPath(card.path)}>

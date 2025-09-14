@@ -29,13 +29,31 @@ export async function middleware(req: NextRequest) {
     // This is an API route. It should not be processed for i18n redirects.
     // 1. Handle public auth endpoints
     if (pathWithoutLocale.startsWith('/api/auth')) {
+      // For auth endpoints, always use the path without locale
+      if (pathname !== pathWithoutLocale) {
+        return NextResponse.rewrite(new URL(pathWithoutLocale, req.url));
+      }
       return NextResponse.next();
     }
 
     // 2. Secure all other API endpoints
-    const token = await getToken({ req, secret });
-    if (!token) {
-      return new NextResponse(JSON.stringify({ message: 'Authentication required' }), {
+    try {
+      const token = await getToken({ req, secret });
+      if (!token) {
+        return new NextResponse(JSON.stringify({ 
+          message: 'Authentication required',
+          error: 'UNAUTHORIZED' 
+        }), {
+          status: 401,
+          headers: { 'Content-Type': 'application/json' },
+        });
+      }
+    } catch (authError) {
+      console.error('Auth token verification failed:', authError);
+      return new NextResponse(JSON.stringify({ 
+        message: 'Authentication verification failed',
+        error: 'AUTH_ERROR' 
+      }), {
         status: 401,
         headers: { 'Content-Type': 'application/json' },
       });
@@ -44,7 +62,12 @@ export async function middleware(req: NextRequest) {
     // 3. If the original path had a locale, rewrite it to remove the locale prefix
     // so Next.js can find the correct API route file in `app/api/...`.
     if (pathname !== pathWithoutLocale) {
-      return NextResponse.rewrite(new URL(pathWithoutLocale, req.url));
+      const rewriteUrl = new URL(pathWithoutLocale, req.url);
+      // Copy all search params to the rewritten URL
+      req.nextUrl.searchParams.forEach((value, key) => {
+        rewriteUrl.searchParams.set(key, value);
+      });
+      return NextResponse.rewrite(rewriteUrl);
     }
 
     // If no locale was present (e.g., a direct call to /api/...), just continue.
@@ -56,6 +79,8 @@ export async function middleware(req: NextRequest) {
 
   // Then, apply page-level authentication and authorization.
   // Note: pathWithoutLocale is already calculated above.
+
+  const isPublicPage = pathWithoutLocale === '' || pathWithoutLocale === '/';
 
   // Handle auth pages - redirect logged in users to dashboard
   if (pathWithoutLocale.startsWith('/auth/')) {
@@ -70,6 +95,11 @@ export async function middleware(req: NextRequest) {
     } catch (error) {
       console.error('Token check error:', error);
     }
+  }
+
+  // Allow logged-in users to visit the landing page
+  if (isPublicPage) {
+    return intlResponse;
   }
 
   // Handle protected routes

@@ -12,13 +12,23 @@ export async function GET(req: NextRequest) {
   const t = await getTranslations('api');
   try {
     const session = await getServerSession(authOptions);
-    const companyId = session?.user?.companyId;
-
-    if (!companyId) {
+    if (!session?.user) {
       return responseHandler.unauthorized(t('error.unauthorized'));
     }
 
-    const interviews = await interviewService.getInterviewsByCompany(companyId);
+    const userRoles = session.user.roles || [];
+    const isSuperAdmin = userRoles.includes(USER_ROLES.SUPER_ADMIN);
+    const companyId = session.user.companyId;
+    
+    let interviews;
+    if (isSuperAdmin) {
+      interviews = await interviewService.getAllInterviews();
+    } else if (companyId) {
+      interviews = await interviewService.getInterviewsByCompany(companyId);
+    } else {
+      return responseHandler.unauthorized(t('error.unauthorized'));
+    }
+
     return responseHandler.success({ interviews });
   } catch (error) {
     return responseHandler.error(

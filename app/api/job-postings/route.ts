@@ -3,20 +3,32 @@ import { getToken } from 'next-auth/jwt';
 import { responseHandler } from '@/utils/response-handler';
 import { jobPostingService } from '@/services/db';
 import { getTranslations } from 'next-intl/server';
+import { USER_ROLES } from '@/lib/constants';
 
 // GET all job postings
 export async function GET(req: NextRequest) {
   const t = await getTranslations('api');
   try {
     const token = await getToken({ req });
-    // @ts-ignore
-    const companyId = token?.companyId;
-
-    if (!token || !companyId) {
+    if (!token) {
       return responseHandler.error(t('error.unauthorized'), 401);
     }
 
-    const jobPostings = await jobPostingService.findByCompany(companyId);
+    // @ts-ignore
+    const companyId = token?.companyId;
+    // @ts-ignore
+    const userRoles = token?.roles || [];
+    const isSuperAdmin = userRoles.includes(USER_ROLES.SUPER_ADMIN);
+
+    let jobPostings;
+    if (isSuperAdmin) {
+      jobPostings = await jobPostingService.findAllPopulated();
+    } else if (companyId) {
+      jobPostings = await jobPostingService.findByCompany(companyId);
+    } else {
+      return responseHandler.error(t('error.unauthorized'), 401);
+    }
+
     return responseHandler.success(jobPostings);
   } catch (error) {
     console.error('Failed to fetch job postings:', error);

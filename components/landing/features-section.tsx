@@ -1,106 +1,234 @@
 'use client';
 
-import styles from '@/styles/landing.module.css';
+import Image from 'next/image';
+import Link from 'next/link';
 
 export function FeaturesSection() {
+
   return (
-    <section className={styles['featuresSection']}>
-      <div className={styles['featuresContainer']}>
-        <div className={styles['featuresHeader']}>
-          <h2 className={styles['featuresTitle']}>
-            Powerful AI Features
-          </h2>
-          <p className={styles['featuresDescription']}>
-            Our platform combines cutting-edge AI with intuitive design to streamline your hiring process
-          </p>
+    <section id='features'>
+      {/* Section Spacer */}
+      <div className='pb-20 pt-20 xl:pb-[150px] xl:pt-[130px]'>
+        {/* Section Container */}
+        <div className='global-container'>
+          {/* Section Content Block */}
+          <div className='mb-10 lg:mb-16 xl:mb-20' data-animate>
+            <div className='md:max-w-sm lg:max-w-xl xl:max-w-[746px]'>
+              <h2>Core features that make it valuable</h2>
+            </div>
+          </div>
+          {/* Section Content Block */}
+          {/* Service List */}
+          <ul className='grid grid-cols-1 gap-[2px] overflow-hidden rounded-[10px] border-2 border-black dark:border-gray-700 bg-black dark:bg-gray-700 sm:grid-cols-2 lg:grid-cols-4' data-animate="stagger">
+            {/* Service Item */}
+            <li className='group bg-white dark:bg-gray-800 p-[30px] transition-all duration-300 ease-in-out hover:bg-black dark:hover:bg-gray-900'>
+              <div className='relative mb-9 h-[70px] w-[70px]'>
+                <Image
+                  src='/assets/img_placeholder/th-1/service-icon-black-1.svg'
+                  alt=''
+                  width='70'
+                  height='70'
+                />
+                <Image
+                  src='/assets/img_placeholder/th-1/service-icon-orange-1.svg'
+                  alt='service-icon-orange-1'
+                  width='70'
+                  height='70'
+                  className='absolute left-0 top-0 h-full w-full opacity-0 transition-all duration-300 ease-linear group-hover:opacity-100'
+                />
+            </div>
+              <h4 className='mb-4 block leading-tight -tracking-[0.5px] text-black dark:text-white group-hover:text-white'>
+                <Link
+                  href='/service-details'
+                  className='hover:text-colorOrangyRed'
+                >
+                  AI CV Analysis
+                </Link>
+              </h4>
+
+              <p className='mb-12 duration-300 text-gray-700 dark:text-gray-400 group-hover:text-white'>
+                Advanced AI analyzes CVs to extract technical skills, experience levels, and quality scores automatically.
+              </p>
+
+              <Link
+                href='/service-details'
+                className='relative inline-block h-[30px] w-[30px] duration-300'
+              >
+                <Image
+                  src='/assets/img_placeholder/th-1/arrow-right-black.svg'
+                  alt='arrow-right-black'
+                  width='30'
+                  height='30'
+                />
+                <Image
+                  src='/assets/img_placeholder/th-1/arrow-right-orange.svg'
+                  alt='arrow-right-black'
+                  width='30'
+                  height='30'
+                  className='absolute left-0 top-0 h-full w-full opacity-0 transition-all duration-300 ease-linear group-hover:opacity-100'
+                />
+              </Link>
+            </li>
+            {/* Service Item */}
+            {/* Service Item */}
+            <li className='group bg-white dark:bg-gray-800 p-[30px] transition-all duration-300 ease-in-out hover:bg-black dark:hover:bg-gray-900'>
+              <div className='relative mb-9 h-[70px] w-[70px]'>
+                <Image
+                  src='/assets/img_placeholder/th-1/service-icon-black-2.svg'
+                  alt='service-icon-black-2'
+                  width='70'
+                  height='70'
+                />
+                <Image
+                  src='/assets/img_placeholder/th-1/service-icon-orange-2.svg'
+                  alt='service-icon-orange-1'
+                  width='70'
+                  height='70'
+                  className='absolute left-0 top-0 h-full w-full opacity-0 transition-all duration-300 ease-linear group-hover:opacity-100'
+                />
+          </div>
+
+              <h4 className='mb-4 block leading-tight -tracking-[0.5px] text-black dark:text-white group-hover:text-white'>
+                <Link
+                  href='/service-details'
+                  className='hover:text-colorOrangyRed'
+                >
+                  Live Coding Assessment
+                </Link>
+              </h4>
+
+              <p className='mb-12 duration-300 text-gray-700 dark:text-gray-400 group-hover:text-white'>
+                Real-time coding environment with live monitoring, keystroke logging, and AI-powered analysis.
+              </p>
+
+              <Link
+                href='/service-details'
+                className='relative inline-block h-[30px] w-[30px] duration-300'
+              >
+                <Image
+                  src='/assets/img_placeholder/th-1/arrow-right-black.svg'
+                  alt='arrow-right-black'
+                  width='30'
+                  height='30'
+                />
+                <Image
+                  src='/assets/img_placeholder/th-1/arrow-right-orange.svg'
+                  alt='arrow-right-black'
+                  width='30'
+                  height='30'
+                  className='absolute left-0 top-0 h-full w-full opacity-0 transition-all duration-300 ease-linear group-hover:opacity-100'
+                />
+              </Link>
+              {/* Features Item */}
+              {/* Features Item */}
+            </li>
+            {/* Service Item */}
+            {/* Service Item */}
+            <li className='group bg-white dark:bg-gray-800 p-[30px] transition-all duration-300 ease-in-out hover:bg-black dark:hover:bg-gray-900'>
+              <div className='relative mb-9 h-[70px] w-[70px]'>
+                <Image
+                  src='/assets/img_placeholder/th-1/service-icon-black-3.svg'
+                  alt='service-icon-black-3'
+                  width='70'
+                  height='70'
+                />
+                <Image
+                  src='/assets/img_placeholder/th-1/service-icon-orange-3.svg'
+                  alt='service-icon-orange-3'
+                  width='70'
+                  height='70'
+                  className='absolute left-0 top-0 h-full w-full opacity-0 transition-all duration-300 ease-linear group-hover:opacity-100'
+                />
+          </div>
+              <h4 className='mb-4 block leading-tight -tracking-[0.5px] text-black dark:text-white group-hover:text-white'>
+                <Link
+                  href='/service-details'
+                  className='hover:text-colorOrangyRed'
+                >
+                  Smart Interview Scheduling
+                </Link>
+              </h4>
+
+              <p className='mb-12 duration-300 text-gray-700 dark:text-gray-400 group-hover:text-white'>
+                Automated scheduling with calendar integration, timezone handling, and reminder notifications.
+              </p>
+
+              <Link
+                href='/service-details'
+                className='relative inline-block h-[30px] w-[30px] duration-300'
+              >
+                <Image
+                  src='/assets/img_placeholder/th-1/arrow-right-black.svg'
+                  alt='arrow-right-black'
+                  width='30'
+                  height='30'
+                />
+                <Image
+                  src='/assets/img_placeholder/th-1/arrow-right-orange.svg'
+                  alt='arrow-right-black'
+                  width='30'
+                  height='30'
+                  className='absolute left-0 top-0 h-full w-full opacity-0 transition-all duration-300 ease-linear group-hover:opacity-100'
+                />
+              </Link>
+            </li>
+            {/* Service Item */}
+            {/* Service Item */}
+            <li className='group bg-white dark:bg-gray-800 p-[30px] transition-all duration-300 ease-in-out hover:bg-black dark:hover:bg-gray-900'>
+              <div className='relative mb-9 h-[70px] w-[70px]'>
+                <Image
+                  src='/assets/img_placeholder/th-1/service-icon-black-4.svg'
+                  alt='service-icon-black-4'
+                  width='70'
+                  height='70'
+                />
+                <Image
+                  src='/assets/img_placeholder/th-1/service-icon-orange-4.svg'
+                  alt='service-icon-orange-4'
+                  width='70'
+                  height='70'
+                  className='absolute left-0 top-0 h-full w-full opacity-0 transition-all duration-300 ease-linear group-hover:opacity-100'
+                />
+          </div>
+              <h4 className='mb-4 block leading-tight -tracking-[0.5px] text-black dark:text-white group-hover:text-white'>
+                <Link
+                  href='/service-details'
+                  className='hover:text-colorOrangyRed'
+                >
+                  Real-time Analytics
+                </Link>
+              </h4>
+
+              <p className='mb-12 duration-300 text-gray-700 dark:text-gray-400 group-hover:text-white'>
+                Comprehensive analytics dashboard with performance metrics, candidate insights, and hiring trends.
+              </p>
+
+              <Link
+                href='/service-details'
+                className='relative inline-block h-[30px] w-[30px] duration-300'
+              >
+                <Image
+                  src='/assets/img_placeholder/th-1/arrow-right-black.svg'
+                  alt='arrow-right-black'
+                  width='30'
+                  height='30'
+                />
+                <Image
+                  src='/assets/img_placeholder/th-1/arrow-right-orange.svg'
+                  alt='arrow-right-black'
+                  width='30'
+                  height='30'
+                  className='absolute left-0 top-0 h-full w-full opacity-0 transition-all duration-300 ease-linear group-hover:opacity-100'
+                />
+              </Link>
+            </li>
+            {/* Service Item */}
+          </ul>
+          {/* Service List */}
         </div>
-        
-        <div className={styles['featuresGrid']}>
-          {/* Feature 1 */}
-          <div className={styles['featureCard']}>
-            <div className={`${styles['featureIcon']} ${styles['featureIconBlue']}`}>
-              <svg className={`${styles['featureIconSvg']} ${styles['featureIconSvgBlue']}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
-            </div>
-            <h3 className={styles['featureTitle']}>AI CV Analysis</h3>
-            <p className={styles['featureDescription']}>
-              Automatically extract skills, experience levels, and quality scores from CVs. 
-              Get instant insights on candidate qualifications.
-            </p>
-          </div>
-
-          {/* Feature 2 */}
-          <div className={styles['featureCard']}>
-            <div className={`${styles['featureIcon']} ${styles['featureIconGreen']}`}>
-              <svg className={`${styles['featureIconSvg']} ${styles['featureIconSvgGreen']}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-            </div>
-            <h3 className={styles['featureTitle']}>Smart Scheduling</h3>
-            <p className={styles['featureDescription']}>
-              Automated interview scheduling with calendar integration. 
-              Generate unique interview links and manage multiple sessions effortlessly.
-            </p>
-          </div>
-
-          {/* Feature 3 */}
-          <div className={styles['featureCard']}>
-            <div className={`${styles['featureIcon']} ${styles['featureIconPurple']}`}>
-              <svg className={`${styles['featureIconSvg']} ${styles['featureIconSvgPurple']}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-              </svg>
-            </div>
-            <h3 className={styles['featureTitle']}>Live Coding Assessment</h3>
-            <p className={styles['featureDescription']}>
-              Real-time coding environment with AI-powered analysis. 
-              Monitor candidate progress and get instant feedback on code quality.
-            </p>
-          </div>
-
-          {/* Feature 4 */}
-          <div className={styles['featureCard']}>
-            <div className={`${styles['featureIcon']} ${styles['featureIconOrange']}`}>
-              <svg className={`${styles['featureIconSvg']} ${styles['featureIconSvgOrange']}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-              </svg>
-            </div>
-            <h3 className={styles['featureTitle']}>Analytics Dashboard</h3>
-            <p className={styles['featureDescription']}>
-              Comprehensive analytics and reporting. Track hiring metrics, 
-              candidate performance, and optimize your recruitment process.
-            </p>
-          </div>
-
-          {/* Feature 5 */}
-          <div className={styles['featureCard']}>
-            <div className={`${styles['featureIcon']} ${styles['featureIconRed']}`}>
-              <svg className={`${styles['featureIconSvg']} ${styles['featureIconSvgRed']}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-              </svg>
-            </div>
-            <h3 className={styles['featureTitle']}>Secure & Compliant</h3>
-            <p className={styles['featureDescription']}>
-              Enterprise-grade security with GDPR compliance. 
-              Protect candidate data with end-to-end encryption and secure storage.
-            </p>
-          </div>
-
-          {/* Feature 6 */}
-          <div className={styles['featureCard']}>
-            <div className={`${styles['featureIcon']} ${styles['featureIconIndigo']}`}>
-              <svg className={`${styles['featureIconSvg']} ${styles['featureIconSvgIndigo']}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-              </svg>
-            </div>
-            <h3 className={styles['featureTitle']}>Team Collaboration</h3>
-            <p className={styles['featureDescription']}>
-              Multi-user support with role-based access. 
-              Collaborate with your team and share candidate evaluations seamlessly.
-            </p>
-          </div>
-        </div>
+        {/* Section Container */}
       </div>
+      {/* Section Spacer */}
     </section>
   );
 }

@@ -73,15 +73,51 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        // --- Projeye Özel Renk Paleti ---
+        // --- Projeye Özel Yeni Renk Paleti ---
         brand: {
-          green: '#21C55D', // Ana Renk
-          red: '#DD3333',   // İkincil Renk
-          dark: {
-            DEFAULT: '#111827', // Üçüncül Renk (Ana Koyu)
-            light: '#1F2937',  // Üçüncül Renk (Açık Koyu)
+          // Ana Vurgu Renkleri (Koyu Yeşil Ana, Açık Yeşil İkincil)
+          green: {
+            DEFAULT: '#3A8C24', // Ana Vurgu Rengi (Koyu Yeşil) - Butonlar için
+            hover: '#4CAF31',   // Hover Durumu (Biraz Daha Açık)
+            light: '#6AD93F',   // İkincil Vurgu Rengi (Açık Yeşil)
           },
+          // Arka Plan Renkleri
+          background: {
+            DEFAULT: '#F5F5F5', // Light Ana Arka Plan
+            dark: '#1E1E1E',     // Dark Ana Arka Plan
+          },
+          // Kart/İkincil Arka Plan Renkleri
+          card: {
+            DEFAULT: '#FFFFFF', // Light Kartlar
+            dark: '#2C2C2C',    // Dark Kartlar
+          },
+          // Metin Renkleri
+          text: {
+            primary: {
+              DEFAULT: '#333333', // Light Birincil Metin
+              dark: '#E0E0E0',    // Dark Birincil Metin
+            },
+            secondary: {
+              DEFAULT: '#666666', // Light İkincil Metin
+              dark: '#A0A0A0',    // Dark İkincil Metin
+            },
+          },
+          // Kenarlık Renkleri
+          border: {
+            DEFAULT: '#E0E0E0', // Light Kenarlık
+            dark: '#404040',    // Dark Kenarlık
+          },
+          // Durum Renkleri
+          error: '#DC3545',
+          success: '#28A745',
+          warning: '#FFC107',
         },
+        // --- Template Renk Paleti ---
+        colorCodGray: '#191919',
+        colorOrangyRed: '#FE330A',
+        colorLinenRuffle: '#EFEAE3',
+        colorViolet: '#321CA4',
+        colorGreen: '#39FF14',
       },
       borderRadius: {
         lg: "var(--radius)",

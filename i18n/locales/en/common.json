@@ -320,5 +320,16 @@
                 "cancelErrorDescription": "An error occurred while cancelling the interview."
             }
         }
+    },
+    "LandingPage": {
+        "hero": {
+            "title": "Revolutionize Your Hiring Process with AI-Powered Interview Platform",
+            "subtitle": "AI-powered CV analysis, automated interview scheduling, and real-time coding assessment. Find the best talent faster and more accurately.",
+            "cta": {
+                "primary": "Get Started Free",
+                "secondary": "Learn More"
+            },
+            "trustText": "Companies of all sizes trust us to find AI SaaS critical to their growth and innovation"
+        }
     }
 }

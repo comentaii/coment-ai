@@ -1,12 +1,14 @@
 'use client';
 import dynamic from 'next/dynamic';
+import { ThemeProvider } from 'next-themes';
 import { RootProvidersProps } from './root-providers';
+import { FullPageLoader } from '@/components/ui/full-page-loader';
 
 const DynamicRootProviders = dynamic(
   () => import('./root-providers').then(mod => mod.RootProviders),
   {
     ssr: false,
-    loading: () => <div>Loading...</div>, // You can replace this with a proper skeleton loader
+    loading: () => <FullPageLoader />,
   }
 );
 
@@ -16,8 +18,10 @@ export const ClientProviders = ({
   locale,
 }: RootProvidersProps) => {
   return (
-    <DynamicRootProviders messages={messages} locale={locale}>
-      {children}
-    </DynamicRootProviders>
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+      <DynamicRootProviders messages={messages} locale={locale}>
+        {children}
+      </DynamicRootProviders>
+    </ThemeProvider>
   );
 };
