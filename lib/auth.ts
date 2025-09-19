@@ -109,21 +109,16 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
     redirect: ({ url, baseUrl }) => {
-      // Production'da baseUrl kontrolü
-      const isProduction = process.env.NODE_ENV === 'production';
-      const productionUrl = process.env.NEXTAUTH_URL || baseUrl;
-      const actualBaseUrl = isProduction ? productionUrl : baseUrl;
-      
       // If URL is already a full URL and on the same domain
-      if (url.startsWith(actualBaseUrl)) {
-        const urlPath = url.replace(actualBaseUrl, '');
+      if (url.startsWith(baseUrl)) {
+        const urlPath = url.replace(baseUrl, '');
         // If the URL already has a locale and is not a sign-in page, keep it
         if ((urlPath.startsWith('/en/') || urlPath.startsWith('/tr/')) && !urlPath.includes('/auth/')) {
           return url;
         }
         // Only redirect to dashboard for sign-in pages or pages without locale
         if (urlPath.includes('/auth/') || (!urlPath.startsWith('/en/') && !urlPath.startsWith('/tr/'))) {
-          return `${actualBaseUrl}/tr/dashboard`;
+          return `${baseUrl}/tr/dashboard`;
         }
         return url;
       }
@@ -131,15 +126,15 @@ export const authOptions: NextAuthOptions = {
       if (url.startsWith('/')) {
         // Don't redirect if it's already a valid route with locale
         if ((url.startsWith('/en/') || url.startsWith('/tr/')) && !url.includes('/auth/')) {
-          return `${actualBaseUrl}${url}`;
+          return `${baseUrl}${url}`;
         }
         // Only redirect to dashboard for auth pages or pages without locale
         if (url.includes('/auth/') || (!url.startsWith('/en/') && !url.startsWith('/tr/'))) {
-          return `${actualBaseUrl}/tr/dashboard`;
+          return `${baseUrl}/tr/dashboard`;
         }
-        return `${actualBaseUrl}${url}`;
+        return `${baseUrl}${url}`;
       }
-      return `${actualBaseUrl}/tr/dashboard`;
+      return `${baseUrl}/tr/dashboard`;
     },
   },
   pages: {

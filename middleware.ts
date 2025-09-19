@@ -20,10 +20,6 @@ export async function middleware(req: NextRequest) {
     });
   }
 
-  // Production'da base URL kontrolü
-  const isProduction = process.env.NODE_ENV === 'production';
-  const baseUrl = isProduction ? process.env.NEXTAUTH_URL : req.nextUrl.origin;
-
   const { pathname } = req.nextUrl;
 
   // Check if the path is an API route, ignoring any potential locale prefix
@@ -94,8 +90,7 @@ export async function middleware(req: NextRequest) {
       if (token) {
         // User is logged in, redirect to dashboard
         const locale = pathname.startsWith('/en/') ? 'en' : 'tr';
-        const redirectUrl = isProduction ? `${baseUrl}/${locale}/dashboard` : `/${locale}/dashboard`;
-        return NextResponse.redirect(new URL(redirectUrl, req.url));
+        return NextResponse.redirect(new URL(`/${locale}/dashboard`, req.url));
       }
     } catch (error) {
       console.error('Token check error:', error);
@@ -124,8 +119,7 @@ export async function middleware(req: NextRequest) {
       
       if (!token) {
         // User not authenticated, redirect to the sign-in page
-        const signInPath = isProduction ? `${baseUrl}/${locale}/auth/signin` : `/${locale}/auth/signin`;
-        const signInUrl = new URL(signInPath, req.url);
+        const signInUrl = new URL(`/${locale}/auth/signin`, req.url);
         // Add a callbackUrl so the user is redirected back to the page they
         // were trying to access after they successfully log in.
         signInUrl.searchParams.set('callbackUrl', req.url);
@@ -139,8 +133,7 @@ export async function middleware(req: NextRequest) {
       if (pathWithoutLocale.startsWith('/admin') || pathWithoutLocale.startsWith('/super-admin')) {
         if (!userRoles.includes(USER_ROLES.SUPER_ADMIN)) {
           // Forbidden access, redirect to forbidden page
-          const forbiddenPath = isProduction ? `${baseUrl}/${locale}/forbidden` : `/${locale}/forbidden`;
-          return NextResponse.redirect(new URL(forbiddenPath, req.url));
+          return NextResponse.redirect(new URL(`/${locale}/forbidden`, req.url));
         }
       }
       
@@ -149,8 +142,7 @@ export async function middleware(req: NextRequest) {
           pathWithoutLocale.startsWith('/interviews')) {
         if (!userRoles.includes(USER_ROLES.HR_MANAGER) && !userRoles.includes(USER_ROLES.SUPER_ADMIN)) {
           // Forbidden access, redirect to forbidden page
-          const forbiddenPath = isProduction ? `${baseUrl}/${locale}/forbidden` : `/${locale}/forbidden`;
-          return NextResponse.redirect(new URL(forbiddenPath, req.url));
+          return NextResponse.redirect(new URL(`/${locale}/forbidden`, req.url));
         }
       }
       
@@ -160,15 +152,13 @@ export async function middleware(req: NextRequest) {
             !userRoles.includes(USER_ROLES.HR_MANAGER) && 
             !userRoles.includes(USER_ROLES.SUPER_ADMIN)) {
           // Forbidden access, redirect to forbidden page
-          const forbiddenPath = isProduction ? `${baseUrl}/${locale}/forbidden` : `/${locale}/forbidden`;
-          return NextResponse.redirect(new URL(forbiddenPath, req.url));
+          return NextResponse.redirect(new URL(`/${locale}/forbidden`, req.url));
         }
       }
     } catch (error) {
       const locale = pathname.startsWith('/en/') ? 'en' : 'tr';
       // On error, redirect to sign-in page as a fallback
-      const signInPath = isProduction ? `${baseUrl}/${locale}/auth/signin` : `/${locale}/auth/signin`;
-      const signInUrl = new URL(signInPath, req.url);
+      const signInUrl = new URL(`/${locale}/auth/signin`, req.url);
       signInUrl.searchParams.set('callbackUrl', req.url);
       return NextResponse.redirect(signInUrl);
     }
